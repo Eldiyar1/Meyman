@@ -1,22 +1,10 @@
-from django.urls import path
-from travel.views import *
+from rest_framework.routers import DefaultRouter
+from travel.views import TravelServiceViewSet, HotelViewSet, NewsViewSet
 
-list_create = {
-    'get': 'list',
-    'post': 'create'
-}
+router = DefaultRouter()
+router.register(r'travel-services', TravelServiceViewSet)
+router.register(r'hotels', HotelViewSet)
+router.register(r'news', NewsViewSet)
 
-retrieve_update_destroy = {
-    'get': 'retrieve',
-    'put': 'update',
-    'delete': 'destroy'
-}
+urlpatterns = router.urls
 
-urlpatterns = [
-    path('travel-services/', TravelServiceViewSet.as_view(list_create)),
-    path('travel-services/<int:pk>/', TravelServiceViewSet.as_view(retrieve_update_destroy)),
-    path('hotels/', HotelViewSet.as_view(list_create)),
-    path('hotels/<int:pk>/', HotelViewSet.as_view(retrieve_update_destroy)),
-    path('news/', NewsViewSet.as_view(list_create)),
-    path('news/<int:pk>/', NewsViewSet.as_view(retrieve_update_destroy)),
-]

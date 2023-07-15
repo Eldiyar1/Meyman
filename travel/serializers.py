@@ -11,9 +11,9 @@ class TravelServiceSerializer(serializers.ModelSerializer):
             'description',
             'price',
             'location',
-            'start_date',
-            'end_date',
-            'is_available'
+            'is_available',
+            'formatted_start_date',
+            'formatted_end_date'
         )
 
 

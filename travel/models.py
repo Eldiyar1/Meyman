@@ -79,6 +79,12 @@ class TravelService(models.Model):
     def __str__(self):
         return self.service_name
 
+    def formatted_start_date(self):
+        return self.start_date.strftime('%d-%m-%Y')
+
+    def formatted_end_date(self):
+        return self.end_date.strftime('%d-%m-%Y')
+
 
 class News(models.Model):
     class Meta:
