@@ -37,7 +37,7 @@ class NewsSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
-            'author',
             'published_date',
+            'formatted_published_date',
             'author_fullname_list',
         )
