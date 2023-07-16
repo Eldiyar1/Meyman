@@ -15,8 +15,9 @@ class TravelServiceViewSet(mixins.ListModelMixin,
     serializer_class = TravelServiceSerializer
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = 'service_name service_name location is_available'.split()
+    filterset_fields = 'service_name price location is_available'.split()
     pagination_class = StandardResultsSetPagination
+    search_fields = ['service_name', 'price', 'location', 'is_available']
 
 
 
@@ -32,6 +33,7 @@ class HotelViewSet(mixins.ListModelMixin,
     filter_backends = [DjangoFilterBackend]
     filterset_fields = 'hotel_name description daily_price available_rooms is_available'.split()
     pagination_class = StandardResultsSetPagination
+    search_fields = ['hotel_name', 'description', 'daily_price', 'is_available', 'available_rooms']
 
 
 
@@ -48,4 +50,6 @@ class NewsViewSet(mixins.ListModelMixin,
     filter_backends = [DjangoFilterBackend]
     filterset_fields = 'title author published_date content'.split()
     pagination_class = StandardResultsSetPagination
+    search_fields = ['title', 'author', 'published_date', 'content']
+
 
