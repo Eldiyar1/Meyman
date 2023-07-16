@@ -3,6 +3,7 @@ from .models import TravelService, Hotel, News
 from .serializers import TravelServiceSerializer, HotelSerializer, NewsSerializer
 from .permissions import IsAdminUserOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
+from .paginations import *
 
 class TravelServiceViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
@@ -15,6 +16,7 @@ class TravelServiceViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = 'service_name service_name location is_available'.split()
+    pagination_class = StandardResultsSetPagination
 
 
 
@@ -29,6 +31,8 @@ class HotelViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = 'hotel_name description daily_price available_rooms is_available'.split()
+    pagination_class = StandardResultsSetPagination
+
 
 
 
@@ -43,4 +47,5 @@ class NewsViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = 'title author published_date content'.split()
+    pagination_class = StandardResultsSetPagination
 
