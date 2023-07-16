@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .settings import STATIC_URL, STATIC_ROOT
+from django.conf.urls.static import static
+from . import swagger
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('travel.urls')),
 ]
+urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
+urlpatterns += swagger.urlpatterns
