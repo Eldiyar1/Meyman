@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from travel.models import TravelService, Hotel, News
+from .models import TravelService, Hotel, News
 
 
 class TravelServiceSerializer(serializers.ModelSerializer):
@@ -11,9 +11,9 @@ class TravelServiceSerializer(serializers.ModelSerializer):
             'description',
             'price',
             'location',
-            'start_date',
-            'end_date',
-            'is_available'
+            'is_available',
+            'formatted_start_date',
+            'formatted_end_date'
         )
 
 
@@ -37,7 +37,7 @@ class NewsSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
-            'author',
             'published_date',
+            'formatted_published_date',
             'author_fullname_list',
         )

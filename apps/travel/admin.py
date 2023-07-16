@@ -1,5 +1,5 @@
 from django.contrib import admin
-from travel.models import TravelService, Hotel, News, Author
+from .models import TravelService, Hotel, News, Author
 
 admin.site.register(TravelService)
 admin.site.register(Hotel)
