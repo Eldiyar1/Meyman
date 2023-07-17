@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if config('DEBUG') == 'on' else False
+DEBUG = True
+    # if config('DEBUG') == 'on' else False
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.travel',
-    'drf_yasg'
+    'drf_yasg',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
