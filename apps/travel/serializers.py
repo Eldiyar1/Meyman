@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TravelService, Hotel, News
+from .models import TravelService, Hotel, News, Signal
 
 
 class TravelServiceSerializer(serializers.ModelSerializer):
@@ -40,4 +40,16 @@ class NewsSerializer(serializers.ModelSerializer):
             'published_date',
             'formatted_published_date',
             'author_fullname_list',
+        )
+
+
+class SignalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Signal
+        fields = (
+            'id',
+            'recipient',
+            'message',
+            'is_read',
+            'created_at'
         )

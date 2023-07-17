@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Author(models.Model):
@@ -118,3 +119,34 @@ class News(models.Model):
 
     def formatted_published_date(self):
         return self.published_date.strftime('%d-%m-%Y')
+
+
+class Signal(models.Model):
+    class Meta:
+        verbose_name = "Уведомление"
+        verbose_name_plural = "Уведомление"
+
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Кому'
+    )
+    message = models.TextField(
+        verbose_name='Сообщение'
+    )
+    is_read = models.BooleanField(
+        default=False,
+        verbose_name='Прочитанно'
+
+    )
+    created_at = models.DateField(
+        auto_now_add=True,
+        verbose_name='Когда написанно'
+    )
+    def __str__(self):
+        return self.message
+
+
+def create_signal(user, message):
+    notification = Signal(recipient=user, message=message)
+    notification.save()
