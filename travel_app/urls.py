@@ -22,5 +22,6 @@ import os
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.travel.urls')),
+    path('', include('apps.users.urls')),
 ]
 urlpatterns += doc_urls
