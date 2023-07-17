@@ -48,6 +48,7 @@ class TravelService(models.Model):
     class Meta:
         verbose_name = "Тревел сервис"
         verbose_name_plural = "Тревел сервисы"
+        ordering = ['start_date']
 
     service_name = models.CharField(
         max_length=255,

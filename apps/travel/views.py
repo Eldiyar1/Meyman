@@ -15,9 +15,9 @@ class TravelServiceViewSet(mixins.ListModelMixin,
     serializer_class = TravelServiceSerializer
     permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = 'service_name price location is_available'.split()
+    filterset_fields = 'service_name description price location is_available'.split()
     pagination_class = StandardResultsSetPagination
-    search_fields = ['service_name', 'price', 'location', 'is_available']
+    search_fields = ['service_name','description', 'price', 'location', 'is_available']
 
 
 
