@@ -26,7 +26,7 @@ class BedTypeAdmin(admin.ModelAdmin):
 class HousingAdmin(admin.ModelAdmin):
     list_display = ['housing_name', 'daily_price', 'available_rooms', 'is_available', 'location']
     list_filter = ['is_available', 'housing_type']
-    search_fields = ['accommodation_name']
+    search_fields = ['housing_name']
 
 
 @admin.register(Hotel)
