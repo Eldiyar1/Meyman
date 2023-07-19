@@ -79,7 +79,7 @@ class Housing(models.Model):
     class Meta:
         abstract = True
 
-    accommodation_name = models.CharField(max_length=255, verbose_name="Название места жительства")
+    housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     image = models.ImageField(upload_to='images/housing/', verbose_name="Изображение места жительства")
     description = models.TextField(verbose_name="Описание места жительства")
     daily_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)],
@@ -94,7 +94,7 @@ class Housing(models.Model):
     bed_type = models.ForeignKey(BedType, on_delete=models.SET_NULL, null=True, verbose_name="Тип кроватей")
 
     def __str__(self):
-        return self.accommodation_name
+        return self.housing_name
 
 
 class Hotel(Housing):

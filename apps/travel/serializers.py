@@ -27,30 +27,30 @@ class BedTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'bed_type')
 
 
-class AccommodationSerializer(serializers.ModelSerializer):
+class HousingSerializer(serializers.ModelSerializer):
     class Meta:
         abstract = True
-        fields = ('id', 'accommodation_name', 'image', 'description', 'daily_price', 'available_rooms', 'is_available',
+        fields = ('id', 'housing_name', 'image', 'description', 'daily_price', 'available_rooms', 'is_available',
                   'price_range', 'housing_type', 'accommodation_type', 'bed_type')
 
 
-class HotelSerializer(AccommodationSerializer):
-    class Meta(AccommodationSerializer.Meta):
+class HotelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = Hotel
 
 
-class HostelSerializer(AccommodationSerializer):
-    class Meta(AccommodationSerializer.Meta):
+class HostelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = Hostel
 
 
-class ApartmentSerializer(AccommodationSerializer):
-    class Meta(AccommodationSerializer.Meta):
+class ApartmentSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = Apartment
 
 
-class GuestHouseSerializer(AccommodationSerializer):
-    class Meta(AccommodationSerializer.Meta):
+class GuestHouseSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = GuestHouse
 
 

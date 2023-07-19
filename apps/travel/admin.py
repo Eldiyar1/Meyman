@@ -23,29 +23,29 @@ class BedTypeAdmin(admin.ModelAdmin):
     pass
 
 
-class AccommodationAdmin(admin.ModelAdmin):
-    list_display = ['accommodation_name', 'daily_price', 'available_rooms', 'is_available', 'location']
+class HousingAdmin(admin.ModelAdmin):
+    list_display = ['housing_name', 'daily_price', 'available_rooms', 'is_available', 'location']
     list_filter = ['is_available', 'housing_type']
     search_fields = ['accommodation_name']
 
 
 @admin.register(Hotel)
-class HotelAdmin(AccommodationAdmin):
+class HotelAdmin(HousingAdmin):
     pass
 
 
 @admin.register(Hostel)
-class HostelAdmin(AccommodationAdmin):
+class HostelAdmin(HousingAdmin):
     pass
 
 
 @admin.register(Apartment)
-class ApartmentAdmin(AccommodationAdmin):
+class ApartmentAdmin(HousingAdmin):
     pass
 
 
 @admin.register(GuestHouse)
-class GuestHouseAdmin(AccommodationAdmin):
+class GuestHouseAdmin(HousingAdmin):
     pass
 
 
