@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import PriceRange, HousingType, AccommodationType, BedType, TravelService, Hotel, Hostel, \
-    Apartment, GuestHouse, News, Author
+from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
 
 
 @admin.register(PriceRange)
@@ -48,26 +47,3 @@ class ApartmentAdmin(HousingAdmin):
 class GuestHouseAdmin(HousingAdmin):
     pass
 
-
-@admin.register(TravelService)
-class TravelServiceAdmin(admin.ModelAdmin):
-    list_display = ['service_name', 'price', 'location', 'start_date', 'end_date', 'is_available']
-    list_filter = ['is_available', 'start_date', 'end_date']
-    search_fields = ['service_name']
-
-
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['fullname']
-
-
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'formatted_published_date']
-    list_filter = ['published_date']
-    search_fields = ['title', 'author__username']
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return ['published_date']
-        return []

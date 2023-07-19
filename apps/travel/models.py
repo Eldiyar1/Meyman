@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 
@@ -121,61 +120,6 @@ class GuestHouse(Housing):
         verbose_name_plural = "Гостиницы"
 
 
-class TravelService(models.Model):
-    class Meta:
-        verbose_name = "Туристический сервис"
-        verbose_name_plural = "Туристические сервисы"
-
-    service_name = models.CharField(max_length=255, verbose_name="Название сервиса")
-    image = models.ImageField(upload_to='images/travel/', verbose_name="Изображение туристического сервиса")
-    description = models.TextField(verbose_name="Описание сервиса")
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], verbose_name="Цена")
-    location = models.CharField(max_length=255, verbose_name="Местоположение")
-    start_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Дата начала")
-    end_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Дата окончания")
-    is_available = models.BooleanField(default=True, verbose_name='Доступность')
-
-    def __str__(self):
-        return self.service_name
-
-    def formatted_start_date(self):
-        return self.start_date.strftime('%d-%m-%Y')
-
-    def formatted_end_date(self):
-        return self.end_date.strftime('%d-%m-%Y')
 
 
-class Author(models.Model):
-    class Meta:
-        verbose_name = "Автор"
-        verbose_name_plural = "Авторы"
 
-    fullname = models.CharField(
-        max_length=100,
-        verbose_name="ФИО автора"
-    )
-
-    def __str__(self):
-        return self.fullname
-
-
-class News(models.Model):
-    class Meta:
-        verbose_name = "Новость"
-        verbose_name_plural = "Новости"
-
-    title = models.CharField(max_length=255, verbose_name="Заголовок")
-    image = models.ImageField(upload_to='images/news', verbose_name='Картинка новости', blank=True, null=True)
-    content = models.TextField(verbose_name="Содержание")
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, related_name="news", verbose_name='Автор')
-    published_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата публикации")
-    link = models.URLField(max_length=200, blank=True, null=True, verbose_name="Ссылка на источник")
-
-    def __str__(self):
-        return self.title
-
-    def author_fullname_list(self):
-        return [self.author.fullname]
-
-    def formatted_published_date(self):
-        return self.published_date.strftime('%d-%m-%Y')

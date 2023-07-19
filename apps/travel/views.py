@@ -1,10 +1,8 @@
 from rest_framework import mixins, viewsets
-from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse, \
-    TravelService, Author, News
+from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
 from .permissions import IsAdminUserOrReadOnly
 from .serializers import PriceRangeSerializer, HousingTypeSerializer, AccommodationTypeSerializer, BedTypeSerializer, \
-    HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, TravelServiceSerializer, \
-    AuthorSerializer, NewsSerializer
+    HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer
 
 
 class AbstractModelViewSet(mixins.ListModelMixin,
@@ -64,19 +62,3 @@ class GuestHouseViewSet(AbstractModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-class TravelServiceViewSet(AbstractModelViewSet):
-    queryset = TravelService.objects.all()
-    serializer_class = TravelServiceSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class AuthorViewSet(AbstractModelViewSet):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class NewsViewSet(AbstractModelViewSet):
-    queryset = News.objects.all()
-    serializer_class = NewsSerializer
-    permission_classes = [IsAdminUserOrReadOnly]

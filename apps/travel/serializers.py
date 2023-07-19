@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import PriceRange, HousingType, AccommodationType, BedType, TravelService, Hotel, Hostel, Apartment, \
-    GuestHouse, News, Author
+from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
 
 
 class PriceRangeSerializer(serializers.ModelSerializer):
@@ -52,31 +51,6 @@ class ApartmentSerializer(HousingSerializer):
 class GuestHouseSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = GuestHouse
-
-
-class TravelServiceSerializer(serializers.ModelSerializer):
-    start_date = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TravelService.objects.all())
-    end_date = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TravelService.objects.all())
-
-    class Meta:
-        model = TravelService
-        fields = ('id', 'service_name', 'image', 'description', 'price', 'location', 'is_available', 'start_date',
-                  'end_date', 'formatted_start_date', 'formatted_end_date')
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Author
-        fields = ('id', 'fullname')
-
-
-class NewsSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Author.objects.all())
-
-    class Meta:
-        model = News
-        fields = ('id', 'title', 'image', 'content', 'formatted_published_date', 'author', 'author_fullname_list',
-                  'link')
 
 
 class CurrencyConverterSerializer(serializers.Serializer):
