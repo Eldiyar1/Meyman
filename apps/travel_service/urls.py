@@ -1,8 +1,11 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import TravelServiceViewSet
-
+from .views import SearchViewSet, TransferViewSet
 
 router = DefaultRouter()
-router.register('travel-services', TravelServiceViewSet)
+router.register(r'search', SearchViewSet)
+router.register(r'transfer', TransferViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+]

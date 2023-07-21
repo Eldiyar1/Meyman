@@ -1,36 +1,26 @@
 from rest_framework import serializers
-from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities
 
 
-class PriceRangeSerializer(serializers.ModelSerializer):
+class HousingAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PriceRange
-        fields = ('min_price', 'max_price')
+        model = HousingAmenities
+        exclude = ('housing', )
 
 
-class HousingTypeSerializer(serializers.ModelSerializer):
+class RoomAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HousingType
-        fields = ('id', 'housing_type')
-
-
-class AccommodationTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AccommodationType
-        fields = ('id', 'accommodation_type',)
-
-
-class BedTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BedType
-        fields = ('id', 'bed_type')
+        model = RoomAmenities
+        exclude = ('housing', )
 
 
 class HousingSerializer(serializers.ModelSerializer):
+    housing_amenities = HousingAmenitiesSerializer()
+    room_amenities = RoomAmenitiesSerializer()
+
     class Meta:
         abstract = True
-        fields = ('id', 'housing_name', 'image', 'description', 'daily_price', 'available_rooms', 'is_available',
-                  'price_range', 'housing_type', 'accommodation_type', 'bed_type')
+        fields = '__all__'
 
 
 class HotelSerializer(HousingSerializer):
@@ -53,6 +43,9 @@ class GuestHouseSerializer(HousingSerializer):
         model = GuestHouse
 
 
-class CurrencyConverterSerializer(serializers.Serializer):
-    amount = serializers.FloatField()
-    currency = serializers.ChoiceField(choices=['USD', 'EUR', 'RUB', 'KZT'])
+class SanatoriumSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Sanatorium
+
+
+

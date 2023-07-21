@@ -1,12 +1,24 @@
 from rest_framework import serializers
-from .models import TravelService
+from .models import Search, Transfer
 
-
-class TravelServiceSerializer(serializers.ModelSerializer):
-    start_date = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TravelService.objects.all())
-    end_date = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TravelService.objects.all())
+class SearchSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
 
     class Meta:
-        model = TravelService
-        fields = ('id', 'service_name', 'image', 'description', 'price', 'location', 'is_available', 'start_date',
-                  'end_date', 'formatted_start_date', 'formatted_end_date')
+        model = Search
+        fields = (
+            'destination', 'check_in_date', 'check_out_date', 'adults',
+            'teens', 'children', 'infants', 'pets',
+        )
+
+class TransferSerializer(serializers.ModelSerializer):
+    pickup_date = serializers.DateField(format='%d-%m-%Y')
+    return_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = Transfer
+        fields = (
+            'transfer_location', 'pickup_date', 'pickup_time', 'return_location',
+            'return_date', 'return_time', 'with_driver'
+        )

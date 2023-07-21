@@ -1,15 +1,12 @@
-from rest_framework import mixins, viewsets
-from .models import TravelService
-from .permissions import IsAdminUserOrReadOnly
-from .serializers import TravelServiceSerializer
+from rest_framework import viewsets
+from .models import Search, Transfer
+from .serializers import SearchSerializer, TransferSerializer
 
+class SearchViewSet(viewsets.ModelViewSet):
+    queryset = Search.objects.all()
+    serializer_class = SearchSerializer
 
-class TravelServiceViewSet(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
-    queryset = TravelService.objects.all()
-    serializer_class = TravelServiceSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+class TransferViewSet(viewsets.ModelViewSet):
+    queryset = Transfer.objects.all()
+    serializer_class = TransferSerializer
+

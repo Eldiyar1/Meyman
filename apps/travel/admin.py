@@ -1,49 +1,44 @@
 from django.contrib import admin
-from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
+from .models import Hotel, Hostel, Apartment, GuestHouse, HousingAmenities, RoomAmenities, Sanatorium
 
 
-@admin.register(PriceRange)
-class PriceRangeAdmin(admin.ModelAdmin):
+class HousingAmenitiesInline(admin.TabularInline):
+    model = HousingAmenities
     pass
 
 
-@admin.register(HousingType)
-class HousingTypeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(AccommodationType)
-class AccommodationTypeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(BedType)
-class BedTypeAdmin(admin.ModelAdmin):
+class RoomAmenitiesInline(admin.TabularInline):
+    model = RoomAmenities
     pass
 
 
 class HousingAdmin(admin.ModelAdmin):
-    list_display = ['housing_name', 'daily_price', 'available_rooms', 'is_available', 'location']
-    list_filter = ['is_available', 'housing_type']
+    list_display = ['housing_name', 'location', 'min_and_max_price_per_night', 'housing_type', 'accommodation_type',
+    'bed_type', 'food_type']
+    list_filter = ['housing_type']
     search_fields = ['housing_name']
 
 
 @admin.register(Hotel)
 class HotelAdmin(HousingAdmin):
-    pass
+    inlines = [HousingAmenitiesInline, RoomAmenitiesInline]
 
 
 @admin.register(Hostel)
 class HostelAdmin(HousingAdmin):
-    pass
+    inlines = [HousingAmenitiesInline, RoomAmenitiesInline]
 
 
 @admin.register(Apartment)
 class ApartmentAdmin(HousingAdmin):
-    pass
+    inlines = [HousingAmenitiesInline, RoomAmenitiesInline]
 
 
 @admin.register(GuestHouse)
 class GuestHouseAdmin(HousingAdmin):
-    pass
+    inlines = [HousingAmenitiesInline, RoomAmenitiesInline]
 
+
+@admin.register(Sanatorium)
+class SanatoriumAdmin(HousingAdmin):
+    inlines = [HousingAmenitiesInline, RoomAmenitiesInline]

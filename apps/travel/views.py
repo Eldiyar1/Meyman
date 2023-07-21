@@ -1,64 +1,44 @@
 from rest_framework import mixins, viewsets
-from .models import PriceRange, HousingType, AccommodationType, BedType, Hotel, Hostel, Apartment, GuestHouse
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 from .permissions import IsAdminUserOrReadOnly
-from .serializers import PriceRangeSerializer, HousingTypeSerializer, AccommodationTypeSerializer, BedTypeSerializer, \
-    HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer
+from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
+    SanatoriumSerializer
 
 
-class AbstractModelViewSet(mixins.ListModelMixin,
-                           mixins.CreateModelMixin,
-                           mixins.RetrieveModelMixin,
-                           mixins.UpdateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
+class AbstractHousingModelViewSet(mixins.ListModelMixin,
+                                  mixins.CreateModelMixin,
+                                  mixins.RetrieveModelMixin,
+                                  mixins.UpdateModelMixin,
+                                  mixins.DestroyModelMixin,
+                                  viewsets.GenericViewSet):
     pass
 
 
-class PriceRangeViewSet(AbstractModelViewSet):
-    queryset = PriceRange.objects.all()
-    serializer_class = PriceRangeSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class HousingTypeViewSet(AbstractModelViewSet):
-    queryset = HousingType.objects.all()
-    serializer_class = HousingTypeSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class AccommodationTypeViewSet(AbstractModelViewSet):
-    queryset = AccommodationType.objects.all()
-    serializer_class = AccommodationTypeSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class BedTypeViewSet(AbstractModelViewSet):
-    queryset = BedType.objects.all()
-    serializer_class = BedTypeSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class HotelViewSet(AbstractModelViewSet):
+class HotelViewSet(AbstractHousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-class HostelViewSet(AbstractModelViewSet):
+class HostelViewSet(AbstractHousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-class ApartmentViewSet(AbstractModelViewSet):
+class ApartmentViewSet(AbstractHousingModelViewSet):
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-class GuestHouseViewSet(AbstractModelViewSet):
+class GuestHouseViewSet(AbstractHousingModelViewSet):
     queryset = GuestHouse.objects.all()
     serializer_class = GuestHouseSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
+class SanatoriumViewSet(AbstractHousingModelViewSet):
+    queryset = Sanatorium.objects.all()
+    serializer_class = SanatoriumSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
