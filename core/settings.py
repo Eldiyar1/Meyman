@@ -43,10 +43,23 @@ INSTALLED_APPS = [
 
     # rest
     'rest_framework',
+    # swagger
+    'drf_yasg',
     
     # apps
     'apps.advertising',
 ]
+
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    }
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
