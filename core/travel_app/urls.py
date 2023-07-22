@@ -22,6 +22,7 @@ from apps.travel.urls import router as travel_router
 from apps.news.urls import router as news_router
 from apps.travel_service.urls import router as travel_service_router
 from apps.currency_conversion.urls import router as currency_conversion_router
+from apps.weather_forecast.urls import router as weather_forecast_router
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -30,6 +31,7 @@ router.registry.extend(travel_router.registry)
 router.registry.extend(news_router.registry)
 router.registry.extend(travel_service_router.registry)
 router.registry.extend(currency_conversion_router.registry)
+router.registry.extend(weather_forecast_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'weather_api',
     'apps.travel',
     'apps.news',
     'apps.travel_service',
     'apps.currency_conversion',
+    'apps.weather_forecast',
 ]
 
 MIDDLEWARE = [
