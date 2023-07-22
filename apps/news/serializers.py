@@ -1,17 +1,9 @@
 from rest_framework import serializers
-from .models import News, Author
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Author
-        fields = ('id', 'fullname')
-
+from .models import News
 
 class NewsSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Author.objects.all())
+    published_date = serializers.DateTimeField(format='%H:%M:%S, %d-%m-%Y')
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'image', 'content', 'formatted_published_date', 'author', 'link',
-                  'author_fullname_list',)
+        fields = ('id', 'title', 'image', 'content', 'author_fullname', 'published_date', 'link')

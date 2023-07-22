@@ -1,11 +1,17 @@
 from rest_framework import mixins, viewsets
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Signal, create_signal
+from rest_framework.response import Response
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 from .permissions import IsAdminUserOrReadOnly
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, SignalSerializer
-from django.contrib.auth.models import User
+    SanatoriumSerializer
+from googletrans import Translator
+
+translator = Translator()
 
 
+class LanguageParamMixin:
+    def get_language(self):
+        return self.request.query_params.get('lang', 'ru')
 
 
 class AbstractHousingModelViewSet(mixins.ListModelMixin,
@@ -17,49 +23,90 @@ class AbstractHousingModelViewSet(mixins.ListModelMixin,
     pass
 
 
-class HotelViewSet(AbstractHousingModelViewSet):
+
+
+class HotelViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
+
+        # Translate the fields
+        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+        instance.description = translator.translate(instance.description, dest=lang).text
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
-class HostelViewSet(AbstractHousingModelViewSet):
+
+
+class HostelViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
 
-class SignalViewSet(mixins.ListModelMixin,
-                    mixins.CreateModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
-    queryset = Signal.objects.all()
-    serializer_class = SignalSerializer
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(username='john')
-        message = 'Новое уведомление!'
-        create_signal(user, message)
+        # Translate the fields
+        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+        instance.description = translator.translate(instance.description, dest=lang).text
 
-    def post(self, request, *args, **kwargs):
-        user = User.objects.get(username='john')
-        message = 'Новое уведомление!'
-        create_signal(user, message)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
-
-class ApartmentViewSet(AbstractHousingModelViewSet):
+class ApartmentViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
+
+        # Translate the fields
+        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+        instance.description = translator.translate(instance.description, dest=lang).text  
+        instance.location = translator.translate(instance.location, dest=lang).text
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
-class GuestHouseViewSet(AbstractHousingModelViewSet):
+class GuestHouseViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
     queryset = GuestHouse.objects.all()
     serializer_class = GuestHouseSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
+
+        # Translate the fields
+        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+        instance.description = translator.translate(instance.description, dest=lang).text
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
-class SanatoriumViewSet(AbstractHousingModelViewSet):
+class SanatoriumViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
     queryset = Sanatorium.objects.all()
     serializer_class = SanatoriumSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
+
+        # Translate the fields
+        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+        instance.description = translator.translate(instance.description, dest=lang).text
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

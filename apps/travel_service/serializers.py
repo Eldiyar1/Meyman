@@ -20,5 +20,5 @@ class TransferSerializer(serializers.ModelSerializer):
         model = Transfer
         fields = (
             'transfer_location', 'pickup_date', 'pickup_time', 'return_location',
-            'return_date', 'return_time', 'with_driver'
+            'return_date', 'return_time', 'with_driver', 'different_pickup_places'
         )

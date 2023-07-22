@@ -6,6 +6,6 @@ router.register("advertising", AdvertisingAPI, basename="advertising")
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/2/', include(router.urls)),
 ]
 urlpatterns+=router.urls

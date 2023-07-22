@@ -47,6 +47,7 @@ class Transfer(models.Model):
     return_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
                                    verbose_name="Дата возврата трансфера")
     return_time = models.TimeField(verbose_name="Время возврата трансфера")
+    different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
 
     def formatted_pickup_date(self):
@@ -54,3 +55,4 @@ class Transfer(models.Model):
 
     def formatted_return_date(self):
         return self.return_date.strftime('%d-%m-%Y')
+
