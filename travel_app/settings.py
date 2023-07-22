@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'apps.travel',
     'drf_yasg',
     'apps.users',
+    'apps.news',
+    'apps.travel_service'
 ]
 
 MIDDLEWARE = [

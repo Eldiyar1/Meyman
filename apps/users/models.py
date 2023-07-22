@@ -1,7 +1,11 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
-from apps.travel.models import Hotel, TravelService, News
+from apps.travel.models import Housing
+from apps.travel_service.models import Transfer
 
 
 class Profile(models.Model):
@@ -9,33 +13,35 @@ class Profile(models.Model):
         User, on_delete=models.CASCADE
     )
     avatar = models.ImageField(
-        upload_to='avatars/', blank=True, null=True
+        upload_to='avatars/', blank=True, null=True, verbose_name='Profiles_avatar'
     )
-
-class Reservation(models.Model):
-    Reserve = models.ForeignKey(
-        TravelService, on_delete=models.CASCADE
+    email = models.EmailField(
+        null=True, verbose_name='Email'
+    )
+    phone_number = PhoneNumberField(
+        null=True, verbose_name='Номер телефона'
     )
 
     def __str__(self):
-        return self.id
+        return self.email
 
 
-class Favorite(models.Model):
+class CarReservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    car = models.ForeignKey(Transfer, on_delete=models.CASCADE)
+    check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
+                                     verbose_name="дата бронирование")
+    check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())])
 
-    class Meta:
-        verbose_name = 'Избранное'
-        verbose_name_plural = 'Избранные'
+    def __str__(self):
+        return str(self.user)
 
-    hotel = models.ForeignKey(
-        News, on_delete=models.CASCADE, null=True, blank=True,
-        related_name='Hotel'
-    )
-    travel_service = models.ForeignKey(
-        TravelService, on_delete=models.CASCADE, null=True, blank=True,
-        related_name='Travel_service'
-    )
-    news = models.ForeignKey(
-        News, on_delete=models.CASCADE, null=True, blank=True,
-        related_name='News'
-    )
+
+class AccommodationReservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    accommodation = models.ForeignKey(Housing, on_delete=models.CASCADE)
+    check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
+    check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
+
+    def __str__(self):
+        return str(self.user)

@@ -1,43 +1,50 @@
 from rest_framework import serializers
-from .models import TravelService, Hotel, News
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities
 
 
-class TravelServiceSerializer(serializers.ModelSerializer):
+class HousingAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TravelService
-        fields = (
-            'id',
-            'service_name',
-            'description',
-            'price',
-            'location',
-            'is_available',
-            'formatted_start_date',
-            'formatted_end_date'
-        )
+        model = HousingAmenities
+        exclude = ('housing', )
 
 
-class HotelSerializer(serializers.ModelSerializer):
+class RoomAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
+        model = RoomAmenities
+        exclude = ('housing', )
+
+
+class HousingSerializer(serializers.ModelSerializer):
+    housing_amenities = HousingAmenitiesSerializer()
+    room_amenities = RoomAmenitiesSerializer()
+
+    class Meta:
+        abstract = True
+        fields = '__all__'
+
+
+class HotelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = Hotel
-        fields = (
-            'id',
-            'hotel_name',
-            'description',
-            'daily_price',
-            'available_rooms',
-            'is_available'
-        )
 
 
-class NewsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = News
-        fields = (
-            'id',
-            'title',
-            'content',
-            'published_date',
-            'formatted_published_date',
-            'author_fullname_list',
-        )
+
+class HostelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Hostel
+
+
+
+class ApartmentSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Apartment
+
+class GuestHouseSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = GuestHouse
+
+
+class SanatoriumSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Sanatorium
+
