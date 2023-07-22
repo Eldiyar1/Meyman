@@ -2,7 +2,7 @@ JAZZMIN_SETTINGS = {
     # Исправим смотря на тз
     "site_title": "Site",     # Заголовок сайта
     "site_header": "Simon",   # Заголовок на экране входа
-    "site_brand": "it is not Django admin",     # Выходит на сайте вместо Django-admin.(Администрирование сайта)
+    "site_brand": "Django administrations",     # Выходит на сайте вместо Django-admin.(Администрирование сайта)
     "welcome_sign": "Welcome to the my work",   # Приветственный текст на экране входа
     "copyright": "Meyman",     # Авторское право (footer)
     "search_model": ["auth.User", "auth.Group"],    # Для поиска пользователей или группы

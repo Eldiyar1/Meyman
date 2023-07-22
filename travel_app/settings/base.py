@@ -1,25 +1,22 @@
 from pathlib import Path
 from decouple import config
-from .jazzmin import *
+from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
 
-<<<<<<< HEAD:core/travel_app/settings/base.py
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = 'django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9'
 
 DEBUG = True if config('DEBUG') == 'on' else False
-=======
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/
-"""
-from pathlib import Path
-import os
->>>>>>> Eldiyar:core/travel_app/settings.py
+
+
 
 ALLOWED_HOSTS = ['*']
 
 CREATE_APPS = [
     'apps.travel',
     'apps.advertising',
+    'apps.news',
+    'apps.travel_service',
+
 ]
 INSTALLED_LIBRARY = [
     'django_filters',
@@ -40,24 +37,6 @@ DJANGO_APPS = [
 INSTALLED_APPS = INSTALLED_LIBRARY + CREATE_APPS + DJANGO_APPS
 
 
-# JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
-# JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
-
-<<<<<<< HEAD:core/travel_app/settings/base.py
-=======
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'apps.travel',
-    'apps.news',
-    'apps.travel_service',
-]
->>>>>>> Eldiyar:core/travel_app/settings.py
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,7 +48,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-<<<<<<< HEAD:core/travel_app/settings/base.py
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
@@ -80,9 +58,6 @@ SWAGGER_SETTINGS = {
 }
 
 ROOT_URLCONF = 'travel_app.urls'
-=======
-ROOT_URLCONF = 'core.travel_app.urls'
->>>>>>> Eldiyar:core/travel_app/settings.py
 
 TEMPLATES = [
     {
@@ -100,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.travel_app.wsgi.application'
+WSGI_APPLICATION = 'travel_app.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -133,11 +108,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-<<<<<<< HEAD:core/travel_app/settings/base.py
-=======
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
->>>>>>> Eldiyar:core/travel_app/settings.py
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
