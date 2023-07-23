@@ -1,11 +1,13 @@
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 from .permissions import IsAdminUserOrReadOnly
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
     SanatoriumSerializer
+from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
 
 
 class AbstractHousingModelViewSet(mixins.ListModelMixin,
@@ -20,7 +22,8 @@ class AbstractHousingModelViewSet(mixins.ListModelMixin,
 class HotelViewSet(AbstractHousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HotelFilter
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -33,7 +36,8 @@ class HotelViewSet(AbstractHousingModelViewSet):
 class HostelViewSet(AbstractHousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HostelFilter
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -46,7 +50,8 @@ class HostelViewSet(AbstractHousingModelViewSet):
 class ApartmentViewSet(AbstractHousingModelViewSet):
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ApartmentFilter
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -59,7 +64,8 @@ class ApartmentViewSet(AbstractHousingModelViewSet):
 class GuestHouseViewSet(AbstractHousingModelViewSet):
     queryset = GuestHouse.objects.all()
     serializer_class = GuestHouseSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = GuestHouseFilter
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -72,7 +78,8 @@ class GuestHouseViewSet(AbstractHousingModelViewSet):
 class SanatoriumViewSet(AbstractHousingModelViewSet):
     queryset = Sanatorium.objects.all()
     serializer_class = SanatoriumSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SanatoriumFilter
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -80,6 +87,3 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
-
-
-

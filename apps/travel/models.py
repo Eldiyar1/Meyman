@@ -1,8 +1,11 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Housing(models.Model):
+    class Meta:
+        verbose_name = "Жильё"
+        verbose_name_plural = "Жильё"
+
     HOUSING_CHOICES = (
         ('Отели', 'Отели'),
         ('Хостелы', 'Хостелы'),
@@ -35,9 +38,7 @@ class Housing(models.Model):
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     image = models.ImageField(upload_to='media/housing/', verbose_name="Изображение места жительства")
     description = models.TextField(verbose_name="Описание места жительства")
-    min_and_max_price_per_night = models.DecimalField(max_digits=10, decimal_places=2,
-                                                      validators=[MinValueValidator(10),
-                                                                  MaxValueValidator(500)], verbose_name="цена за ночь")
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     bathrooms = models.PositiveIntegerField(verbose_name='Количество ванн', default=1)
     beds = models.PositiveIntegerField(verbose_name='Количество кроватей', default=1)
     location = models.CharField(max_length=255, verbose_name="местоположение жилища")
@@ -45,11 +46,6 @@ class Housing(models.Model):
     accommodation_type = models.CharField(max_length=255, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     bed_type = models.CharField(max_length=255, choices=BED_CHOICES, verbose_name="Тип кроватей")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
-    is_favorite = models.BooleanField(null=True, blank=True, default=False, verbose_name='Добавить в избраное')
-
-    class Meta:
-        verbose_name = "Жильё"
-        verbose_name_plural = "Жильё"
 
     def __str__(self):
         return self.housing_name
@@ -86,7 +82,8 @@ class Sanatorium(Housing):
 
 
 class HousingAmenities(models.Model):
-    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, related_name='housing_amenities')
+    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, related_name='housing_amenities', blank=True,
+                                   null=True)
     free_internet = models.BooleanField(default=False, verbose_name='Бесплатный интернет')
     spa_services = models.BooleanField(default=False, verbose_name="Спа услуги")
     parking = models.BooleanField(default=False, verbose_name="Парковка")
@@ -115,7 +112,6 @@ class HousingAmenities(models.Model):
     paid_laundry = models.BooleanField(default=False, verbose_name='Прачечная (платно)')
     fax_xerox = models.BooleanField(default=False, verbose_name='Факс/ксерокопирование (платно)')
     conference_banquet_hall = models.BooleanField(default=False, verbose_name='Конференц-зал/банкетный зал (платно)')
-
     fire_extinguishers = models.BooleanField(default=False, verbose_name='Огнетушители')
     smoke_detectors = models.BooleanField(default=False, verbose_name='Датчики дыма')
     outdoor_surveillance = models.BooleanField(default=False, verbose_name='Видеонаблюдения снаружи здания')
@@ -164,13 +160,15 @@ class HousingAmenities(models.Model):
     dry_cleaning = models.BooleanField(default=False, verbose_name='Сухая чистка')
     shoe_shine = models.BooleanField(default=False, verbose_name='Чистка обуви')
 
-    class Meta:
-        verbose_name = "Удобства в объекте"
-        verbose_name_plural = "Удобства в объекте"
+
+class Meta:
+    verbose_name = "Удобства в объекте"
+    verbose_name_plural = "Удобства в объекте"
 
 
 class RoomAmenities(models.Model):
-    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, related_name='room_amenities')
+    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, related_name='room_amenities', blank=True,
+                                   null=True)
     air_conditioner = models.BooleanField(default=False, verbose_name="Кондиционер")
     hair_dryer = models.BooleanField(default=False, verbose_name="Фен")
     washing_machine = models.BooleanField(default=False, verbose_name="Стиральная машина")

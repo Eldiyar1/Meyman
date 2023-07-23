@@ -20,6 +20,7 @@ class Profile(models.Model):
     phone_number = PhoneNumberField(
         null=True, verbose_name='Номер телефона'
     )
+
     def __str__(self):
         return self.email
 
@@ -36,10 +37,24 @@ class CarReservation(models.Model):
 
 
 class AccommodationReservation(models.Model):
+    BOOKING_CHOICES = (
+        (1, "Без банковской карты"),
+        (2, "Бесплатная отмена"),
+    )
+
+    PAYMENT_CHOICES = (
+        ("К оплате сейчас", "К оплате сейчас"),
+        ("Предоплата", "Предоплата"),
+        ("Оплата наличными", "Оплата наличными"),
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     accommodation = models.ForeignKey(Housing, on_delete=models.CASCADE)
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
+    booking_type = models.IntegerField(choices=BOOKING_CHOICES, verbose_name="Бронирование", default=1)
+    payment_type = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас",
+                                    verbose_name="Оплата")
 
     def __str__(self):
         return str(self.user)
