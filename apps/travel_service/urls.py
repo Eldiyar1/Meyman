@@ -6,6 +6,4 @@ router = DefaultRouter()
 router.register(r'search', SearchViewSet)
 router.register(r'transfer', TransferViewSet)
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+urlpatterns = router.urls
