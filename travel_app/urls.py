@@ -15,10 +15,10 @@ router.registry.extend(travel_service_router.registry)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
-    path('', include('apps.travel.urls')),
-    path('', include('apps.users.urls')),
+    path('api/travel/', include('apps.travel.urls')),
+    path('api/users/', include('apps.users.urls')),
     path('', include('apps.travel_service.urls')),
-    path('', include('apps.news.urls')),
+    path('api/news/', include('apps.news.urls')),
 ]
 
 urlpatterns += doc_urls
