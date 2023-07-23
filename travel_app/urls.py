@@ -17,8 +17,11 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('api/travel/', include('apps.travel.urls')),
     path('api/users/', include('apps.users.urls')),
-    path('', include('apps.travel_service.urls')),
     path('api/news/', include('apps.news.urls')),
+    path('api/weather/', include('apps.weather_forecast.urls')),
+    path('api/travel_sevice/', include('apps.travel_service.urls')),
+    path('api/currency_conversion', include('apps.currency_conversion.urls')),
+    path('api/advertising', include('apps.advertising.urls')),
 ]
 
 urlpatterns += doc_urls
