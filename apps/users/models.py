@@ -38,8 +38,8 @@ class CarReservation(models.Model):
 
 class AccommodationReservation(models.Model):
     BOOKING_CHOICES = (
-        (1, "Без банковской карты"),
-        (2, "Бесплатная отмена"),
+        ("Без банковской карты", "Без банковской карты"),
+        ("Бесплатная отмена", "Бесплатная отмена"),
     )
 
     PAYMENT_CHOICES = (
