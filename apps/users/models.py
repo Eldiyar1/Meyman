@@ -20,7 +20,6 @@ class Profile(models.Model):
     phone_number = PhoneNumberField(
         null=True, verbose_name='Номер телефона'
     )
-
     def __str__(self):
         return self.email
 
