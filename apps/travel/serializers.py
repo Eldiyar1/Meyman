@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drf_writable_nested import WritableNestedModelSerializer
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities, Housing
 
 
 class HousingAmenitiesSerializer(serializers.ModelSerializer):
@@ -20,13 +20,17 @@ class HousingSerializer(WritableNestedModelSerializer):
     room_amenities = RoomAmenitiesSerializer(required=False)
 
     class Meta:
-        model = Hotel
+        model = Housing
         fields = '__all__'
 
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        # Исключаем поля с типом Boolean, имеющие значение False
-        return {key: value for key, value in ret.items() if not isinstance(value, bool) or value}
+        data = super().to_representation(instance)
+        if data['housing_amenities'] is not None:
+            data['housing_amenities'] = {k: v for k, v in data['housing_amenities'].items() if v is not False}
+        if data['room_amenities'] is not None:
+            data['room_amenities'] = {key: value for key, value in data['room_amenities'].items() if value is not False}
+        return data
+
 
 class HotelSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):

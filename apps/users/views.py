@@ -27,13 +27,15 @@ class CarReservationViewSet(mixins.UpdateModelMixin,
 
 
 class AccommodationReservationViewSet(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
+                                      mixins.CreateModelMixin,
+                                      mixins.RetrieveModelMixin,
+                                      mixins.UpdateModelMixin,
+                                      mixins.DestroyModelMixin,
                                       viewsets.GenericViewSet):
     queryset = AccommodationReservation.objects.all()
     serializer_class = AccommodationReservationSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = AccommodationReservationFilter
+
+
