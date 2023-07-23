@@ -1,17 +1,11 @@
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 from .permissions import IsAdminUserOrReadOnly
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
     SanatoriumSerializer
-from googletrans import Translator
-
-translator = Translator()
-
-
-class LanguageParamMixin:
-    def get_language(self):
-        return self.request.query_params.get('lang', 'ru')
 
 
 class AbstractHousingModelViewSet(mixins.ListModelMixin,
@@ -23,90 +17,69 @@ class AbstractHousingModelViewSet(mixins.ListModelMixin,
     pass
 
 
-
-
-class HotelViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
+class HotelViewSet(AbstractHousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
         instance = self.get_object()
-        lang = self.get_language()
-
-        # Translate the fields
-        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
-        instance.description = translator.translate(instance.description, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
 
-
-
-class HostelViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
+class HostelViewSet(AbstractHousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
         instance = self.get_object()
-        lang = self.get_language()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
-        # Translate the fields
-        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
-        instance.description = translator.translate(instance.description, dest=lang).text
 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-class ApartmentViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
+class ApartmentViewSet(AbstractHousingModelViewSet):
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
         instance = self.get_object()
-        lang = self.get_language()
-
-        # Translate the fields
-        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
-        instance.description = translator.translate(instance.description, dest=lang).text  
-        instance.location = translator.translate(instance.location, dest=lang).text
-        
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
 
-class GuestHouseViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
+class GuestHouseViewSet(AbstractHousingModelViewSet):
     queryset = GuestHouse.objects.all()
     serializer_class = GuestHouseSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
         instance = self.get_object()
-        lang = self.get_language()
-
-        # Translate the fields
-        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
-        instance.description = translator.translate(instance.description, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
 
-class SanatoriumViewSet(LanguageParamMixin, AbstractHousingModelViewSet):
+class SanatoriumViewSet(AbstractHousingModelViewSet):
     queryset = Sanatorium.objects.all()
     serializer_class = SanatoriumSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
         instance = self.get_object()
-        lang = self.get_language()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
-        # Translate the fields
-        instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
-        instance.description = translator.translate(instance.description, dest=lang).text
 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+

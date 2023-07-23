@@ -1,7 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -48,6 +45,7 @@ class Housing(models.Model):
     accommodation_type = models.CharField(max_length=255, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     bed_type = models.CharField(max_length=255, choices=BED_CHOICES, verbose_name="Тип кроватей")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
+    is_favorite = models.BooleanField(null=True, blank=True, default=False, verbose_name='Добавить в избраное')
 
     class Meta:
         verbose_name = "Жильё"
@@ -87,9 +85,6 @@ class Sanatorium(Housing):
         verbose_name_plural = "Санатории"
 
 
-
-
-
 class HousingAmenities(models.Model):
     housing = models.OneToOneField(Housing, on_delete=models.CASCADE, related_name='housing_amenities')
     free_internet = models.BooleanField(default=False, verbose_name='Бесплатный интернет')
@@ -106,7 +101,6 @@ class HousingAmenities(models.Model):
     room_service = models.BooleanField(default=False, verbose_name='Доставка еды и напитков в номер')
     coffee_teapot = models.BooleanField(default=False, verbose_name='Кофеварка/чайник')
     bar = models.BooleanField(default=False, verbose_name='Бар')
-
     garden_furniture = models.BooleanField(default=False, verbose_name='Садовая мебель')
     sun_terrace = models.BooleanField(default=False, verbose_name='Терасса для загара')
     garden = models.BooleanField(default=False, verbose_name='Сад')
@@ -121,6 +115,7 @@ class HousingAmenities(models.Model):
     paid_laundry = models.BooleanField(default=False, verbose_name='Прачечная (платно)')
     fax_xerox = models.BooleanField(default=False, verbose_name='Факс/ксерокопирование (платно)')
     conference_banquet_hall = models.BooleanField(default=False, verbose_name='Конференц-зал/банкетный зал (платно)')
+
     fire_extinguishers = models.BooleanField(default=False, verbose_name='Огнетушители')
     smoke_detectors = models.BooleanField(default=False, verbose_name='Датчики дыма')
     outdoor_surveillance = models.BooleanField(default=False, verbose_name='Видеонаблюдения снаружи здания')
@@ -129,7 +124,6 @@ class HousingAmenities(models.Model):
     security_alarm = models.BooleanField(default=False, verbose_name='Охранная сигнализация')
     full_time_security = models.BooleanField(default=False, verbose_name='Круглосуточная охрана')
     safe = models.BooleanField(default=False, verbose_name='Сейф')
-
     invoices_issued = models.BooleanField(default=False, verbose_name='Выдаются счета')
     lockers = models.BooleanField(default=False, verbose_name="Запирающиеся шкафчики")
     concierge_service = models.BooleanField(default=False, verbose_name='Услуги консьержа')
@@ -137,7 +131,6 @@ class HousingAmenities(models.Model):
     luggage_storage = models.BooleanField(default=False, verbose_name='Хранение багажа')
     express_check_in = models.BooleanField(default=False, verbose_name='Ускоренная регистрация')
     full_time_front_desk = models.BooleanField(default=False, verbose_name='Круглосуточная стойка регистрации')
-
     indoor_pool_heated = models.BooleanField(default=False, verbose_name='Крытый бассейн/бассейн с подогревом')
     transfer_paid = models.BooleanField(default=False, verbose_name='Трансфер (платно)')
     food_delivery_to_room_paid = models.BooleanField(default=False,
