@@ -36,7 +36,7 @@ class Housing(models.Model):
     )
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    image = models.ImageField(upload_to='media/housing/', verbose_name="Изображение места жительства")
+    image = models.ImageField(upload_to='images/housing/', verbose_name="Изображение места жительства")
     description = models.TextField(verbose_name="Описание места жительства")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     bathrooms = models.PositiveIntegerField(verbose_name='Количество ванн', default=1)

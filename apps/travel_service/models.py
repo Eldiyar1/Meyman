@@ -34,6 +34,7 @@ class Transfer(models.Model):
         verbose_name_plural = "Поиск Трансферов"
 
     transfer_location = models.CharField(max_length=255, verbose_name="Место получения трансфера")
+    destination_location = models.CharField(max_length=255, verbose_name="Куда вы хотите поехать")
     pickup_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
                                    verbose_name="Дата получения трансфера")
     pickup_time = models.TimeField(verbose_name="Время получения трансфера")
