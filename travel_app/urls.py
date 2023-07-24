@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/travel_sevice/', include('apps.travel_service.urls')),
     path('api/currency_conversion', include('apps.currency_conversion.urls')),
     path('api/advertising', include('apps.advertising.urls')),
+    path('api/review/', include('apps.review.urls')),
 ]
 
 urlpatterns += doc_urls
