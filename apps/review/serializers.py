@@ -9,8 +9,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'news',
                   'hotel',
-                  'travel_service',
-                  'author',
                   'stars',
                   'comment',
                   'formatted_date_added',
