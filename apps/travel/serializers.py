@@ -1,43 +1,57 @@
 from rest_framework import serializers
-from .models import TravelService, Hotel, News
+from drf_writable_nested import WritableNestedModelSerializer
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities, Housing
 
 
-class TravelServiceSerializer(serializers.ModelSerializer):
+class HousingAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TravelService
-        fields = (
-            'id',
-            'service_name',
-            'description',
-            'price',
-            'location',
-            'is_available',
-            'formatted_start_date',
-            'formatted_end_date'
-        )
+        model = HousingAmenities
+        fields = '__all__'
 
 
-class HotelSerializer(serializers.ModelSerializer):
+class RoomAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
+        model = RoomAmenities
+        fields = '__all__'
+
+
+class HousingSerializer(WritableNestedModelSerializer):
+    housing_amenities = HousingAmenitiesSerializer(required=False)
+    room_amenities = RoomAmenitiesSerializer(required=False)
+
+    class Meta:
+        model = Housing
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if data['housing_amenities'] is not None:
+            data['housing_amenities'] = {k: v for k, v in data['housing_amenities'].items() if v is not False}
+        if data['room_amenities'] is not None:
+            data['room_amenities'] = {key: value for key, value in data['room_amenities'].items() if value is not False}
+        return data
+
+
+class HotelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
         model = Hotel
-        fields = (
-            'id',
-            'hotel_name',
-            'description',
-            'daily_price',
-            'available_rooms',
-            'is_available'
-        )
 
 
-class NewsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = News
-        fields = (
-            'id',
-            'title',
-            'content',
-            'published_date',
-            'formatted_published_date',
-            'author_fullname_list',
-        )
+class HostelSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Hostel
+
+
+class ApartmentSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Apartment
+
+
+class GuestHouseSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = GuestHouse
+
+
+class SanatoriumSerializer(HousingSerializer):
+    class Meta(HousingSerializer.Meta):
+        model = Sanatorium

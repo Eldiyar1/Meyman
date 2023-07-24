@@ -1,55 +1,89 @@
 from rest_framework import mixins, viewsets
-from .models import TravelService, Hotel, News
-from .serializers import TravelServiceSerializer, HotelSerializer, NewsSerializer
-from .permissions import IsAdminUserOrReadOnly
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .paginations import *
 
-class TravelServiceViewSet(mixins.ListModelMixin,
-                           mixins.CreateModelMixin,
-                           mixins.RetrieveModelMixin,
-                           mixins.UpdateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    queryset = TravelService.objects.all()
-    serializer_class = TravelServiceSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = 'service_name description price location is_available'.split()
-    pagination_class = StandardResultsSetPagination
-    search_fields = ['service_name','description', 'price', 'location', 'is_available']
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
+from .permissions import IsAdminUserOrReadOnly
+from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
+    SanatoriumSerializer
+from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
 
 
+class AbstractHousingModelViewSet(mixins.ListModelMixin,
+                                  mixins.CreateModelMixin,
+                                  mixins.RetrieveModelMixin,
+                                  mixins.UpdateModelMixin,
+                                  mixins.DestroyModelMixin,
+                                  viewsets.GenericViewSet):
+    pass
 
-class HotelViewSet(mixins.ListModelMixin,
-                   mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.GenericViewSet):
+
+class HotelViewSet(AbstractHousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = 'hotel_name description daily_price available_rooms is_available'.split()
-    pagination_class = StandardResultsSetPagination
-    search_fields = ['hotel_name', 'description', 'daily_price', 'is_available', 'available_rooms']
+    filterset_class = HotelFilter
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
 
-
-
-class NewsViewSet(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
-    queryset = News.objects.all()
-    serializer_class = NewsSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+class HostelViewSet(AbstractHousingModelViewSet):
+    queryset = Hostel.objects.all()
+    serializer_class = HostelSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = 'title author published_date content'.split()
-    pagination_class = StandardResultsSetPagination
-    search_fields = ['title', 'author', 'published_date', 'content']
+    filterset_class = HostelFilter
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
 
 
+class ApartmentViewSet(AbstractHousingModelViewSet):
+    queryset = Apartment.objects.all()
+    serializer_class = ApartmentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ApartmentFilter
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
+
+
+class GuestHouseViewSet(AbstractHousingModelViewSet):
+    queryset = GuestHouse.objects.all()
+    serializer_class = GuestHouseSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = GuestHouseFilter
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')
+
+
+class SanatoriumViewSet(AbstractHousingModelViewSet):
+    queryset = Sanatorium.objects.all()
+    serializer_class = SanatoriumSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SanatoriumFilter
+
+    @action(detail=True, methods=['POST'])
+    def add_to_favorite(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_favorite = True
+        instance.save()
+        return Response('Объект успешно добавлен в избранное!')

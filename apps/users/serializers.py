@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Reservation, Favorite
+from .models import Profile, CarReservation, AccommodationReservation
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -8,13 +8,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ReservationSerializer(serializers.ModelSerializer):
+class CarReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
     class Meta:
-        model = Reservation
+        model = CarReservation
         fields = '__all__'
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
+class AccommodationReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
     class Meta:
-        model = Favorite
+        model = AccommodationReservation
         fields = '__all__'
+
+

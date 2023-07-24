@@ -1,27 +1,27 @@
-"""
-URL configuration for travel_app project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
-from .yasg import urlpatterns as doc_urls
-import os
+from .settings.yasg import urlpatterns_swagger as doc_urls
+from apps.travel.urls import router as travel_router
+from apps.news.urls import router as news_router
+from apps.travel_service.urls import router as travel_service_router
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+
+router.registry.extend(travel_router.registry)
+router.registry.extend(news_router.registry)
+router.registry.extend(travel_service_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.travel.urls')),
-    path('', include('apps.users.urls')),
+    path('api/v1/', include(router.urls)),
+    path('api/travel/', include('apps.travel.urls')),
+    path('api/users/', include('apps.users.urls')),
+    path('api/news/', include('apps.news.urls')),
+    path('api/weather/', include('apps.weather_forecast.urls')),
+    path('api/travel_sevice/', include('apps.travel_service.urls')),
+    path('api/currency_conversion', include('apps.currency_conversion.urls')),
+    path('api/advertising', include('apps.advertising.urls')),
 ]
+
 urlpatterns += doc_urls

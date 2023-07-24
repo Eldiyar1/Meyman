@@ -1,8 +1,9 @@
 from rest_framework import mixins, viewsets
-
-from .models import Profile, Reservation, Favorite
-from .serializers import ProfileSerializer, ReservationSerializer, FavoriteSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Profile, CarReservation, AccommodationReservation
+from .serializers import ProfileSerializer, CarReservationSerializer, AccommodationReservationSerializer
 from rest_framework.permissions import IsAuthenticated
+from .filters import AccommodationReservationFilter
 
 
 class ProfileViewSet(mixins.ListModelMixin,
@@ -17,18 +18,24 @@ class ProfileViewSet(mixins.ListModelMixin,
     lookup_field = 'user__username'
 
 
-class ReservationViewSet(mixins.UpdateModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = Reservation.objects.all()
-    serializer_class = ReservationSerializer
+class CarReservationViewSet(mixins.UpdateModelMixin,
+                            mixins.CreateModelMixin,
+                            viewsets.GenericViewSet):
+    queryset = CarReservation.objects.all()
+    serializer_class = CarReservationSerializer
     permission_classes = [IsAuthenticated]
 
 
-class FavoriteViewSet(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     viewsets.GenericViewSet):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+class AccommodationReservationViewSet(mixins.ListModelMixin,
+                                      mixins.CreateModelMixin,
+                                      mixins.RetrieveModelMixin,
+                                      mixins.UpdateModelMixin,
+                                      mixins.DestroyModelMixin,
+                                      viewsets.GenericViewSet):
+    queryset = AccommodationReservation.objects.all()
+    serializer_class = AccommodationReservationSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AccommodationReservationFilter
+
+
