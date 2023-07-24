@@ -20,6 +20,12 @@ class Housing(models.Model):
         ("Общая комната", "Общая комната"),
     )
 
+    BEDROOM_CHOICES = (
+        ("1 спальня", "1 спальня"),
+        ("2 спальни", "2 спальни"),
+        ("Больше 3 спален", "Больше 3 спален"),
+    )
+
     BED_CHOICES = (
         ("Отдельные", "Отдельные"),
         ("Двуспальная", "Двуспальная"),
@@ -44,8 +50,11 @@ class Housing(models.Model):
     location = models.CharField(max_length=255, verbose_name="местоположение жилища")
     housing_type = models.CharField(max_length=255, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=255, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
+    bedrooms = models.CharField(max_length=255, choices=BEDROOM_CHOICES, default="Не включено",
+                                verbose_name="Количество спален")
     bed_type = models.CharField(max_length=255, choices=BED_CHOICES, verbose_name="Тип кроватей")
-    food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
+    food_type = models.CharField(max_length=255, choices=FOOD_CHOICES, default="Не включено",
+                                 verbose_name="Тип питания")
 
     def __str__(self):
         return self.housing_name

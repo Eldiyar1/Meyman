@@ -45,7 +45,8 @@ class AbstractHousingFilter(django_filters.FilterSet):
             'food_type': ['exact'],
             'housing_type': ['exact'],
             'accommodation_type': ['exact'],
-            'bed_type': ['exact'],
+            'bedrooms': ['exact'],
+            'bed_type': ['exact']
         }
 
 
