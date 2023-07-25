@@ -1,9 +1,9 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProfileViewSet, CarReservationViewSet, AccommodationReservationViewSet
+from .views import UserViewSet, CarReservationViewSet
 
 router = DefaultRouter()
-router.register(r'profile', ProfileViewSet)
+router.register(r'users', UserViewSet)
 router.register(r'carreservation', CarReservationViewSet)
-router.register(r'accommodationreservation', AccommodationReservationViewSet)
+
 
 urlpatterns = router.urls
