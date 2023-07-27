@@ -55,3 +55,4 @@ class GuestHouseSerializer(HousingSerializer):
 class SanatoriumSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = Sanatorium
+

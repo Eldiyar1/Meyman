@@ -5,7 +5,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Django administrations",     # Выходит на сайте вместо Django-admin.(Администрирование сайта)
     "welcome_sign": "Welcome to the my work",   # Приветственный текст на экране входа
     "copyright": "Meyman",     # Авторское право (footer)
-    "search_model": ["auth.User", "auth.Group"],    # Для поиска пользователей или группы
+    "search_model": ["auth.User", "auth.Group",  "apps.travel", "apps.weather_forecast", "apps.travel_service"],    # Для поиска пользователей или группы
 
 
     # Header (пока только базовые вещи исправим смотря на тз)

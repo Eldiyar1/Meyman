@@ -1,19 +1,11 @@
 from django.db import models
-
+from .constants import CHOICES
 from apps.news.models import News
 from apps.travel.models import Hotel
 from apps.travel_service.models import Transfer
 
 
 class Review(models.Model):
-
-    CHOICES = (
-        (1, " * "),
-        (2, 2 * " * "),
-        (3, 3 * " * "),
-        (4, 4 * " * "),
-        (5, 5 * " * "),
-    )
 
     class Meta:
         verbose_name = "Отзыв"

@@ -6,6 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from apps.travel.models import Housing
 from apps.travel_service.models import Transfer
 from django.contrib.auth.models import AbstractUser
+from .constants import *
 
 
 # class Profile(models.Model):
@@ -46,16 +47,7 @@ class CarReservation(models.Model):
 
 
 class AccommodationReservation(models.Model):
-    BOOKING_CHOICES = (
-        ("Без банковской карты", "Без банковской карты"),
-        ("Бесплатная отмена", "Бесплатная отмена"),
-    )
 
-    PAYMENT_CHOICES = (
-        ("К оплате сейчас", "К оплате сейчас"),
-        ("Предоплата", "Предоплата"),
-        ("Оплата наличными", "Оплата наличными"),
-    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     accommodation = models.ForeignKey(Housing, on_delete=models.CASCADE)

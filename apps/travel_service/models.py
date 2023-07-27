@@ -1,16 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils import timezone
+from .constants import DESTINATION_CHOICES
 
-DESTINATION_CHOICES = (
-    ('Бишкек', 'Бишкек'),
-    ('Джалал-Абад', 'Джалал-Абад'),
-    ('Иссык-Куль', 'Иссык-Куль'),
-    ('Ош', 'Ош'),
-    ('Нарын', 'Нарын'),
-    ('Талас', 'Талас'),
-    ('Баткен', 'Баткен'),
-)
 
 
 class Search(models.Model):
