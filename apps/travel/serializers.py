@@ -6,13 +6,13 @@ from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAme
 class HousingAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingAmenities
-        fields = '__all__'
+        exclude = ('housing',)
 
 
 class RoomAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomAmenities
-        fields = '__all__'
+        exclude = ('housing',)
 
 
 class HousingSerializer(WritableNestedModelSerializer):
