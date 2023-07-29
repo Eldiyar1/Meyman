@@ -1,41 +1,49 @@
+from .models import  CarReservation, AccommodationReservation, User, CustomUser
 from rest_framework import serializers
-from .models import  CarReservation, AccommodationReservation, User
+from rest_framework.authtoken.models import Token
+from rest_framework.validators import ValidationError
 
 
-class UserSerializer(serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(max_length=80)
+    username = serializers.CharField(max_length=45)
+    password = serializers.CharField(min_length=8, write_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'avatar', 'date_joined')
-
-class UserRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length=50,
-        write_only=True
-    )
-    confirm_password = serializers.CharField(
-        max_length=50,
-        write_only=True
-    )
-    class Meta:
-        model=User 
-        fields=('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password')
+        fields = ["email", "username", "password"]
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({'password' : 'Пароли отличаются'})
-        return attrs
-    
+
+        email_exists = CustomUser.objects.filter(email=attrs["email"]).exists()
+
+        if email_exists:
+            raise ValidationError("Email has already been used")
+
+        return super().validate(attrs)
+
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            email=validated_data['email'],
-        )
-        user.set_password(validated_data['password'])
+        password = validated_data.pop("password")
+
+        user = super().create(validated_data)
+
+        user.set_password(password)
+
         user.save()
+
+        token, created = Token.objects.get_or_create(user=user)
+
         return user
 
+
+class CurrentUserPostsSerializer(serializers.ModelSerializer):
+    posts = serializers.HyperlinkedRelatedField(
+        many=True, view_name="post_detail", read_only=True, source='post_set'
+    )
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "posts"]
 
 class CarReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
