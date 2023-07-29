@@ -147,7 +147,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'apps.users.email.EmailBackend',
+]
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "errors",
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -173,4 +176,4 @@ SIMPLE_JWT = {
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'

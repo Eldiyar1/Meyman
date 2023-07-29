@@ -1,17 +1,20 @@
-from .models import  CarReservation, AccommodationReservation, User, CustomUser
+from .models import  CarReservation, AccommodationReservation, CustomUser
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import ValidationError
 
-
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.CharField(max_length=80)
     username = serializers.CharField(max_length=45)
     password = serializers.CharField(min_length=8, write_only=True)
 
     class Meta:
-        model = User
-        fields = ["email", "username", "password"]
+        model = CustomUser
+        fields = ["email", "username", "password", "user_type"]
 
     def validate(self, attrs):
 
@@ -42,7 +45,7 @@ class CurrentUserPostsSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ["id", "username", "email", "posts"]
 
 class CarReservationSerializer(serializers.ModelSerializer):

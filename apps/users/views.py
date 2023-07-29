@@ -1,6 +1,6 @@
 from rest_framework import mixins, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import CarReservation, AccommodationReservation
+from .models import CarReservation, AccommodationReservation, CustomUser
 from .serializers import CarReservationSerializer, AccommodationReservationSerializer
 from .filters import AccommodationReservationFilter
 from django.contrib.auth import authenticate
@@ -8,18 +8,29 @@ from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import SignUpSerializer
-from .tokens import create_jwt_pair_for_user
-from .permissions import IsAdminUser
+from .serializers import SignUpSerializer, CustomUserSerializer
+from .permissions import IsAdminUser, IsOwnerOrReadOnly, IsClientOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
 
+class ClientView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.filter(user_type='client')
+    serializer_class = CustomUserSerializer
+    permission_classes = (IsClientOrReadOnly,)
+
+
+class OwnerView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.filter(user_type='owner')
+    serializer_class = CustomUserSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
 
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = [IsAdminUser, IsAuthenticated]
+
     def post(self, request: Request):
         data = request.data
 
@@ -37,27 +48,19 @@ class SignUpView(generics.GenericAPIView):
 
 class LoginView(APIView):
     serializer_class = SignUpSerializer
-    permission_classes = [IsAdminUser, IsAuthenticated]
-    def post(self, request: Request):
+
+    def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        user = authenticate(email=email, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
-
-            tokens = create_jwt_pair_for_user(user)
-
-            response = {"message": "Login Successfull", "tokens": tokens}
+            response = {"message": "Login Successful"}
             return Response(data=response, status=status.HTTP_200_OK)
-
         else:
-            return Response(data={"message": "Invalid email or password"})
+            return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request: Request):
-        content = {"user": str(request.user), "auth": str(request.auth)}
-
-        return Response(data=content, status=status.HTTP_200_OK)
 
 class CarReservationViewSet(mixins.UpdateModelMixin,
                             mixins.CreateModelMixin,
@@ -78,5 +81,3 @@ class AccommodationReservationViewSet(mixins.ListModelMixin,
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = AccommodationReservationFilter
-
-
