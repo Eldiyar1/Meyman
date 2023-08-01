@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import CarReservation, AccommodationReservation, CustomUser
+from .models import Profile, CarReservation, AccommodationReservation, AdminReview
 
-admin.site.register(CustomUser)
+admin.site.register(Profile)
 admin.site.register(CarReservation)
 admin.site.register(AccommodationReservation)
+admin.site.register(AdminReview)
