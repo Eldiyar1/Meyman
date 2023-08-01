@@ -67,6 +67,7 @@ class Car(models.Model):
     year = models.PositiveIntegerField(verbose_name='Год выпуска автомобиля')
     description = models.TextField(verbose_name='Описание автомобиля', blank=True)
     fuel_consumption = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход топлива на 100км')
+    driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
     operating_area = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
                                       verbose_name='Территория эксплуатации')
