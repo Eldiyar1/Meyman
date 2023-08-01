@@ -1,45 +1,11 @@
 from django.db import models
+from .constants import *
 
 
 class Housing(models.Model):
     class Meta:
         verbose_name = "Жильё"
         verbose_name_plural = "Жильё"
-
-    HOUSING_CHOICES = (
-        ('Отели', 'Отели'),
-        ('Хостелы', 'Хостелы'),
-        ('Апартаменты', 'Апартаменты'),
-        ('Гостевые дома', 'Гостевые дома'),
-        ('Санатории', 'Санатории'),
-    )
-
-    ACCOMMODATION_CHOICES = (
-        ("Жилье целиком", "Жилье целиком"),
-        ("Комната", "Комната"),
-        ("Общая комната", "Общая комната"),
-    )
-
-    BEDROOM_CHOICES = (
-        ("1 спальня", "1 спальня"),
-        ("2 спальни", "2 спальни"),
-        ("Больше 3 спален", "Больше 3 спален"),
-    )
-
-    BED_CHOICES = (
-        ("Отдельные", "Отдельные"),
-        ("Двуспальная", "Двуспальная"),
-        ("Больше 3х", "Больше 3х"),
-        ("Kingsize", "Kingsize"),
-        ("Queensize ", "Queensize "),
-    )
-
-    FOOD_CHOICES = (
-        ("Все включено", "Все включено"),
-        ("Завтрак включен", "Завтрак включен"),
-        ("Не включено", "Не включено"),
-        ("С собственной кухней", "С собственной кухней"),
-    )
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     image = models.ImageField(upload_to='images/housing/', verbose_name="Изображение места жительства")

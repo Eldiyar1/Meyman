@@ -14,7 +14,7 @@ router.registry.extend(travel_service_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(router.urls)),
+    path('api/', include(router.urls)),
     path('api/travel/', include('apps.travel.urls')),
     path('api/users/', include('apps.users.urls')),
     path('api/news/', include('apps.news.urls')),

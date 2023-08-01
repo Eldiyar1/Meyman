@@ -5,6 +5,7 @@ from apps.travel_service.models import Transfer
 from django.contrib.auth.models import AbstractBaseUser,  PermissionsMixin
 from .constants import *
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 
@@ -20,6 +21,23 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'user_type']
+
+    def __str__(self):
+        return self.email
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE
+    )
+    avatar = models.ImageField(
+        upload_to='avatars/', blank=True, null=True, verbose_name='Profiles_avatar'
+    )
+    email = models.EmailField(
+        null=True, verbose_name='Email'
+    )
+    phone_number = PhoneNumberField(
+        null=True, verbose_name='Номер телефона'
+    )
 
     def __str__(self):
         return self.email
@@ -53,6 +71,7 @@ class AdminReview(models.Model):
     author = models.CharField(max_length=100)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    photo = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.author
