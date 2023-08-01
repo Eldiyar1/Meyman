@@ -31,6 +31,9 @@ class HousingSerializer(WritableNestedModelSerializer):
             data['room_amenities'] = {key: value for key, value in data['room_amenities'].items() if value is not False}
         return data
 
+    def get_stars(self, obj):
+        return '*' * obj.stars
+
 
 class HotelSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):

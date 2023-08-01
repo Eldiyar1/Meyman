@@ -1,45 +1,14 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
+    FOOD_CHOICES, PARKING_CHOICES
+from apps.travel_service.constants import DESTINATION_CHOICES
 
 
 class Housing(models.Model):
     class Meta:
         verbose_name = "Жильё"
         verbose_name_plural = "Жильё"
-
-    HOUSING_CHOICES = (
-        ('Отели', 'Отели'),
-        ('Хостелы', 'Хостелы'),
-        ('Апартаменты', 'Апартаменты'),
-        ('Гостевые дома', 'Гостевые дома'),
-        ('Санатории', 'Санатории'),
-    )
-
-    ACCOMMODATION_CHOICES = (
-        ("Жилье целиком", "Жилье целиком"),
-        ("Комната", "Комната"),
-        ("Общая комната", "Общая комната"),
-    )
-
-    BEDROOM_CHOICES = (
-        ("1 спальня", "1 спальня"),
-        ("2 спальни", "2 спальни"),
-        ("Больше 3 спален", "Больше 3 спален"),
-    )
-
-    BED_CHOICES = (
-        ("Отдельные", "Отдельные"),
-        ("Двуспальная", "Двуспальная"),
-        ("Больше 3х", "Больше 3х"),
-        ("Kingsize", "Kingsize"),
-        ("Queensize ", "Queensize "),
-    )
-
-    FOOD_CHOICES = (
-        ("Все включено", "Все включено"),
-        ("Завтрак включен", "Завтрак включен"),
-        ("Не включено", "Не включено"),
-        ("С собственной кухней", "С собственной кухней"),
-    )
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     image = models.ImageField(upload_to='images/housing/', verbose_name="Изображение места жительства")
@@ -48,6 +17,14 @@ class Housing(models.Model):
     bathrooms = models.PositiveIntegerField(verbose_name='Количество ванн', default=1)
     beds = models.PositiveIntegerField(verbose_name='Количество кроватей', default=1)
     location = models.CharField(max_length=255, verbose_name="местоположение жилища")
+    check_in_time_start = models.TimeField(verbose_name="Заезд С", null=True)
+    check_in_time_end = models.TimeField(verbose_name="Заезд До", null=True)
+    check_out_time_start = models.TimeField(verbose_name="Отъезд С", null=True)
+    check_out_time_end = models.TimeField(verbose_name="Отъезд До", null=True)
+    region = models.CharField(max_length=255, choices=DESTINATION_CHOICES, verbose_name="Область")
+    address = models.CharField(max_length=255, verbose_name="Адрес")
+    stars = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)],
+                                        verbose_name='Количество звезд')
     housing_type = models.CharField(max_length=255, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=255, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     bedrooms = models.CharField(max_length=255, choices=BEDROOM_CHOICES, default="Не включено",
@@ -55,9 +32,12 @@ class Housing(models.Model):
     bed_type = models.CharField(max_length=255, choices=BED_CHOICES, verbose_name="Тип кроватей")
     food_type = models.CharField(max_length=255, choices=FOOD_CHOICES, default="Не включено",
                                  verbose_name="Тип питания")
+    parking_service = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no',
+                                       verbose_name='Услуги парковки')
 
-    def __str__(self):
-        return self.housing_name
+
+def __str__(self):
+    return self.housing_name
 
 
 class Hotel(Housing):
@@ -95,7 +75,6 @@ class HousingAmenities(models.Model):
                                    null=True)
     free_internet = models.BooleanField(default=False, verbose_name='Бесплатный интернет')
     spa_services = models.BooleanField(default=False, verbose_name="Спа услуги")
-    parking = models.BooleanField(default=False, verbose_name="Парковка")
     bar_or_restaurant = models.BooleanField(default=False, verbose_name="Бар/Ресторан")
     pool = models.BooleanField(default=False, verbose_name="Бассейн")
     airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
@@ -113,7 +92,6 @@ class HousingAmenities(models.Model):
     wine_champagne = models.BooleanField(default=False, verbose_name='Вино/шампанское (платно)')
     kids_menu = models.BooleanField(default=False, verbose_name='Детское меню (платно)')
     breakfast_in_room = models.BooleanField(default=False, verbose_name='Завтрак в номер')
-    restaurant = models.BooleanField(default=False, verbose_name='Archa Restaurant')
     free_wifi = models.BooleanField(default=False, verbose_name='Бесплатный Wi-Fi на территории всего отеля')
     daily_cleaning = models.BooleanField(default=False, verbose_name='Ежедневная уборка')
     laundry_service = models.BooleanField(default=False, verbose_name='Услуги по глажению одежды (платно)')
@@ -168,11 +146,13 @@ class HousingAmenities(models.Model):
                                                         verbose_name='Индивидуальная регистрация заезда/отъезда')
     dry_cleaning = models.BooleanField(default=False, verbose_name='Сухая чистка')
     shoe_shine = models.BooleanField(default=False, verbose_name='Чистка обуви')
+    kids_playground = models.BooleanField(default=False, verbose_name='Детская площадка')
+    allow_children = models.BooleanField(verbose_name="C детьми?", default=False)
+    allow_pets = models.BooleanField(verbose_name="C домашними животными", default=False)
 
-
-class Meta:
-    verbose_name = "Удобства в объекте"
-    verbose_name_plural = "Удобства в объекте"
+    class Meta:
+        verbose_name = "Удобства в объекте"
+        verbose_name_plural = "Удобства в объекте"
 
 
 class RoomAmenities(models.Model):
