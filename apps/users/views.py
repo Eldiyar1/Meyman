@@ -1,8 +1,10 @@
 from rest_framework import mixins, viewsets
 
-from .models import Profile, CarReservation, AccommodationReservation
-from .serializers import ProfileSerializer, CarReservationSerializer, AccommodationReservationSerializer
+from .models import Profile, CarReservation, AccommodationReservation, AdminReview
+from .serializers import ProfileSerializer, CarReservationSerializer, AccommodationReservationSerializer, \
+    AdminReviewSerializer
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdminUserOrReadOnly
 
 
 class ProfileViewSet(mixins.ListModelMixin,
@@ -32,3 +34,19 @@ class AccommodationReservationViewSet(mixins.UpdateModelMixin,
     serializer_class = AccommodationReservationSerializer
     permission_classes = [IsAuthenticated]
 
+
+class AdminReviewViewSet(mixins.ListModelMixin,
+                         mixins.CreateModelMixin,
+                         viewsets.GenericViewSet):
+    queryset = AdminReview.objects.all()
+    serializer_class = AdminReviewSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class AdminReviewDetailViewSet(mixins.RetrieveModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.DestroyModelMixin,
+                               viewsets.GenericViewSet):
+    queryset = AdminReview.objects.all()
+    serializer_class = AdminReviewSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
