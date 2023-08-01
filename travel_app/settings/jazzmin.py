@@ -8,7 +8,7 @@ JAZZMIN_SETTINGS = {
     "search_model": ["auth.User", "auth.Group",  "apps.travel", "apps.weather_forecast", "apps.travel_service"],    # Для поиска пользователей или группы
 
 
-    # Header (пока только базовые вещи исправим смотря на тз)
+    # Header (пока только базовые вещи исправим смотря на тз).
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
