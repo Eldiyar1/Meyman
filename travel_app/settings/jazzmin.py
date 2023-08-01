@@ -18,6 +18,7 @@ JAZZMIN_SETTINGS = {
         # telega
         {"name": "Support", "url": "https://t.me/Abdykadyrov_S", "new_window": True},
 
+        {"name": "Support(Технический)", "url": "https://t.me/islaw_BT", "new_window": True},            
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
 
