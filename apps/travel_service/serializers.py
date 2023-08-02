@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Search, Transfer, Car
-from .constants import DESTINATION_CHOICES
+from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 
 class SearchSerializer(serializers.ModelSerializer):
@@ -30,6 +30,8 @@ class TransferSerializer(serializers.ModelSerializer):
 class CarSerializer(serializers.ModelSerializer):
     operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                      label="Территория эксплуатации")
+    has_safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
+                                                           label="Наличие системы безопасности")
 
     class Meta:
         model = Car
