@@ -11,6 +11,7 @@ from googletrans import Translator
 
 translator = Translator()
 
+
 class LanguageParamMixin:
     def get_language(self):
         return self.request.query_params.get('lang', 'ru')
@@ -37,21 +38,20 @@ class HotelViewSet(AbstractHousingModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
-    
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         lang = self.get_language()
 
         instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text       
+        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
         instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text    
+        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text    
+        instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
 
 
 class HostelViewSet(AbstractHousingModelViewSet):
@@ -66,21 +66,20 @@ class HostelViewSet(AbstractHousingModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
-    
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         lang = self.get_language()
 
         instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text       
+        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
         instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text    
+        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text    
+        instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
 
 
 class ApartmentViewSet(AbstractHousingModelViewSet):
@@ -101,15 +100,15 @@ class ApartmentViewSet(AbstractHousingModelViewSet):
         lang = self.get_language()
 
         instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text       
+        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
         instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text    
+        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text    
+        instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
+
 
 class GuestHouseViewSet(AbstractHousingModelViewSet):
     queryset = GuestHouse.objects.all()
@@ -123,21 +122,20 @@ class GuestHouseViewSet(AbstractHousingModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
-    
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         lang = self.get_language()
 
         instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text       
+        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
         instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text    
+        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text    
+        instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
 
 
 class SanatoriumViewSet(AbstractHousingModelViewSet):
@@ -152,18 +150,17 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
-    
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         lang = self.get_language()
 
         instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text       
+        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
         instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text    
+        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text    
+        instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
