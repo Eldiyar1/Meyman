@@ -11,14 +11,7 @@ class Housing(models.Model):
     class Meta:
         verbose_name = "Жильё"
         verbose_name_plural = "Жильё"
-    STAR_CHOICES = [
-        (1, '*'),
-        (2, '**'),
-        (3, '***'),
-        (4, '****'),
-        (5, '*****'),
-        (0, 'Без звезд'),
-    ]
+
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     image = models.ImageField(upload_to='images/housing/', verbose_name="Изображение места жительства")
     description = models.TextField(verbose_name="Описание места жительства")
