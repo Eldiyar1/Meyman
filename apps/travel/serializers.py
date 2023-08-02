@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from drf_writable_nested import WritableNestedModelSerializer
 from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities, Housing
 
@@ -6,13 +7,12 @@ from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAme
 class HousingAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingAmenities
-        fields = '__all__'
-
+        exclude = ('housing',)
 
 class RoomAmenitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomAmenities
-        fields = '__all__'
+        exclude = ('housing',)
 
 
 class HousingSerializer(WritableNestedModelSerializer):
@@ -31,12 +31,13 @@ class HousingSerializer(WritableNestedModelSerializer):
             data['room_amenities'] = {key: value for key, value in data['room_amenities'].items() if value is not False}
         return data
 
+    def get_stars(self, obj):
+        return '*' * obj.stars
+
 
 class HotelSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = Hotel
-
-
 class HostelSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = Hostel
@@ -47,10 +48,10 @@ class ApartmentSerializer(HousingSerializer):
         model = Apartment
 
 
+
 class GuestHouseSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = GuestHouse
-
 
 class SanatoriumSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):

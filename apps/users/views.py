@@ -1,8 +1,9 @@
-
 from rest_framework import mixins, viewsets
 from .models import CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
 from .serializers import CarReservationSerializer, AccommodationReservationSerializer, ProfileSerializer, \
     AdminReviewSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import AccommodationReservationFilter
 from django.contrib.auth import authenticate
 from rest_framework import generics, status
 from rest_framework.request import Request
@@ -15,7 +16,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-# Create your views here.
 class ClientView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(user_type='client')
     serializer_class = CustomUserSerializer
@@ -26,6 +26,7 @@ class OwnerView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(user_type='owner')
     serializer_class = CustomUserSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+
 
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
@@ -92,12 +93,17 @@ class CarReservationViewSet(mixins.UpdateModelMixin,
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class AccommodationReservationViewSet(mixins.UpdateModelMixin,
+class AccommodationReservationViewSet(mixins.ListModelMixin,
                                       mixins.CreateModelMixin,
+                                      mixins.RetrieveModelMixin,
+                                      mixins.UpdateModelMixin,
+                                      mixins.DestroyModelMixin,
                                       viewsets.GenericViewSet):
     queryset = AccommodationReservation.objects.all()
     serializer_class = AccommodationReservationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AccommodationReservationFilter
 
 
 class AdminReviewViewSet(mixins.ListModelMixin,

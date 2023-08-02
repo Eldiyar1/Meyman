@@ -1,6 +1,7 @@
 
 
 from .models import  CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
+
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import ValidationError
@@ -56,7 +57,6 @@ class CarReservationSerializer(serializers.ModelSerializer):
 class AccommodationReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
-
     class Meta:
         model = AccommodationReservation
         fields = '__all__'
@@ -66,3 +66,4 @@ class AdminReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminReview
         fields = '__all__'
+

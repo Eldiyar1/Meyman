@@ -10,7 +10,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=45)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
@@ -54,7 +53,6 @@ class CarReservation(models.Model):
 
 class AccommodationReservation(models.Model):
 
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     accommodation = models.ForeignKey(Housing, on_delete=models.CASCADE)
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
@@ -75,3 +73,4 @@ class AdminReview(models.Model):
 
     def __str__(self):
         return self.author
+

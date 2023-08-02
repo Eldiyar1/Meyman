@@ -52,3 +52,4 @@ class CurrencyConverterViewSet(viewsets.ViewSet):
 
         except requests.RequestException:
             return Response({'error': 'Failed to fetch currency rates'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

@@ -14,5 +14,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('owner/', OwnerView.as_view(), name='owner'),
     path('client/', ClientView.as_view(), name='client')
+
 ]
 urlpatterns += router.urls
