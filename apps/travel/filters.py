@@ -7,8 +7,8 @@ from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing
 class AbstractHousingFilter(django_filters.FilterSet):
     price_per_night__gte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='gte')
     price_per_night__lte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='lte')
-    housing_amenities = django_filters.MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES)
-    room_amenities = django_filters.MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES)
+    housing_amenities = django_filters.MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="Жилищные удобства")
+    room_amenities = django_filters.MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
 
     class Meta:
         model = Housing
