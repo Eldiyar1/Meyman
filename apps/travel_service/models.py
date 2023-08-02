@@ -5,6 +5,7 @@ from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, 
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, MINIMUM_AGE_CHOICES, SAFETY_EQUIPMENT_CHOICES
 from apps.users.constants import PAYMENT_CHOICES
 from multiselectfield import MultiSelectField
+from multiupload.fields import MultiImageField
 
 
 class Search(models.Model):
@@ -71,7 +72,7 @@ class Car(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
     operating_area = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
                                       verbose_name='Территория эксплуатации')
-    has_safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_choices=6, max_length=100,
+    has_safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
                                             verbose_name='Наличие системы безопасности')
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")

@@ -100,3 +100,12 @@ CURRENCY_CHOICES = (
     ('Сом', 'Сом'),
     ('USD', 'USD'),
 )
+
+SAFETY_EQUIPMENT_CHOICES = [
+    ('fire_extinguisher', 'Наличие огнетушителя'),
+    ('first_aid_kit', 'Наличие аптечки'),
+    ('spare_wheel', 'Наличие запасного колеса'),
+    ('airbags', 'Наличие подушка безопасности'),
+    ('emergency_tools', 'Наличие инструментов аварийной ситуации'),
+    ('dashboard_camera', 'Наличие авторегистратора'),
+]
