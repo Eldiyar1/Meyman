@@ -8,7 +8,7 @@ JAZZMIN_SETTINGS = {
     "search_model": ["auth.User", "auth.Group",  "apps.travel", "apps.weather_forecast", "apps.travel_service"],    # Для поиска пользователей или группы
 
 
-    # Header (пока только базовые вещи исправим смотря на тз)
+    # Header (пока только базовые вещи исправим смотря на тз).
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
@@ -18,6 +18,7 @@ JAZZMIN_SETTINGS = {
         # telega
         {"name": "Support", "url": "https://t.me/Abdykadyrov_S", "new_window": True},
 
+        {"name": "Support(Технический)", "url": "https://t.me/islaw_BT", "new_window": True},
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
 
