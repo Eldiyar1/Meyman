@@ -4,6 +4,9 @@ from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROO
     FOOD_CHOICES, PARKING_CHOICES
 from apps.travel_service.constants import DESTINATION_CHOICES
 
+from django.utils.text import slugify
+
+
 
 class Housing(models.Model):
     class Meta:
@@ -34,6 +37,21 @@ class Housing(models.Model):
                                  verbose_name="Тип питания")
     parking_service = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no',
                                        verbose_name='Услуги парковки')
+
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        verbose_name="человеко-понятный url",
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return self.housing_name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.housing_name)
+        super().save(*args, **kwargs)
 
 
 def __str__(self):

@@ -17,6 +17,9 @@ class HousingAdmin(admin.ModelAdmin):
     'bed_type', 'food_type']
     list_filter = ['housing_type']
     search_fields = ['housing_name']
+    prepopulated_fields = {'slug' : ('housing_name', )}
+
+    
 
 
 @admin.register(Hotel)

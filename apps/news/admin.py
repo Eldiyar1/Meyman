@@ -7,4 +7,6 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ['title', 'author_fullname', 'published_date']
     list_filter = ['published_date']
     search_fields = ['title', 'author_fullname']
+    prepopulated_fields = {'slug' : ('title', )}
+
 
