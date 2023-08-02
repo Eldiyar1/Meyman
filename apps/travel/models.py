@@ -41,9 +41,8 @@ class Housing(models.Model):
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_choices=50, max_length=255,
                                       verbose_name='Удобства в номере')
 
-
-def __str__(self):
-    return self.housing_name
+    def __str__(self):
+        return self.housing_name
 
 
 class Hotel(Housing):
@@ -74,4 +73,3 @@ class Sanatorium(Housing):
     class Meta:
         verbose_name = "Санаторий"
         verbose_name_plural = "Санатории"
-
