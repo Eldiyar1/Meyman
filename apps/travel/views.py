@@ -53,7 +53,6 @@ class HotelViewSet(AbstractHousingModelViewSet):
         return Response(serializer.data)
     
 
-
 class HostelViewSet(AbstractHousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer

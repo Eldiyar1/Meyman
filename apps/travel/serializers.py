@@ -1,38 +1,16 @@
 from rest_framework import serializers
-from drf_writable_nested import WritableNestedModelSerializer
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, HousingAmenities, RoomAmenities, Housing
+
+from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing
 
 
-class HousingAmenitiesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HousingAmenities
-        exclude = ('housing',)
-
-
-class RoomAmenitiesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomAmenities
-        exclude = ('housing',)
-
-
-class HousingSerializer(WritableNestedModelSerializer):
-    housing_amenities = HousingAmenitiesSerializer(required=False)
-    room_amenities = RoomAmenitiesSerializer(required=False)
+class HousingSerializer(serializers.ModelSerializer):
+    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Комнатные удобства")
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Жилищные удобства")
 
     class Meta:
         model = Housing
         fields = '__all__'
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        if data['housing_amenities'] is not None:
-            data['housing_amenities'] = {k: v for k, v in data['housing_amenities'].items() if v is not False}
-        if data['room_amenities'] is not None:
-            data['room_amenities'] = {key: value for key, value in data['room_amenities'].items() if value is not False}
-        return data
-
-    def get_stars(self, obj):
-        return '*' * obj.stars
 
 
 class HotelSerializer(HousingSerializer):
@@ -58,4 +36,3 @@ class GuestHouseSerializer(HousingSerializer):
 class SanatoriumSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = Sanatorium
-
