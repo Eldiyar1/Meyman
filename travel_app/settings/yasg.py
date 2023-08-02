@@ -5,9 +5,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Meyman API",
+      title="Meyman",
       default_version='v1',
-      description="Meyman",
+      description="В целях обучения",
       terms_of_service="https://t.me/Abdykadyrov_S",
       contact=openapi.Contact(email="abdykadyrovsyimyk0708@gmail.com"),
       license=openapi.License(name="BSD License"),
