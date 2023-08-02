@@ -21,6 +21,6 @@ class TransferAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'model', 'year', 'fuel_consumption', 'operating_area')
+    list_display = ('brand', 'model', 'year', 'fuel_consumption')
     list_filter = ('brand', 'model', 'year', 'fuel_consumption')
     search_fields = ('brand', 'model', 'year')

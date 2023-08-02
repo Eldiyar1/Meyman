@@ -2,10 +2,10 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils import timezone
 from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
-    FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, MINIMUM_AGE_CHOICES, SAFETY_EQUIPMENT_CHOICES
+    FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, MINIMUM_AGE_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
+    BRAND_CHOICES, COLOR_CHOICES, YES_OR_NO
 from apps.users.constants import PAYMENT_CHOICES
 from multiselectfield import MultiSelectField
-from multiupload.fields import MultiImageField
 
 
 class Search(models.Model):
@@ -62,17 +62,22 @@ class Car(models.Model):
     minimum_age = models.CharField(choices=MINIMUM_AGE_CHOICES, max_length=2, verbose_name='Минимальный возраст')
     rental_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма аренды (Сутки)')
     car_address = models.CharField(max_length=255, verbose_name='Адрес')
-    brand = models.CharField(max_length=50, verbose_name='Марка автомобиля')
+    brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка автомобиля')
     model = models.CharField(max_length=50, verbose_name='Модель автомобиля')
-    color = models.CharField(max_length=50, verbose_name='Цвет автомобиля', blank=True)
+    color = models.CharField(max_length=50, choices=COLOR_CHOICES, verbose_name='Цвет автомобиля', blank=True)
     year = models.PositiveIntegerField(verbose_name='Год выпуска автомобиля')
     description = models.TextField(verbose_name='Описание автомобиля', blank=True)
     fuel_consumption = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход топлива на 100км')
     driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
-    operating_area = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
-                                      verbose_name='Территория эксплуатации')
+    pickup_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
+                                     verbose_name='Регион получения')
+    return_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
+                                     verbose_name='Регион возврата')
     has_safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
                                             verbose_name='Наличие системы безопасности')
+    air_conditioner = models.BooleanField(default=False, choices=YES_OR_NO, verbose_name='Кондиционер')
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
+    can_arrange_pickup_return = models.CharField(choices=YES_OR_NO, max_length=10,
+                                    verbose_name='Может ли клиент договориться о месте получения/возврата автомобиля')

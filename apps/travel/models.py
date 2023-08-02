@@ -36,9 +36,9 @@ class Housing(models.Model):
                                  verbose_name="Тип питания")
     parking_service = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no',
                                        verbose_name='Услуги парковки')
-    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_choices=50, max_length=255,
+    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=255,
                                          verbose_name='Удобства в объекте')
-    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_choices=50, max_length=255,
+    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255,
                                       verbose_name='Удобства в номере')
 
     def __str__(self):

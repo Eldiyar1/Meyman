@@ -21,4 +21,4 @@ class CarFilter(django_filters.FilterSet):
     class Meta:
         model = Car
         fields = ('min_rental_price', 'max_rental_price', 'brand', 'color', 'body_type', 'steering', 'drive_type',
-                  'passenger_capacity', 'fuel_type', 'condition', 'transmission')
+                  'passenger_capacity', 'fuel_type', 'condition', 'transmission', 'air_conditioner')

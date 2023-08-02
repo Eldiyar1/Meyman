@@ -12,9 +12,8 @@ class AbstractHousingFilter(django_filters.FilterSet):
 
     class Meta:
         model = Housing
-        fields = ('price_per_night__gte', 'price_per_night__lte', 'beds', 'food_type', 'housing_type',
-                  'accommodation_type', 'bedrooms', 'bed_type', 'parking_service', 'housing_amenities',
-                  'room_amenities')
+        fields = ('price_per_night__gte', 'price_per_night__lte', 'beds', 'food_type', 'housing_type', 'stars',
+                  'accommodation_type', 'bedrooms', 'bed_type', 'parking_service', 'housing_amenities', 'room_amenities')
 
 
 class HotelFilter(AbstractHousingFilter):

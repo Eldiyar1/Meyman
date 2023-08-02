@@ -28,8 +28,11 @@ class TransferSerializer(serializers.ModelSerializer):
 
 
 class CarSerializer(serializers.ModelSerializer):
-    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                     label="Территория эксплуатации")
+    pickup_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+                                                    label="Регион получения")
+    return_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+                                                    label="    Регион возврата")
+
     has_safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
                                                            label="Наличие системы безопасности")
 
