@@ -8,7 +8,3 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ['published_date']
     search_fields = ['title', 'author_fullname']
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return ['published_date']
-        return []

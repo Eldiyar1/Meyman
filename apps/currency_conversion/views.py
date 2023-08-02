@@ -25,7 +25,8 @@ class CurrencyConverterViewSet(viewsets.ViewSet):
             response = requests.get(BANK, headers=headers)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
-            convert = soup.find_all("td", {"class": "excurr", "class": "exrate"})   
+
+            convert = soup.find_all("td", {"class": "excurr", "class": "exrate"})
             usd = float(convert[0].text.replace(',', '.'))
             eur = float(convert[2].text.replace(',', '.'))
             rub = float(convert[4].text.replace(',', '.'))
@@ -51,5 +52,4 @@ class CurrencyConverterViewSet(viewsets.ViewSet):
 
         except requests.RequestException:
             return Response({'error': 'Failed to fetch currency rates'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
 

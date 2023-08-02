@@ -5,6 +5,5 @@ from .views import CurrencyConverterViewSet
 router = DefaultRouter()
 router.register(r'currency-conversion', CurrencyConverterViewSet, basename='currency_conversion')
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+
+urlpatterns = router.urls

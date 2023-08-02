@@ -2,8 +2,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from geocoder import ip
+from django_filters.rest_framework import DjangoFilterBackend
 import pyowm
-
+from .filters import WeatherFilter
 from .serializers import WeatherSerializer
 
 class WeatherViewSet(ViewSet):
@@ -23,13 +24,15 @@ class WeatherViewSet(ViewSet):
             return Response({'error': 'Location not found'}, status=status.HTTP_404_NOT_FOUND)
 
         w = observation.weather
-        
+
+
         data = {
             'location': location,
             'temperature': w.temperature('celsius')['temp'],
             'humidity': w.humidity,
             'weather_description': w.status,
         }
+
         
         serializer = WeatherSerializer(data=data)
         if serializer.is_valid():
@@ -37,3 +40,7 @@ class WeatherViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = WeatherFilter
+
