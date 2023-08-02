@@ -3,8 +3,8 @@ from django.core.validators import MinValueValidator
 from django.utils import timezone
 from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, MINIMUM_AGE_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
-    BRAND_CHOICES, COLOR_CHOICES, YES_OR_NO
-from apps.users.constants import PAYMENT_CHOICES
+    BRAND_CHOICES, COLOR_CHOICES, YES_OR_NO, AMENITIES_CHOICES
+from apps.travel.constants import PAYMENT_CHOICES
 from multiselectfield import MultiSelectField
 
 
@@ -70,13 +70,13 @@ class Car(models.Model):
     fuel_consumption = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход топлива на 100км')
     driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
-    pickup_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
+    pickup_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=100,
                                      verbose_name='Регион получения')
-    return_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=50,
+    return_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=100,
                                      verbose_name='Регион возврата')
     has_safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
                                             verbose_name='Наличие системы безопасности')
-    air_conditioner = models.CharField(choices=YES_OR_NO, verbose_name='Кондиционер', max_length=10,)
+    amenities = MultiSelectField(choices=AMENITIES_CHOICES, max_length=100, verbose_name="Внутренние удобства")
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
     can_arrange_pickup_return = models.CharField(choices=YES_OR_NO, max_length=10,

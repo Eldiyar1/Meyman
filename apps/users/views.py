@@ -2,7 +2,6 @@ from rest_framework import mixins, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import CarReservation, AccommodationReservation, CustomUser
 from .serializers import CarReservationSerializer, AccommodationReservationSerializer
-from .filters import AccommodationReservationFilter
 from django.contrib.auth import authenticate
 from rest_framework import generics, status
 from rest_framework.request import Request
@@ -79,5 +78,3 @@ class AccommodationReservationViewSet(mixins.ListModelMixin,
     queryset = AccommodationReservation.objects.all()
     serializer_class = AccommodationReservationSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = AccommodationReservationFilter

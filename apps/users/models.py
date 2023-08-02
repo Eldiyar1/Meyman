@@ -39,10 +39,6 @@ class AccommodationReservation(models.Model):
     accommodation = models.ForeignKey(Housing, on_delete=models.CASCADE)
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
-    booking_type = models.CharField(max_length=50, choices=BOOKING_CHOICES, default="Без банковской карты",
-                                    verbose_name="Бронирование")
-    payment_type = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас",
-                                    verbose_name="Оплата")
 
     def __str__(self):
         return str(self.user)

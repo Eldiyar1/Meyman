@@ -1,14 +1,5 @@
 from django.contrib.auth.base_user import BaseUserManager
 
-BOOKING_CHOICES = (
-        ("Без банковской карты", "Без банковской карты"),
-        ("Бесплатная отмена", "Бесплатная отмена"),
-    )
-PAYMENT_CHOICES = (
-        ("К оплате сейчас", "К оплате сейчас"),
-        ("Предоплата", "Предоплата"),
-        ("Оплата наличными", "Оплата наличными"),
-    )
 USER_TYPE_CHOICES = (
         ('client', 'Client'),
         ('owner', 'Owner'),

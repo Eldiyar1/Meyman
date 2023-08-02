@@ -3,8 +3,8 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
-    FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES
-from apps.travel_service.constants import DESTINATION_CHOICES
+    FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, PAYMENT_CHOICES
+from apps.travel_service.constants import DESTINATION_CHOICES, YES_OR_NO
 from django.utils.text import slugify
 
 
@@ -41,6 +41,11 @@ class Housing(models.Model):
                                          verbose_name='Удобства в объекте')
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255,
                                       verbose_name='Удобства в номере')
+    without_credit_card = models.BooleanField(choices=YES_OR_NO, default=True, verbose_name="Без банковской карты")
+    free_cancellation = models.BooleanField(choices=YES_OR_NO, default=False, verbose_name="Бесплатная отмена")
+    payment_type = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас",
+                                    verbose_name="Оплата")
+
 
     slug = models.SlugField(
         max_length=255,
