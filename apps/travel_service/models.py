@@ -76,7 +76,7 @@ class Car(models.Model):
                                      verbose_name='Регион возврата')
     has_safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
                                             verbose_name='Наличие системы безопасности')
-    air_conditioner = models.BooleanField(default=False, choices=YES_OR_NO, verbose_name='Кондиционер')
+    air_conditioner = models.CharField(choices=YES_OR_NO, verbose_name='Кондиционер', max_length=10,)
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
     can_arrange_pickup_return = models.CharField(choices=YES_OR_NO, max_length=10,
