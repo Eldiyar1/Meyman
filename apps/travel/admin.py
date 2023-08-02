@@ -4,7 +4,7 @@ from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 
 class HousingAdmin(admin.ModelAdmin):
     list_display = ['housing_name', 'location', 'price_per_night', 'housing_type', 'accommodation_type',
-    'bed_type', 'food_type']
+                    'bed_type', 'food_type']
     list_filter = ['housing_type']
     search_fields = ['housing_name']
     prepopulated_fields = {'slug': ('housing_name',)}

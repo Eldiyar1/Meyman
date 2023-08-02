@@ -57,6 +57,9 @@ class Housing(models.Model):
             self.slug = slugify(self.housing_name)
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.housing_name
+
 
 class Hotel(Housing):
     class Meta:
