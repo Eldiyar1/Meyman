@@ -1,7 +1,8 @@
 from rest_framework import mixins, viewsets
+from .models import CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
+from .serializers import CarReservationSerializer, AccommodationReservationSerializer, ProfileSerializer, \
+    AdminReviewSerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import CarReservation, AccommodationReservation, CustomUser
-from .serializers import CarReservationSerializer, AccommodationReservationSerializer
 from django.contrib.auth import authenticate
 from rest_framework import generics, status
 from rest_framework.request import Request
@@ -9,10 +10,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import SignUpSerializer, CustomUserSerializer
 from .permissions import IsAdminUser, IsOwnerOrReadOnly, IsClientOrReadOnly
+from .tokens import create_jwt_pair_for_user
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-
-# Create your views here.
 
 class ClientView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(user_type='client')
@@ -47,18 +48,40 @@ class SignUpView(generics.GenericAPIView):
 
 class LoginView(APIView):
     serializer_class = SignUpSerializer
+    permission_classes = [IsAdminUser, IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request: Request):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(email=email, password=password)
 
         if user is not None:
-            response = {"message": "Login Successful"}
+
+            tokens = create_jwt_pair_for_user(user)
+
+            response = {"message": "Login Successfull", "tokens": tokens}
             return Response(data=response, status=status.HTTP_200_OK)
+
         else:
-            return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data={"message": "Invalid email or password"})
+
+    def get(self, request: Request):
+        content = {"user": str(request.user), "auth": str(request.auth)}
+
+        return Response(data=content, status=status.HTTP_200_OK)
+
+
+class ProfileViewSet(mixins.ListModelMixin,
+                     mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'user__username'
 
 
 class CarReservationViewSet(mixins.UpdateModelMixin,
@@ -66,7 +89,7 @@ class CarReservationViewSet(mixins.UpdateModelMixin,
                             viewsets.GenericViewSet):
     queryset = CarReservation.objects.all()
     serializer_class = CarReservationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AccommodationReservationViewSet(mixins.ListModelMixin,
@@ -78,3 +101,20 @@ class AccommodationReservationViewSet(mixins.ListModelMixin,
     queryset = AccommodationReservation.objects.all()
     serializer_class = AccommodationReservationSerializer
     permission_classes = [IsAuthenticated]
+
+
+class AdminReviewViewSet(mixins.ListModelMixin,
+                         mixins.CreateModelMixin,
+                         viewsets.GenericViewSet):
+    queryset = AdminReview.objects.all()
+    serializer_class = AdminReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+class AdminReviewDetailViewSet(mixins.RetrieveModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.DestroyModelMixin,
+                               viewsets.GenericViewSet):
+    queryset = AdminReview.objects.all()
+    serializer_class = AdminReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

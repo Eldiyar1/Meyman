@@ -6,7 +6,6 @@ USER_TYPE_CHOICES = (
     )
 
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:

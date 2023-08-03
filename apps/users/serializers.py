@@ -1,7 +1,11 @@
-from .models import  CarReservation, AccommodationReservation, CustomUser
+
+
+from .models import  CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
+
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import ValidationError
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,20 +41,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         token, created = Token.objects.get_or_create(user=user)
 
         return user
-
-
-class CurrentUserPostsSerializer(serializers.ModelSerializer):
-    posts = serializers.HyperlinkedRelatedField(
-        many=True, view_name="post_detail", read_only=True, source='post_set'
-    )
-
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ["id", "username", "email", "posts"]
-
+        model = Profile
+        fields = '__all__'
 class CarReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
+
     class Meta:
         model = CarReservation
         fields = '__all__'
@@ -63,4 +61,9 @@ class AccommodationReservationSerializer(serializers.ModelSerializer):
         model = AccommodationReservation
         fields = '__all__'
 
+
+class AdminReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminReview
+        fields = '__all__'
 

@@ -1,11 +1,12 @@
-from rest_framework import mixins, viewsets
+from django.db.models import Avg
+from rest_framework import mixins, viewsets, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer
+    SanatoriumSerializer, RatingSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
 from googletrans import Translator
 
@@ -23,7 +24,12 @@ class AbstractHousingModelViewSet(LanguageParamMixin, mixins.ListModelMixin,
                                   mixins.UpdateModelMixin,
                                   mixins.DestroyModelMixin,
                                   viewsets.GenericViewSet):
-    pass
+    def average_rating(self):
+        ratings = Rating.objects.filter(housing=self)
+        if ratings.exists():
+            return ratings.aggregate(Avg('rating'))['rating__avg']
+        else:
+            return 0
 
 
 class HotelViewSet(AbstractHousingModelViewSet):
@@ -164,3 +170,8 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer

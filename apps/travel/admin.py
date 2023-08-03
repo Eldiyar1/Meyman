@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating
 
 
 class HousingAdmin(admin.ModelAdmin):
@@ -8,6 +8,11 @@ class HousingAdmin(admin.ModelAdmin):
     list_filter = ['housing_type']
     search_fields = ['housing_name']
     prepopulated_fields = {'slug': ('housing_name',)}
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('rating',)
 
 
 @admin.register(Hotel)
