@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -17,6 +17,15 @@ class HousingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
+        fields = '__all__'
+
+
+class HouseReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = HouseReservation
         fields = '__all__'
 
 

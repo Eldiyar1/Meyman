@@ -2,9 +2,10 @@ from django.db import models
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
+from django.utils import timezone
 from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
     FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, PAYMENT_CHOICES, \
-    RATING_CHOICES
+    RATING_CHOICES, PARKING_LOCATION_CHOICES
 from apps.travel_service.constants import DESTINATION_CHOICES, YES_OR_NO
 from django.utils.text import slugify
 from apps.users.email import CustomUser
@@ -22,10 +23,10 @@ class Housing(models.Model):
     bathrooms = models.PositiveIntegerField(verbose_name='Количество ванн', default=1)
     beds = models.PositiveIntegerField(verbose_name='Количество кроватей', default=1)
     location = models.CharField(max_length=255, verbose_name="местоположение жилища")
-    check_in_time_start = models.TimeField(verbose_name="Заезд С", null=True)
-    check_in_time_end = models.TimeField(verbose_name="Заезд До", null=True)
-    check_out_time_start = models.TimeField(verbose_name="Отъезд С", null=True)
-    check_out_time_end = models.TimeField(verbose_name="Отъезд До", null=True)
+    check_in_time_start = models.TimeField(verbose_name="Заезд С")
+    check_in_time_end = models.TimeField(verbose_name="Заезд До")
+    check_out_time_start = models.TimeField(verbose_name="Отъезд С")
+    check_out_time_end = models.TimeField(verbose_name="Отъезд До")
     region = models.CharField(max_length=255, choices=DESTINATION_CHOICES, verbose_name="Область")
     address = models.CharField(max_length=255, verbose_name="Адрес")
     stars = models.PositiveIntegerField(default=1, validators=[MinValueValidator(0), MaxValueValidator(5)],
@@ -39,6 +40,10 @@ class Housing(models.Model):
                                  verbose_name="Тип питания")
     parking_service = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no',
                                        verbose_name='Услуги парковки')
+    parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+                                           verbose_name='Стоимость парковки в US$ (за день)')
+    parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES, blank=True, null=True,
+                                        verbose_name='Где находится парковка?')
     housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=255,
                                          verbose_name='Удобства в объекте')
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255,
@@ -71,8 +76,22 @@ class Rating(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
     rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='0')
 
-    def __str__(self):
-        return f'{self.housing.housing_name}, {self.user}, {self.rating}'
+
+class HouseReservation(models.Model):
+    class Meta:
+        verbose_name = "Бронь жилья"
+        verbose_name_plural = "Бронь жилья"
+
+    destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
+    check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
+    check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
+    adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
+    teens = models.PositiveIntegerField(default=0, verbose_name="Подростки(от 13-18 лет)")
+    children = models.PositiveIntegerField(default=0, verbose_name="Дети(от 2-12 лет)")
+    infants = models.PositiveIntegerField(default=0, verbose_name="Младенцы(младше 2)")
+    pets = models.PositiveIntegerField(default=0, verbose_name="Домашние животные")
+    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Жилье")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
 
 
 class Hotel(Housing):
