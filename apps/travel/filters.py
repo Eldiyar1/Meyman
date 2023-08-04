@@ -18,7 +18,7 @@ class AbstractHousingFilter(django_filters.FilterSet):
         model = Housing
         fields = ('price_per_night__gte', 'price_per_night__lte', 'housing_type', 'accommodation_type', 'bedrooms',
                   'bed_type', 'food_type', 'stars', 'housing_amenities', 'room_amenities',
-                  'without_credit_card', 'free_cancellation', 'payment')
+                  'without_card', 'free_cancellation', 'payment')
 
 
 class HotelFilter(AbstractHousingFilter):

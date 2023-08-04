@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import Transfer, TransferReservation
-from .serializers import TransferSerializer, TransferReservationSerializer
+from .models import Transfer, TransferReservation, TransferImage
+from .serializers import TransferSerializer, TransferReservationSerializer, TransferImageSerializer
 from .filters import TransferFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from googletrans import Translator
@@ -34,3 +34,8 @@ class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class TransferImageViewSet(viewsets.ModelViewSet):
+    queryset = TransferImage.objects.all()
+    serializer_class = TransferImageSerializer

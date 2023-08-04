@@ -6,10 +6,11 @@ from django.utils import timezone
 from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
     FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, PAYMENT_CHOICES, \
     RATING_CHOICES, PARKING_LOCATION_CHOICES, ACCOMMODATION_TYPE_CHOICES, BREAKFAST_CHOICES, CANCELLATION_CHOICES, \
-    TIME_CHOICES
+    TIME_CHOICES, CHOICES_DA_NET, MAX_IMAGES
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
+
 
 class Housing(models.Model):
     class Meta:
@@ -17,17 +18,16 @@ class Housing(models.Model):
         verbose_name_plural = "Жильё"
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    images = models.ImageField(upload_to='images/housing/', verbose_name="Изображения места жительства")
     description = models.TextField(verbose_name="Описание места жительства")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
-    check_in_time_start = models.TimeField(choices=TIME_CHOICES, verbose_name="Заезд С")
-    check_in_time_end = models.TimeField(choices=TIME_CHOICES, verbose_name="Заезд До")
-    check_out_time_start = models.TimeField(choices=TIME_CHOICES, verbose_name="Отъезд С")
-    check_out_time_end = models.TimeField(choices=TIME_CHOICES, verbose_name="Отъезд До")
-    stars = models.PositiveIntegerField(default=1, validators=[MinValueValidator(0), MaxValueValidator(5)],
-                                        choices=STAR_CHOICES, verbose_name='Количество звезд')
+    check_in_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд С")
+    check_in_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд До")
+    check_out_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Отъезд С")
+    check_out_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Отъезд До")
+    stars = models.IntegerField(default=1, validators=[MinValueValidator(0), MaxValueValidator(5)],
+                                choices=STAR_CHOICES, verbose_name='Количество звезд')
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     bedrooms = models.CharField(max_length=50, choices=BEDROOM_CHOICES, verbose_name="Количество спален")
@@ -50,10 +50,9 @@ class Housing(models.Model):
                                            verbose_name='Стоимость парковки в US$ (за день)')
     parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES,
                                         verbose_name='Местонахождение парковки')
-    without_credit_card = models.BooleanField(default=True, verbose_name="Без банковской карты")
-    free_cancellation = models.BooleanField(default=False, verbose_name="Бесплатная отмена")
-    cancellation_policy = models.CharField(choices=CANCELLATION_CHOICES, max_length=50,
-                                           verbose_name='Правила бесплатной отмены')
+    without_card = models.BooleanField(default=True, choices=CHOICES_DA_NET, verbose_name="Без банковской карты")
+    free_cancellation = models.BooleanField(default=False, choices=CHOICES_DA_NET, verbose_name="Бесплатная отмена")
+    policy = models.CharField(choices=CANCELLATION_CHOICES, max_length=50, verbose_name='Правила бесплатной отмены')
     payment = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас", verbose_name="Оплата")
     room_name = models.CharField(max_length=50, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
@@ -82,22 +81,35 @@ class Housing(models.Model):
             self.slug = slugify(self.housing_name)
         super().save(*args, **kwargs)
 
-    def get_images(self):
-        return self.images.split(',')
 
-    def set_images(self, image_paths):
-        self.images = ','.join(image_paths)
+class HousingImage(models.Model):
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
+    image = models.ImageField(upload_to='images/housing/', verbose_name='Изображение места жительства')
+
+    class Meta:
+        verbose_name = 'Изображение места жительства'
+        verbose_name_plural = 'Изображения места жительства'
+
+    def save(self, *args, **kwargs):
+        if self.housing.housing_images.count() >= MAX_IMAGES:
+            raise ValueError(f'Вы превысили лемит {MAX_IMAGES} изображений')
+        super(HousingImage, self).save(*args, **kwargs)
+
 
 class Rating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
     rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='0')
 
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
+
 
 class HouseReservation(models.Model):
     class Meta:
         verbose_name = "Бронь жилья"
-        verbose_name_plural = "Бронь жилья"
+        verbose_name_plural = "Бронь жилищ"
 
     destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
