@@ -68,7 +68,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 INSTALLED_APPS = INSTALLED_LIBRARY + CREATE_APPS + DJANGO_APPS
-
+CSRF_TRUSTED_ORIGINS = ["https://9dde-109-201-165-30.ngrok-free.app"]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

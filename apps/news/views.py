@@ -1,7 +1,6 @@
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 from .models import News
 from .permissions import IsAdminUserOrReadOnly
 from .serializers import NewsSerializer
@@ -39,6 +38,5 @@ class NewsViewSet(LanguageParamMixin, mixins.ListModelMixin,
         return Response('Объект успешно добавлен в избранное!')
         instance.title = translator.translate(instance.title, dest=lang).text
         instance.content = translator.translate(instance.content, dest=lang).text
-
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
