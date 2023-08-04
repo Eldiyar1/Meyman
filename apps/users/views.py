@@ -118,3 +118,5 @@ class AdminReviewDetailViewSet(mixins.RetrieveModelMixin,
     queryset = AdminReview.objects.all()
     serializer_class = AdminReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+

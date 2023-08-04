@@ -6,3 +6,4 @@ admin.site.register(CarReservation)
 admin.site.register(AccommodationReservation)
 admin.site.register(AdminReview)
 admin.site.register(Profile)
+

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Transfer, TransferReservation
+from .models import Transfer, TransferReservation, TransfersFavorite
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 
@@ -33,3 +33,9 @@ class TransferSerializer(serializers.ModelSerializer):
             data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
 
         return data
+
+
+class TransfersFavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransfersFavorite
+        fields = '__all__'

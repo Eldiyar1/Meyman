@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, HouseFavorite
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer
+    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, HouseFavoriteSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
 from googletrans import Translator
 
@@ -23,13 +23,6 @@ class AbstractHousingModelViewSet(LanguageParamMixin, mixins.ListModelMixin,
                                   mixins.UpdateModelMixin,
                                   mixins.DestroyModelMixin,
                                   viewsets.GenericViewSet):
-
-    @action(detail=True, methods=['POST'])
-    def add_to_favorite(self, request, pk=None):
-        instance = self.get_object()
-        instance.is_favorite = True
-        instance.save()
-        return Response('Объект успешно добавлен в избранное!')
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -58,6 +51,14 @@ class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class HouseFavoriteViewSet(mixins.ListModelMixin,
+                           mixins.CreateModelMixin,
+                           mixins.DestroyModelMixin,
+                           viewsets.GenericViewSet):
+    queryset = HouseFavorite.objects.all()
+    serializer_class = HouseFavoriteSerializer
 
 
 class HotelViewSet(AbstractHousingModelViewSet):

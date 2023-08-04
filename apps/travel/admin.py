@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, HouseFavorite
 
 
 class HousingAdmin(admin.ModelAdmin):
@@ -15,6 +15,11 @@ class HouseReservationAdmin(admin.ModelAdmin):
     list_display = ('destination', 'check_in_date', 'check_out_date', 'adults', 'teens', 'children', 'infants', 'pets')
     list_filter = ('destination', 'check_in_date', 'check_out_date')
     search_fields = ('region',)
+
+
+@admin.register(HouseFavorite)
+class HouseFavoriteAdmin(admin.ModelAdmin):
+    fields = ('user', 'item')
 
 
 @admin.register(Rating)

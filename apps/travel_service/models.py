@@ -74,3 +74,11 @@ class TransferReservation(models.Model):
     transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, null=True, blank=True,
                                     verbose_name="Трансфер")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
+
+
+
+class TransfersFavorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    item = models.ForeignKey(Transfer, on_delete=models.CASCADE)
+
+

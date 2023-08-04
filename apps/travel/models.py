@@ -94,6 +94,15 @@ class HouseReservation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
 
 
+class HouseFavorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    item = models.ForeignKey(Housing, on_delete=models.CASCADE)
+
+
+
+
+
+
 class Hotel(Housing):
     class Meta:
         verbose_name = "Отель"

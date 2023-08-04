@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, HouseFavorite
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -26,6 +26,12 @@ class HouseReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HouseReservation
+        fields = '__all__'
+
+
+class HouseFavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HouseFavorite
         fields = '__all__'
 
 

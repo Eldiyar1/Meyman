@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,  PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .constants import *
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
@@ -21,6 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+
 class Profile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE
@@ -37,6 +38,8 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.email
+
+
 class CarReservation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
@@ -48,13 +51,13 @@ class CarReservation(models.Model):
 
 
 class AccommodationReservation(models.Model):
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
 
     def __str__(self):
         return str(self.user)
+
 
 class AdminReview(models.Model):
     author = models.CharField(max_length=100)
