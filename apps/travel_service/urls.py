@@ -1,10 +1,9 @@
 
 from rest_framework.routers import DefaultRouter
-from .views import SearchViewSet, TransferViewSet, CarViewSet
+from .views import TransferViewSet, TransferReservationViewSet
 
 router = DefaultRouter()
-router.register(r'search', SearchViewSet)
-router.register(r'transfer', TransferViewSet)
-router.register(r'cars', CarViewSet)
+router.register(r'transfers', TransferViewSet)
+router.register(r'transfer_reservations', TransferReservationViewSet)
 
 urlpatterns = router.urls

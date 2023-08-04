@@ -1,15 +1,31 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'
 
 
 class HousingSerializer(serializers.ModelSerializer):
     housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Комнатные удобства")
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Жилищные удобства")
+    ratings_received = RatingSerializer(many=True, read_only=True)
 
     class Meta:
         model = Housing
+        fields = '__all__'
+
+
+class HouseReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = HouseReservation
         fields = '__all__'
 
 
