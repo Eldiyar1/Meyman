@@ -41,12 +41,14 @@ class Housing(models.Model):
     pet_fee = models.BooleanField(default=False, verbose_name='Берете ли вы плату за домашних животных?')
     breakfast_offered = models.BooleanField(default=False, verbose_name='Вы предлагаете гостям завтрак?')
     breakfast_included = models.BooleanField(default=False, verbose_name='Завтрак включен в стоимость проживания?')
+    breakfast_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
+                                             verbose_name='Стоимость завтрака в US$ (с человека за ночь)')
     breakfast_type = MultiSelectField(choices=BREAKFAST_CHOICES, max_length=100, blank=True,
                                       verbose_name='Какой тип завтрака вы предлагаете?')
     parking = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no', verbose_name='Услуги парковки')
     parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
                                            verbose_name='Стоимость парковки в US$ (за день)')
-    parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES, blank=True, null=True,
+    parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES,
                                         verbose_name='Местонахождение парковки')
     without_credit_card = models.BooleanField(default=True, verbose_name="Без банковской карты")
     free_cancellation = models.BooleanField(default=False, verbose_name="Бесплатная отмена")
