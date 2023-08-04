@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, MAX_IMAGES
+from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
 from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, HousingImage
 
 

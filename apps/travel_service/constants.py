@@ -103,8 +103,6 @@ CONDITION_CHOICES = (
     ('Новое', 'Новое'),
 )
 
-YEAR_CHOICES = [(i, str(i)) for i in range(1900, 2030)]
-
 CURRENCY_CHOICES = (
     ('KGS', 'Сом (KGS)'),
     ('USD', 'Доллар (USD)'),
@@ -150,3 +148,6 @@ AMENITIES_CHOICES = (
     ('Датчик парковки', 'Датчик парковки'),
     ('Подогрев сидений и руля', 'Подогрев сидений и руля'),
 )
+
+
+PASSENGER_CAPACITY_CHOICES = [(i, i) for i in range(1, 21)]

@@ -14,9 +14,9 @@ class TransferSerializer(serializers.ModelSerializer):
                                                     label="Регион получения")
     return_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                     label="Регион возврата")
-    images = serializers.SerializerMethodField(label='Изображение трансфера')
     has_safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
                                                            label="Наличие системы безопасности")
+    images = serializers.SerializerMethodField(label='Изображение трансфера')
 
     class Meta:
         model = Transfer
@@ -24,7 +24,7 @@ class TransferSerializer(serializers.ModelSerializer):
 
     def get_images(self, obj):
         images = obj.transfer_images.all()
-        return TransferSerializer(images, many=True).data
+        return TransferImageSerializer(images, many=True).data
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

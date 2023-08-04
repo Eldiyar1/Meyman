@@ -215,8 +215,6 @@ MAX_IMAGES = 20
 
 TIME_CHOICES = [(hour, f'{hour:02d}:00') for hour in range(24)]
 
-PASSENGER_CAPACITY_CHOICES = [(i, i) for i in range(1, 21)]
-
 BREAKFAST_CHOICES = (
     ('Asian', 'Азиатский'),
     ('Continental', 'Континентальный'),

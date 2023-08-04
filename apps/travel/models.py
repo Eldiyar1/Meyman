@@ -107,10 +107,6 @@ class Rating(models.Model):
 
 
 class HouseReservation(models.Model):
-    class Meta:
-        verbose_name = "Бронь жилья"
-        verbose_name_plural = "Бронь жилищ"
-
     destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
@@ -122,6 +118,9 @@ class HouseReservation(models.Model):
     housing = models.OneToOneField(Housing, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Жилье")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
 
+    class Meta:
+        verbose_name = "Бронь жилья"
+        verbose_name_plural = "Бронь жилищ"
 
 class Hotel(Housing):
     class Meta:
