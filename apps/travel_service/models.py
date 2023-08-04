@@ -4,9 +4,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from multiselectfield import MultiSelectField
 from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
-    FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, MINIMUM_AGE_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
-    BRAND_CHOICES, COLOR_CHOICES, YES_OR_NO, AMENITIES_CHOICES
-from apps.travel.constants import PAYMENT_CHOICES
+    FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
+    BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, YEAR_CHOICES
+from apps.travel.constants import PAYMENT_CHOICES, PASSENGER_CAPACITY_CHOICES
 from apps.users.email import CustomUser
 
 
@@ -18,23 +18,23 @@ class Transfer(models.Model):
     car_location = models.CharField(choices=DESTINATION_CHOICES, max_length=50,
                                     verbose_name='Область нахождения машины')
     image = models.ImageField(upload_to='images/car/', verbose_name="Изображение автомобиля")
-    category = models.CharField(choices=CAR_CATEGORIES, max_length=255, verbose_name='Категория автомобиля')
-    transmission = models.CharField(choices=TRANSMISSION_TYPES, max_length=255, verbose_name='Тип коробки передач')
+    category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория автомобиля')
+    transmission = models.CharField(choices=TRANSMISSION_TYPES, max_length=50, verbose_name='Тип коробки передач')
     steering = models.CharField(choices=STEERING_TYPES, max_length=50, verbose_name='Руль')
-    body_type = models.CharField(choices=BODY_TYPES, max_length=255, verbose_name='Тип кузова')
-    drive_type = models.CharField(choices=DRIVE_TYPES, max_length=255, verbose_name='Тип привода')
-    fuel_type = models.CharField(choices=FUEL_TYPES, max_length=255, verbose_name='Тип топлива')
-    passenger_capacity = models.CharField(choices=SEATING_CAPACITY, max_length=255,
-                                          verbose_name='Вместимость пассажиров')
-    condition = models.CharField(choices=CONDITION_CHOICES, max_length=255, verbose_name='Состояние автомобиля')
+    body_type = models.CharField(choices=BODY_TYPES, max_length=50, verbose_name='Тип кузова')
+    drive_type = models.CharField(choices=DRIVE_TYPES, max_length=50, verbose_name='Тип привода')
+    fuel_type = models.CharField(choices=FUEL_TYPES, max_length=50, verbose_name='Тип топлива')
+    passenger = models.CharField(choices=SEATING_CAPACITY, max_length=50, verbose_name='Вместимость пассажиров')
+    condition = models.CharField(choices=CONDITION_CHOICES, max_length=50, verbose_name='Состояние автомобиля')
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=10, verbose_name='Валюта')
-    minimum_age = models.CharField(choices=MINIMUM_AGE_CHOICES, max_length=2, verbose_name='Минимальный возраст')
+    minimum_age = models.PositiveIntegerField(verbose_name='Минимальный возраст водителя')
     rental_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма аренды (Сутки)')
     car_address = models.CharField(max_length=255, verbose_name='Адрес')
     brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка автомобиля')
     color = models.CharField(max_length=50, choices=COLOR_CHOICES, verbose_name='Цвет автомобиля', blank=True)
-    year = models.PositiveIntegerField(verbose_name='Год выпуска автомобиля', validators=[
-        MinValueValidator(1900), MaxValueValidator(2030)])
+    passenger_capacity = models.IntegerField(choices=PASSENGER_CAPACITY_CHOICES, default=1,
+                                             verbose_name="Количество пассажирских мест")
+    year = models.PositiveIntegerField(choices=YEAR_CHOICES, verbose_name='Год выпуска')
     description = models.TextField(verbose_name='Описание автомобиля', blank=True)
     fuel_consumption = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход топлива на 100км')
     driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
@@ -48,8 +48,8 @@ class Transfer(models.Model):
     amenities = MultiSelectField(choices=AMENITIES_CHOICES, max_length=100, verbose_name="Внутренние удобства")
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
-    can_arrange_pickup_return = models.CharField(choices=YES_OR_NO, max_length=10,
-                                    verbose_name='Может ли клиент договориться о месте получения/возврата автомобиля')
+    can_arrange_pickup_return = models.BooleanField(default=True,
+                                                    verbose_name='Может ли клиент договориться о месте получения/возврата автомобиля')
 
     def __str__(self):
         return self.brand

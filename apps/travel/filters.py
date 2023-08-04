@@ -7,8 +7,7 @@ from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing
 class AbstractHousingFilter(django_filters.FilterSet):
     price_per_night__gte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='gte')
     price_per_night__lte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='lte')
-    housing_amenities = django_filters.MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES,
-                                                            label="Жилищные удобства")
+    housing_amenities = django_filters.MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="удобства жилья")
     room_amenities = django_filters.MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
     rating = django_filters.ChoiceFilter(choices=RATING_CHOICES, label="рейтинг", method='filter_by_rating')
 
@@ -19,7 +18,7 @@ class AbstractHousingFilter(django_filters.FilterSet):
         model = Housing
         fields = ('price_per_night__gte', 'price_per_night__lte', 'housing_type', 'accommodation_type', 'bedrooms',
                   'bed_type', 'food_type', 'stars', 'housing_amenities', 'room_amenities',
-                  'without_credit_card', 'free_cancellation', 'payment_type')
+                  'without_credit_card', 'free_cancellation', 'payment')
 
 
 class HotelFilter(AbstractHousingFilter):

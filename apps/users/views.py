@@ -1,7 +1,6 @@
 from rest_framework import mixins, viewsets
-from .models import CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
-from .serializers import CarReservationSerializer, AccommodationReservationSerializer, ProfileSerializer, \
-    AdminReviewSerializer
+from .models import  CustomUser, Profile, AdminReview
+from .serializers import ProfileSerializer, AdminReviewSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import authenticate
 from rest_framework import generics, status
@@ -82,25 +81,6 @@ class ProfileViewSet(mixins.ListModelMixin,
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'user__username'
-
-
-class CarReservationViewSet(mixins.UpdateModelMixin,
-                            mixins.CreateModelMixin,
-                            viewsets.GenericViewSet):
-    queryset = CarReservation.objects.all()
-    serializer_class = CarReservationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-
-class AccommodationReservationViewSet(mixins.ListModelMixin,
-                                      mixins.CreateModelMixin,
-                                      mixins.RetrieveModelMixin,
-                                      mixins.UpdateModelMixin,
-                                      mixins.DestroyModelMixin,
-                                      viewsets.GenericViewSet):
-    queryset = AccommodationReservation.objects.all()
-    serializer_class = AccommodationReservationSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class AdminReviewViewSet(mixins.ListModelMixin,
