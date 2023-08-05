@@ -15,12 +15,7 @@ class LanguageParamMixin:
         return self.request.query_params.get('lang', 'ru')  
 
 
-class NewsViewSet(LanguageParamMixin, mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+class NewsViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     permission_classes = [IsAdminUserOrReadOnly]

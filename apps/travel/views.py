@@ -3,10 +3,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Housing, HousingImage
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, HousingImageSerializer
-from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
+    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer
+from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter, RoomFilter
 from googletrans import Translator
 
 translator = Translator()
@@ -17,12 +17,7 @@ class LanguageParamMixin:
         return self.request.query_params.get('lang', 'ru')
 
 
-class AbstractHousingModelViewSet(LanguageParamMixin, mixins.ListModelMixin,
-                                  mixins.CreateModelMixin,
-                                  mixins.RetrieveModelMixin,
-                                  mixins.UpdateModelMixin,
-                                  mixins.DestroyModelMixin,
-                                  viewsets.GenericViewSet):
+class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -95,11 +90,13 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
     filterset_class = SanatoriumFilter
 
 
+class RoomViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RoomFilter
+
+
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-
-
-class HousingImageViewSet(viewsets.ModelViewSet):
-    queryset = HousingImage.objects.all()
-    serializer_class = HousingImageSerializer
