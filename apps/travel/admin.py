@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, HousingImage
 
 
 class HousingAdmin(admin.ModelAdmin):
-    list_display = ['housing_name', 'location', 'price_per_night', 'housing_type', 'accommodation_type',
+    list_display = ['housing_name', 'address', 'price_per_night', 'housing_type', 'accommodation_type',
                     'bed_type', 'food_type']
     list_filter = ['housing_type']
     search_fields = ['housing_name']
@@ -15,6 +15,11 @@ class HouseReservationAdmin(admin.ModelAdmin):
     list_display = ('destination', 'check_in_date', 'check_out_date', 'adults', 'teens', 'children', 'infants', 'pets')
     list_filter = ('destination', 'check_in_date', 'check_out_date')
     search_fields = ('region',)
+
+
+@admin.register(HousingImage)
+class HousingImageAdmin(admin.ModelAdmin):
+    list_display = ('image',)
 
 
 @admin.register(Rating)

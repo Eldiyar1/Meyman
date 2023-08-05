@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation
-from ..review.serializers import ReviewSerializer
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, HousingImage
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -11,24 +10,26 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class HousingImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HousingImage
+        fields = '__all__'
+
+
 class HousingSerializer(serializers.ModelSerializer):
     housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Комнатные удобства")
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Жилищные удобства")
-    ratings_received = RatingSerializer(many=True, read_only=True)
-    reviews = ReviewSerializer(many=True, read_only=True)
-    average_rating = serializers.SerializerMethodField(read_only=True)
-
+    ratings_received = RatingSerializer(many=True, read_only=True, label="Рейтинги")
+    images = serializers.SerializerMethodField(label="Изображение жилья")
 
     class Meta:
         model = Housing
         fields = '__all__'
-    def get_average_rating(self, obj):
-        reviews = obj.review_hotel.all()
-        total_reviews = reviews.count()
-        if total_reviews > 0:
-            sum_stars = sum(review.stars for review in reviews)
-            return round(sum_stars / total_reviews, 2)
-        return 0
+
+    def get_images(self, obj):
+        images = obj.housing_images.all()
+        return HousingImageSerializer(images, many=True).data
+
 
 class HouseReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')

@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Housing, HousingImage
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer
+    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, HousingImageSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter
 from googletrans import Translator
 
@@ -98,3 +98,8 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+
+
+class HousingImageViewSet(viewsets.ModelViewSet):
+    queryset = HousingImage.objects.all()
+    serializer_class = HousingImageSerializer
