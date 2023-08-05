@@ -122,6 +122,15 @@ class HouseReservation(models.Model):
         verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
 
+class HouseFavorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    item = models.ForeignKey(Housing, on_delete=models.CASCADE)
+
+
+
+
+
+
 class Hotel(Housing):
     class Meta:
         verbose_name = "Отель"

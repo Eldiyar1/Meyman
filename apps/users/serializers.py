@@ -1,6 +1,4 @@
-
-
-from .models import  CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
+from .models import CarReservation, AccommodationReservation, CustomUser, Profile, AdminReview
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -11,6 +9,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
+
+
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.CharField(max_length=80)
     username = serializers.CharField(max_length=45)
@@ -21,7 +21,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ["email", "username", "password", "user_type"]
 
     def validate(self, attrs):
-
         email_exists = CustomUser.objects.filter(email=attrs["email"]).exists()
 
         if email_exists:
@@ -41,9 +40,29 @@ class SignUpSerializer(serializers.ModelSerializer):
         token, created = Token.objects.get_or_create(user=user)
 
         return user
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
+        fields = '__all__'
+
+
+class CarReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = CarReservation
+        fields = '__all__'
+
+
+class AccommodationReservationSerializer(serializers.ModelSerializer):
+    check_in_date = serializers.DateField(format='%d-%m-%Y')
+    check_out_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = AccommodationReservation
         fields = '__all__'
 
 
