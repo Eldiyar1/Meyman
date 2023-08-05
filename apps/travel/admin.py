@@ -16,6 +16,10 @@ class HouseReservationAdmin(admin.ModelAdmin):
     list_filter = ('destination', 'check_in_date', 'check_out_date')
     search_fields = ('region',)
 
+class HouseFavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'item')
+    list_filter = ('user', 'item')
+    search_fields = ('user__username', 'item__title') 
 
 @admin.register(HouseFavorite)
 class HouseFavoriteAdmin(admin.ModelAdmin):
