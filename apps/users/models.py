@@ -26,7 +26,7 @@ class Profile(models.Model):
         CustomUser, on_delete=models.CASCADE
     )
     avatar = models.ImageField(
-        upload_to='avatars/', blank=True, null=True, verbose_name='Profiles_avatar'
+        upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar'
     )
     email = models.EmailField(
         null=True, verbose_name='Email'
