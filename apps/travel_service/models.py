@@ -56,7 +56,7 @@ class Transfer(models.Model):
 
 class TransferImage(models.Model):
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    image = models.ImageField(upload_to='images/car/', verbose_name="Изображение автомобиля")
+    image = models.ImageField(upload_to='media/images/car/', verbose_name="Изображение автомобиля")
 
     class Meta:
         verbose_name = 'Изображение трансфера'

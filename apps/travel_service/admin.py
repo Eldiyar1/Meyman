@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Transfer, TransferReservation
+from .models import Transfer, TransferReservation,TransfersFavorite
 
 
 @admin.register(Transfer)
@@ -17,3 +17,12 @@ class TransferReservationAdmin(admin.ModelAdmin):
     list_filter = ('transfer_location', 'destination_location', 'pickup_date', 'return_location', 'return_date',
                    'different_pickup_places')
     search_fields = ('transfer_location',)
+@admin.register(TransfersFavorite)
+class TransfersFavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'item'
+    )
+    list_filter = (
+        'user', 'item'
+    )
+    search_fields = ('user',)

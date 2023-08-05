@@ -84,7 +84,7 @@ class Housing(models.Model):
 
 class HousingImage(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
-    image = models.ImageField(upload_to='images/housing/', verbose_name='Изображение места жительства')
+    image = models.ImageField(upload_to='media/images/housing/', verbose_name='Изображение места жительства')
 
     class Meta:
         verbose_name = 'Изображение места жительства'
