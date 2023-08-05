@@ -11,7 +11,9 @@ class HousingAdmin(admin.ModelAdmin):
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('room_name', 'housing', 'price_per_night', 'max_guest_capacity', 'room_area')
+    list_filter = ('room_name', 'housing', 'max_guest_capacity', 'room_amenities')
+    search_fields = ('room_name',)
 
 
 @admin.register(HouseReservation)
