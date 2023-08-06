@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Transfer, TransferReservation,TransfersFavorite
+from .models import Transfer, TransferReservation
 
 
 @admin.register(Transfer)
 class TransferAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'year', 'fuel_consumption')
-    list_filter = ('brand', 'year', 'fuel_consumption')
+    list_display = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_consumption',  'year')
+    list_filter = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_consumption', 'year')
     search_fields = ('brand', 'year')
 
 
@@ -17,12 +17,3 @@ class TransferReservationAdmin(admin.ModelAdmin):
     list_filter = ('transfer_location', 'destination_location', 'pickup_date', 'return_location', 'return_date',
                    'different_pickup_places')
     search_fields = ('transfer_location',)
-@admin.register(TransfersFavorite)
-class TransfersFavoriteAdmin(admin.ModelAdmin):
-    list_display = (
-        'user', 'item'
-    )
-    list_filter = (
-        'user', 'item'
-    )
-    search_fields = ('user',)

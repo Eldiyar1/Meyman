@@ -1,5 +1,3 @@
-from django.template.defaultfilters import time
-
 HOUSING_CHOICES = (
     ('Hotels', 'Отели'),
     ('Hostels', 'Хостелы'),
@@ -125,7 +123,7 @@ HOUSING_AMENITIES_CHOICES = (
     ('dry_cleaning', 'Сухая чистка'),
     ('shoe_shine', 'Чистка обуви'),
     ('kids_playground', 'Детская площадка'),
-    ('allow_children', 'C детьми?'),
+    ('allow_children', 'Можно c детьми'),
     ('allow_pets', 'C домашними животными'),
     ('pets_paid', 'Берете ли вы плату за домашних животных?'),
     ('Parking lot', 'Парковка'),
@@ -211,7 +209,9 @@ CHOICES_DA_NET = (
     (False, 'Нет'),
 )
 
-MAX_IMAGES = 20
+min_images = 18
+
+max_images = 17
 
 TIME_CHOICES = [(hour, f'{hour:02d}:00') for hour in range(24)]
 

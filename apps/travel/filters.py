@@ -1,24 +1,33 @@
-import django_filters
+from django_filters import FilterSet, ChoiceFilter, MultipleChoiceFilter, NumberFilter
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, RATING_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing
+from .models import Housing, Room, Hotel, Hostel, Apartment, GuestHouse, Sanatorium
 
 
-class AbstractHousingFilter(django_filters.FilterSet):
-    price_per_night__gte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='gte')
-    price_per_night__lte = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='lte')
-    housing_amenities = django_filters.MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="удобства жилья")
-    room_amenities = django_filters.MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
-    rating = django_filters.ChoiceFilter(choices=RATING_CHOICES, label="рейтинг", method='filter_by_rating')
+class AbstractHousingFilter(FilterSet):
+    housing_amenities = MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="Удобства жилья")
+    rating = ChoiceFilter(choices=RATING_CHOICES, label="Рейтинг", method='filter_by_rating')
 
     def filter_by_rating(self, queryset, name, value):
         return queryset.filter(ratings_received__rating=value)
 
     class Meta:
         model = Housing
-        fields = ('price_per_night__gte', 'price_per_night__lte', 'housing_type', 'accommodation_type', 'bedrooms',
-                  'bed_type', 'food_type', 'stars', 'housing_amenities', 'room_amenities',
-                  'without_card', 'free_cancellation', 'payment')
+        fields = (
+            'housing_type', 'housing_type', 'accommodation_type', 'food_type', 'stars', 'housing_amenities',
+        )
+
+
+class RoomFilter(FilterSet):
+    price_per_night__gte = NumberFilter(field_name='price_per_night', lookup_expr='gte')
+    price_per_night__lte = NumberFilter(field_name='price_per_night', lookup_expr='lte')
+    room_amenities = MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
+
+    class Meta:
+        model = Room
+        fields = (
+            'price_per_night__gte', 'price_per_night__lte', 'bedrooms', 'room_amenities', 'bed_type',
+            'without_card', 'free_cancellation', 'payment')
 
 
 class HotelFilter(AbstractHousingFilter):

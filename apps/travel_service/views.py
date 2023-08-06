@@ -1,7 +1,7 @@
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import Transfer, TransferReservation, TransfersFavorite
-from .serializers import TransferSerializer, TransferReservationSerializer, TransfersFavoriteSerializer
+from .models import Transfer, TransferReservation
+from .serializers import TransferSerializer, TransferReservationSerializer
 from .filters import TransferFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from googletrans import Translator
@@ -34,11 +34,3 @@ class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-
-class TransfersFavoriteViewSet(mixins.ListModelMixin,
-                           mixins.CreateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    queryset = TransfersFavorite.objects.all()
-    serializer_class = TransfersFavoriteSerializer

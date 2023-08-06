@@ -1,29 +1,35 @@
+from django.core.validators import MinLengthValidator
 from rest_framework import serializers
-from .models import Transfer, TransferReservation, TransfersFavorite
+from .models import Transfer, TransferReservation, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 
-class TransferReservationSerializer(serializers.ModelSerializer):
-    pickup_date = serializers.DateField(format='%d-%m-%Y')
-    return_date = serializers.DateField(format='%d-%m-%Y')
-
+class TransferImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TransferReservation
+        model = TransferImage
         fields = '__all__'
 
 
 class TransferSerializer(serializers.ModelSerializer):
     pickup_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                     label="Регион получения")
-    return_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                    label="Регион возврата")
-
-    has_safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
-                                                           label="Наличие системы безопасности")
+    safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
+    images = TransferImageSerializer(many=True, read_only=True, label='Изображение трансфера')
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
+        write_only=True, validators=[MinLengthValidator(5)])
 
     class Meta:
         model = Transfer
         fields = '__all__'
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop('uploaded_images')
+        transfer = Transfer.objects.create(**validated_data)
+        for image in uploaded_images:
+            TransferImage.objects.create(transfer=transfer, image=image)
+
+        return transfer
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -35,7 +41,10 @@ class TransferSerializer(serializers.ModelSerializer):
         return data
 
 
-class TransfersFavoriteSerializer(serializers.ModelSerializer):
+class TransferReservationSerializer(serializers.ModelSerializer):
+    pickup_date = serializers.DateField(format='%d-%m-%Y')
+    return_date = serializers.DateField(format='%d-%m-%Y')
+
     class Meta:
-        model = TransfersFavorite
+        model = TransferReservation
         fields = '__all__'
