@@ -32,6 +32,7 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
+
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
