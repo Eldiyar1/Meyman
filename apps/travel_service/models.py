@@ -7,7 +7,7 @@ from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, 
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
     BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_CAPACITY_CHOICES
 from apps.travel.constants import PAYMENT_CHOICES
-# from apps.users.email import CustomUser
+from apps.users.email import CustomUser
 
 
 class Transfer(models.Model):
@@ -79,4 +79,4 @@ class TransferReservation(models.Model):
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
     transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, null=True, blank=True,
                                     verbose_name="Трансфер")
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")

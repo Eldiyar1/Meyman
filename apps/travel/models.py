@@ -9,7 +9,7 @@ from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROO
     TIME_CHOICES, CHOICES_DA_NET
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
-# from apps.users.email import CustomUser
+from apps.users.email import CustomUser
 
 
 class Housing(models.Model):
@@ -116,7 +116,7 @@ class Rating(models.Model):
         verbose_name = 'Рейтинг'
         verbose_name_plural = 'Рейтинги'
 
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
     rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='0')
 
@@ -135,7 +135,7 @@ class HouseReservation(models.Model):
     infants = models.PositiveIntegerField(default=0, verbose_name="Младенцы(младше 2)")
     pets = models.PositiveIntegerField(default=0, verbose_name="Домашние животные")
     housing = models.OneToOneField(Housing, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Жилье")
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
 
 
 class Hotel(Housing):

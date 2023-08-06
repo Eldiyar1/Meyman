@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .models import CustomUser,Profile
+from .models import CustomUser
 from .serializers import SignUpSerializer,LoginSerializer, ProfileSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
 from .tokens import create_jwt_pair_for_user
