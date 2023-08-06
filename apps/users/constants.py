@@ -3,7 +3,7 @@ from django.contrib.auth.base_user import BaseUserManager
 USER_TYPE_CHOICES = (
         ('client', 'Client'),
         ('owner', 'Owner'),
-    )
+        ('admin'), 'Admin')
 
 
 class CustomUserManager(BaseUserManager):

@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .models import CustomUser, Profile
-from .serializers import SignUpSerializer, ProfileSerializer
+from .models import CustomUser,Profile
+from .serializers import SignUpSerializer,LoginSerializer, ProfileSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
 from .tokens import create_jwt_pair_for_user
 
@@ -13,21 +13,24 @@ class SignUpView(generics.CreateAPIView):
     permission_classes = [IsUnregistered]
 
 class LoginView(APIView):
-    serializer_class = SignUpSerializer
+    serializer_class = LoginSerializer  
+    permission_classes = [IsUnregistered]
 
     def post(self, request):
-        email = request.data.get("email")
-        password = request.data.get("password")
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            user = authenticate(email=serializer.validated_data["email"], password=serializer.validated_data["password"])
 
-        user = authenticate(email=email, password=password)
+            if user is not None:
+                tokens = create_jwt_pair_for_user(user) 
 
-        if user is not None:
-            tokens = create_jwt_pair_for_user(user) 
-
-            response = {"message": "Login Successful", "tokens": tokens}
-            return Response(data=response, status=status.HTTP_200_OK)
+                response = {"message": "Login Successful", "tokens": tokens}
+                return Response(data=response, status=status.HTTP_200_OK)
+            else:
+                return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ClientProfileView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
