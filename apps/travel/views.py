@@ -24,6 +24,8 @@ class AbstractHousingModelViewSet(LanguageParamMixin, mixins.ListModelMixin,
                                   mixins.UpdateModelMixin,
                                   mixins.DestroyModelMixin,
                                   viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
+
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -43,6 +45,7 @@ class AbstractHousingModelViewSet(LanguageParamMixin, mixins.ListModelMixin,
 class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = HouseReservation.objects.all()
     serializer_class = HouseReservationSerializer
+
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
