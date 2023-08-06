@@ -18,12 +18,13 @@ class LoginView(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        
+
         if serializer.is_valid():
-            user = authenticate(email=serializer.validated_data["email"], password=serializer.validated_data["password"])
+            user = authenticate(email=serializer.validated_data["email"],
+                                password=serializer.validated_data["password"])
 
             if user is not None:
-                tokens = create_jwt_pair_for_user(user) 
+                tokens = create_jwt_pair_for_user(user)
 
                 response = {"message": "Login Successful", "tokens": tokens}
                 return Response(data=response, status=status.HTTP_200_OK)
@@ -31,6 +32,7 @@ class LoginView(APIView):
                 return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ClientProfileView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()

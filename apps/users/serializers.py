@@ -1,9 +1,9 @@
-from .models import CarReservation, AccommodationReservation,CustomUser, Profile
+from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
-
+from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .tokens import create_jwt_pair_for_user
-from rest_framework import serializers
+from .models import CarReservation, AccommodationReservation, CustomUser, Profile
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -11,6 +11,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['email', 'username', 'user_type', 'password']
         extra_kwargs = {'password': {'write_only': True}}
+
+        def validate(self, attrs):
+            email_exists = CustomUser.objects.filter(email=attrs["email"]).exists()
+
+            if email_exists:
+                raise ValidationError("Email has already been used")
+
+            return super().validate(attrs)
 
         def create(self, validated_data):
             password = validated_data.pop("password")
@@ -24,14 +32,13 @@ class SignUpSerializer(serializers.ModelSerializer):
             token, created = Token.objects.get_or_create(user=user)
 
             return user
-        
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
-
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
@@ -54,7 +61,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['avatar', 'email', 'phone_number']
 
 
-
 class CarReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
@@ -71,4 +77,3 @@ class AccommodationReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccommodationReservation
         fields = '__all__'
-
