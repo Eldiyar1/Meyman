@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from apps.review.models import Review
-from apps.review.permissions import IsAdminUserOrReadOnly
+from apps.review.permissions import IsRegisteredUserOrReadOnly
 from apps.review.serializers import ReviewSerializer
 from googletrans import Translator
 from django.db.models import Avg
@@ -22,7 +22,7 @@ class ReviewViewSet(LanguageParamMixin, mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 
