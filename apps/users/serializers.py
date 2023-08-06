@@ -6,32 +6,25 @@ from .tokens import create_jwt_pair_for_user
 from .models import CarReservation, AccommodationReservation, CustomUser, Profile
 
 
+
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email', 'username', 'user_type', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
-        def validate(self, attrs):
-            email_exists = CustomUser.objects.filter(email=attrs["email"]).exists()
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise ValidationError("Email has already been used")
+        return value
 
-            if email_exists:
-                raise ValidationError("Email has already been used")
-
-            return super().validate(attrs)
-
-        def create(self, validated_data):
-            password = validated_data.pop("password")
-
-            user = super().create(validated_data)
-
-            user.set_password(password)
-
-            user.save()
-
-            token, created = Token.objects.get_or_create(user=user)
-
-            return user
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = super().create(validated_data)
+        user.set_password(password)
+        user.save()
+        Token.objects.get_or_create(user=user)
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
