@@ -1,11 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-class IsAdminUser(BasePermission):
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-        return request.user.is_staff
+
 
 class CustomTokenAuthentication(TokenAuthentication):
     def has_permission(self, request, view):
@@ -13,19 +9,27 @@ class CustomTokenAuthentication(TokenAuthentication):
             raise AuthenticationFailed('You must be authenticated to access this resource.')
 
         return True
-class IsOwnerOrReadOnly(BasePermission):
+class IsUnregistered(BasePermission):
+    def has_permission(self, request, view):
+        return not request.user.is_authenticated
+
+class IsClient(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
+        return request.user.is_authenticated and request.user.user_type == 'client'
 
-        return request.user and request.user.is_authenticated and request.user.user_type == 'owner'
-
-class IsClientOrReadOnly(BasePermission):
+class IsOwner(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
+        return request.user.is_authenticated and request.user.user_type == 'owner'
 
-        return request.user and request.user.is_authenticated and request.user.user_type == 'client'
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user.is_authenticated and request.user.is_staff
 
 
 

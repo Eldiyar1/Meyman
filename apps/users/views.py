@@ -1,101 +1,82 @@
-from rest_framework import mixins, viewsets
-from .models import  CustomUser, Profile, AdminReview
-from .serializers import ProfileSerializer, AdminReviewSerializer
-from django.contrib.auth import authenticate
-from rest_framework import generics, status
-from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework import generics, mixins, viewsets
 from rest_framework.views import APIView
-from .serializers import SignUpSerializer, CustomUserSerializer
-from .permissions import IsAdminUser, IsOwnerOrReadOnly, IsClientOrReadOnly
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from .models import CustomUser, Profile
+from .serializers import SignUpSerializer, ProfileSerializer
+from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
 from .tokens import create_jwt_pair_for_user
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-
-class ClientView(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.filter(user_type='client')
-    serializer_class = CustomUserSerializer
-    permission_classes = (IsClientOrReadOnly,)
-
-
-class OwnerView(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.filter(user_type='owner')
-    serializer_class = CustomUserSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-
-
-class SignUpView(generics.GenericAPIView):
+class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
-    permission_classes = [IsAdminUser, IsAuthenticated]
-
-    def post(self, request: Request):
-        data = request.data
-
-        serializer = self.serializer_class(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            response = {"message": "User Created Successfully", "data": serializer.data}
-
-            return Response(data=response, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    permission_classes = [IsUnregistered]
 
 class LoginView(APIView):
     serializer_class = SignUpSerializer
-    permission_classes = [IsAdminUser, IsAuthenticated]
 
-    def post(self, request: Request):
+    def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
 
         user = authenticate(email=email, password=password)
 
         if user is not None:
+            tokens = create_jwt_pair_for_user(user)  # Создайте свои токены
 
-            tokens = create_jwt_pair_for_user(user)
-
-            response = {"message": "Login Successfull", "tokens": tokens}
+            response = {"message": "Login Successful", "tokens": tokens}
             return Response(data=response, status=status.HTTP_200_OK)
-
         else:
-            return Response(data={"message": "Invalid email or password"})
+            return Response(data={"message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request: Request):
-        content = {"user": str(request.user), "auth": str(request.auth)}
-
-        return Response(data=content, status=status.HTTP_200_OK)
-
-
-class ProfileViewSet(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     viewsets.GenericViewSet):
-    queryset = Profile.objects.all()
+class ClientProfileView(generics.RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    lookup_field = 'user__username'
+    permission_classes = [IsClient]
+
+    def get_object(self):
+        return self.request.user
+
+class OwnerProfileView(generics.RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsOwner]
+
+    def get_object(self):
+        return self.request.user
+
+class AdminProfileView(generics.RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_object(self):
+        return self.request.user
+
+class ClientListView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(user_type='client')
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAdminUser]  
+
+class OwnerListView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(user_type='owner')
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAdminUser]  
+
+class AdminListView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(user_type='admin')
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAdminUser]  
+
+class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsClient | IsOwner | IsAdminUser]
+
+    def get_object(self):
+        return self.request.user
 
 
-class AdminReviewViewSet(mixins.ListModelMixin,
-                         mixins.CreateModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = AdminReview.objects.all()
-    serializer_class = AdminReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-
-class AdminReviewDetailViewSet(mixins.RetrieveModelMixin,
-                               mixins.UpdateModelMixin,
-                               mixins.DestroyModelMixin,
-                               viewsets.GenericViewSet):
-    queryset = AdminReview.objects.all()
-    serializer_class = AdminReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
 

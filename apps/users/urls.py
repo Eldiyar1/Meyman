@@ -1,17 +1,20 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import SignUpView, LoginView, AdminReviewViewSet, \
-    AdminReviewDetailViewSet, ProfileViewSet, OwnerView, ClientView
+from .views import SignUpView, LoginView, ClientProfileView, OwnerProfileView, AdminProfileView, \
+    ClientListView, OwnerListView, AdminListView, ProfileViewSet
 
 router = DefaultRouter()
 router.register(r'profile', ProfileViewSet)
-router.register(r'adminreview', AdminReviewViewSet)
-router.register(r'admindetailreview', AdminReviewDetailViewSet)
-urlpatterns = [
-    path('register/', SignUpView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('owner/', OwnerView.as_view(), name='owner'),
-    path('client/', ClientView.as_view(), name='client')
 
+urlpatterns = [
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('profile/client/', ClientProfileView.as_view(), name='client-profile'),
+    path('profile/owner/', OwnerProfileView.as_view(), name='owner-profile'),
+    path('profile/admin/', AdminProfileView.as_view(), name='admin-profile'),
+    path('users/client/', ClientListView.as_view(), name='client-list'),
+    path('users/owner/', OwnerListView.as_view(), name='owner-list'),
+    path('users/admin/', AdminListView.as_view(), name='admin-list'),
 ]
+
 urlpatterns += router.urls
