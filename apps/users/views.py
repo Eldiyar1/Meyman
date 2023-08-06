@@ -14,6 +14,7 @@ class SignUpView(generics.CreateAPIView):
 
 class LoginView(APIView):
     serializer_class = SignUpSerializer
+    permission_classes = [IsUnregistered]
 
     def post(self, request):
         email = request.data.get("email")
@@ -22,7 +23,7 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
 
         if user is not None:
-            tokens = create_jwt_pair_for_user(user) 
+            tokens = create_jwt_pair_for_user(user)
 
             response = {"message": "Login Successful", "tokens": tokens}
             return Response(data=response, status=status.HTTP_200_OK)
@@ -75,6 +76,7 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
 
     def get_object(self):
         return self.request.user
+
 
 
 

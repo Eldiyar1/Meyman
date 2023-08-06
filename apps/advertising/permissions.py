@@ -1,7 +1,5 @@
-from rest_framework.permissions import BasePermission as FourBasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
 
-class IsAdminOrReadOnly(FourBasePermission):
+class IsUnregistered(BasePermission):
     def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-        return request.user.is_staff
+        return not request.user.is_authenticated

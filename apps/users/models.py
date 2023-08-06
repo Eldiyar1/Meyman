@@ -22,11 +22,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-USER_TYPE_CHOICES = [
-    ('client', 'Client'),
-    ('owner', 'Owner'),
-    ('admin', 'Admin'),
-]
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)

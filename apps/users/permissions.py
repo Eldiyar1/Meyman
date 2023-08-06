@@ -9,7 +9,6 @@ class CustomTokenAuthentication(TokenAuthentication):
             raise AuthenticationFailed('You must be authenticated to access this resource.')
 
         return True
-
 class IsUnregistered(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
