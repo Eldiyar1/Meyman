@@ -52,6 +52,11 @@ class Transfer(models.Model):
     def __str__(self):
         return self.brand
 
+    def save(self, *args, **kwargs):
+        if 'По всему КР' in self.operating_area:
+            self.operating_area = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'По всему КР']
+        super().save(*args, **kwargs)
+
 
 class TransferImage(models.Model):
     class Meta:
