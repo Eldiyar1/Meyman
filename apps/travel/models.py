@@ -39,12 +39,13 @@ class Housing(models.Model):
     breakfast_included = models.BooleanField(default=False, verbose_name='Завтрак включен в стоимость проживания?')
     breakfast_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
                                              verbose_name='Стоимость завтрака в US$ (с человека за ночь)')
-    breakfast_type = MultiSelectField(choices=BREAKFAST_CHOICES, max_length=100, blank=True,
+    breakfast_type = MultiSelectField(choices=BREAKFAST_CHOICES, max_length=100, blank=True, null=True,
                                       verbose_name='Какой тип завтрака вы предлагаете?')
     parking = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no', verbose_name='Услуги парковки')
     parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
                                            verbose_name='Стоимость парковки в US$ (за день)')
     parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES,
+                                        blank=True, null=True,
                                         verbose_name='Местонахождение парковки')
 
     slug = models.SlugField(
@@ -130,11 +131,11 @@ class HouseReservation(models.Model):
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
     adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
-    teens = models.PositiveIntegerField(default=0, verbose_name="Подростки(от 13-18 лет)")
-    children = models.PositiveIntegerField(default=0, verbose_name="Дети(от 2-12 лет)")
-    infants = models.PositiveIntegerField(default=0, verbose_name="Младенцы(младше 2)")
-    pets = models.PositiveIntegerField(default=0, verbose_name="Домашние животные")
-    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Жилье")
+    teens = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Подростки(от 13-18 лет)")
+    children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
+    infants = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Младенцы(младше 2)")
+    pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
+    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, verbose_name="Жилье")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
 
 

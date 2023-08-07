@@ -77,6 +77,5 @@ class TransferReservation(models.Model):
     return_time = models.TimeField(verbose_name="Время возврата трансфера")
     different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
-    transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, null=True, blank=True,
-                                    verbose_name="Трансфер")
+    transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, verbose_name="Трансфер")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
