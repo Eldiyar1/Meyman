@@ -11,8 +11,8 @@ class TransferImageSerializer(serializers.ModelSerializer):
 
 
 class TransferSerializer(serializers.ModelSerializer):
-    pickup_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                    label="Регион получения")
+    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+                                                    label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
     images = TransferImageSerializer(many=True, read_only=True, label='Изображение трансфера')
     uploaded_images = serializers.ListField(
@@ -24,7 +24,7 @@ class TransferSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        uploaded_images = validated_data.pop('uploaded_images')
+        uploaded_images = validated_data.pop('uploaded_images', [])
         transfer = Transfer.objects.create(**validated_data)
         for image in uploaded_images:
             TransferImage.objects.create(transfer=transfer, image=image)
@@ -39,7 +39,6 @@ class TransferSerializer(serializers.ModelSerializer):
             data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
 
         return data
-
 
 class TransferReservationSerializer(serializers.ModelSerializer):
     pickup_date = serializers.DateField(format='%d-%m-%Y')

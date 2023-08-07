@@ -36,14 +36,15 @@ class Transfer(models.Model):
     amenities = MultiSelectField(choices=AMENITIES_CHOICES, max_length=100, verbose_name="Внутренние удобства")
     safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
                                         verbose_name='Наличие системы безопасности')
-    location = models.CharField(choices=DESTINATION_CHOICES, max_length=50, verbose_name='Область нахождения машины')
-    car_address = models.CharField(max_length=255, verbose_name='Адрес')
-    pickup_region = MultiSelectField(choices=DESTINATION_CHOICES + (('Все', 'Все'),), max_length=100,
-                                     verbose_name='Регион получения')
+    pickup_location = models.CharField(choices=DESTINATION_CHOICES, max_length=100, verbose_name='Место получения')
+    car_address = models.CharField(max_length=255, verbose_name='Адрес получения')
+    return_location = models.CharField(choices=DESTINATION_CHOICES, max_length=100, verbose_name='Место возврата')
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
     can_arrange_pickup_return = models.BooleanField(default=True,
                                                     verbose_name='Может ли клиент договориться о месте получения/возврата автомобиля')
+    operating_area = MultiSelectField(choices=DESTINATION_CHOICES + (('По всему КР', 'По всему КР'),), max_length=100,
+                                      verbose_name='Территории эксплуатации')
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=10, verbose_name='Валюта')
     rental_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма аренды (Сутки)')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
@@ -58,7 +59,7 @@ class TransferImage(models.Model):
         verbose_name_plural = 'Изображения тарнсферов'
 
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    image = models.ImageField(upload_to='images/car/', null=True, verbose_name="Изображение автомобиля")
+    image = models.ImageField(upload_to='images/car/', verbose_name="Изображение автомобиля")
 
 
 class TransferReservation(models.Model):
@@ -70,11 +71,11 @@ class TransferReservation(models.Model):
     destination_location = models.CharField(max_length=255, verbose_name="Куда вы хотите поехать")
     pickup_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
                                    verbose_name="Дата получения трансфера")
-    pickup_time = models.TimeField(verbose_name="Время получения трансфера")
-    return_location = models.CharField(max_length=255, verbose_name="Место возврата трансфера")
     return_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
                                    verbose_name="Дата возврата трансфера")
+    pickup_time = models.TimeField(verbose_name="Время получения трансфера")
     return_time = models.TimeField(verbose_name="Время возврата трансфера")
+    return_location = models.CharField(max_length=255, verbose_name="Место возврата трансфера")
     different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
     transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, verbose_name="Трансфер")

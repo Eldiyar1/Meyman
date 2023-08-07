@@ -8,7 +8,6 @@ from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer,
     SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter, RoomFilter
 from googletrans import Translator
-from .permissions import IsRegisteredUserOrReadOnly
 
 translator = Translator()
 
@@ -45,7 +44,7 @@ class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = HouseReservation.objects.all()
     serializer_class = HouseReservationSerializer
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -62,7 +61,7 @@ class HotelViewSet(AbstractHousingModelViewSet):
     serializer_class = HotelSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = HotelFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class HostelViewSet(AbstractHousingModelViewSet):
@@ -70,7 +69,7 @@ class HostelViewSet(AbstractHousingModelViewSet):
     serializer_class = HostelSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = HostelFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class ApartmentViewSet(AbstractHousingModelViewSet):
@@ -78,7 +77,7 @@ class ApartmentViewSet(AbstractHousingModelViewSet):
     serializer_class = ApartmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ApartmentFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class GuestHouseViewSet(AbstractHousingModelViewSet):
@@ -86,7 +85,7 @@ class GuestHouseViewSet(AbstractHousingModelViewSet):
     serializer_class = GuestHouseSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = GuestHouseFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class SanatoriumViewSet(AbstractHousingModelViewSet):
@@ -94,7 +93,7 @@ class SanatoriumViewSet(AbstractHousingModelViewSet):
     serializer_class = SanatoriumSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SanatoriumFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class RoomViewSet(viewsets.ModelViewSet):
@@ -102,10 +101,10 @@ class RoomViewSet(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = RoomFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]
 
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    # permission_classes = [IsRegisteredUserOrReadOnly]

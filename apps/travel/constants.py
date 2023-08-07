@@ -27,7 +27,7 @@ BED_CHOICES = (
 )
 
 FOOD_CHOICES = (
-    ("All-inclusive", "Все включено"),
+    ("all-inclusive", "Все включено"),
     ("Breakfast included", "Завтрак включен"),
     ("Not included", "Не включено"),
     ("With own kitchen", "С собственной кухней"),
@@ -58,7 +58,6 @@ HOUSING_AMENITIES_CHOICES = (
     ('pool', 'Бассейн'),
     ('airport_transfer', 'Трансфер от/до аэропорта'),
     ('fitness', 'Фитнес'),
-    ('pet_allowed', 'Можно с питомцами'),
     ('indoor_pool', 'Крытый бассейн'),
     ('non_smoking_rooms', 'Номера для некурящих'),
     ('wifi', 'Wifi'),
@@ -127,6 +126,17 @@ HOUSING_AMENITIES_CHOICES = (
     ('allow_pets', 'C домашними животными'),
     ('pets_paid', 'Берете ли вы плату за домашних животных?'),
     ('Parking lot', 'Парковка'),
+    ('Jacuzzi', 'Джакузи'),
+    ('Sauna', 'Сауна'),
+    ('Luggage storage', 'Камера хранения багажа'),
+    ('Accessible for people with disabilities', 'Доступ людям с ограниченными возможностями'),
+    ('Souvenir shop', 'Сувенирный магазин'),
+    ('Internet access: in rooms', 'Доступ в интернет: в номерах'),
+    ('Internet access: throughout the hotel', 'Доступ в интернет: на всей территории отеля'),
+    ('Car rental', 'Прокат автомобиля'),
+    ('Dining', 'Питание'),
+    ('Poolside bar', 'Бар у бассейна'),
+    ('Cafe', 'Кафе'),
 )
 
 ROOM_AMENITIES_CHOICES = (
@@ -170,20 +180,26 @@ ROOM_AMENITIES_CHOICES = (
     ('private_bathroom', 'Частные ванные комнаты'),
     ('wake_up_service', 'Услуга будильник / будильник'),
     ('minibar', 'Минибар'),
-    ('flat_screen_tv', 'Телевизор с плоским экраном'),
     ('bath_or_shower', 'Ванна/душ'),
     ('Dressers', 'Комоды'),
     ('Mini kitchen', 'Мини кухня'),
     ('Fireplace', 'Камин'),
     ('Appetizers', 'Закуски'),
     ('2 rooms', '2 комнаты'),
+    ('Nightstand', 'Тумба'),
+    ('Television', 'Телевизор'),
+    ('Bathroom', 'Ванная комната'),
+    ('Phone', 'Телефон'),
+    ('Chest of drawers', 'Комоды'),
+    ('Slippers', 'Тапочки'),
+    ('Bathrobe', 'Халат'),
 )
 
 RATING_CHOICES = (
-    ('Замечательно', 'Замечательно'),
-    ('Отлично', 'Отлично'),
-    ('Хорошо', 'Хорошо'),
-    ('Неплохо', 'Неплохо'),
+    ('Замечательно', '9+: Замечательно'),
+    ('Отлично', '8+: Отлично'),
+    ('Хорошо', '7+: Хорошо'),
+    ('Неплохо', '5+: Неплохо'),
     ('Не оценено', 'Не оценено'),
 )
 
@@ -208,10 +224,6 @@ CHOICES_DA_NET = (
     (True, 'Да'),
     (False, 'Нет'),
 )
-
-min_images = 18
-
-max_images = 17
 
 TIME_CHOICES = [(hour, f'{hour:02d}:00') for hour in range(24)]
 

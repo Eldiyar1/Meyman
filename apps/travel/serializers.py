@@ -31,8 +31,7 @@ class HousingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        uploaded_images = validated_data.get('uploaded_images')
-
+        uploaded_images = validated_data.pop('uploaded_images')
         housing = Housing.objects.create(**validated_data)
         for image in uploaded_images:
             HousingImage.objects.create(housing=housing, image=image)

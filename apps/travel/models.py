@@ -26,7 +26,7 @@ class Housing(models.Model):
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
-    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=100,
+    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=1300,
                                          verbose_name='Удобства в объекте')
     check_in_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд С")
     check_in_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд До")
@@ -44,8 +44,7 @@ class Housing(models.Model):
     parking = models.CharField(max_length=10, choices=PARKING_CHOICES, default='no', verbose_name='Услуги парковки')
     parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
                                            verbose_name='Стоимость парковки в US$ (за день)')
-    parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES,
-                                        blank=True, null=True,
+    parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES, blank=True, null=True,
                                         verbose_name='Местонахождение парковки')
 
     slug = models.SlugField(
@@ -63,13 +62,14 @@ class Housing(models.Model):
             self.slug = slugify(self.housing_name)
         super().save(*args, **kwargs)
 
+
 class HousingImage(models.Model):
     class Meta:
         verbose_name = 'Изображение места жительства'
         verbose_name_plural = 'Изображения места жительства'
 
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
-    image = models.ImageField(upload_to='images/housing/', null=True, verbose_name='Изображение места жительства')
+    image = models.ImageField(upload_to='images/housing/', verbose_name='Изображение места жительства')
 
 
 class Room(models.Model):
@@ -80,7 +80,7 @@ class Room(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='rooms')
     room_name = models.CharField(max_length=50, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
-    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=100, verbose_name='Удобства номера')
+    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=700, verbose_name='Удобства номера')
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
     bedrooms = models.CharField(max_length=50, choices=BEDROOM_CHOICES, verbose_name="Количество спален")
@@ -109,7 +109,7 @@ class RoomImage(models.Model):
         verbose_name_plural = 'Изображения места жительства'
 
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
-    image = models.ImageField(upload_to='images/rooms/', default='', null=True, blank=True, verbose_name='Изображение номера')
+    image = models.ImageField(upload_to='images/rooms/', verbose_name='Изображение номера')
 
 
 class Rating(models.Model):
@@ -119,7 +119,7 @@ class Rating(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
-    rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='0')
+    rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='Не оценено', verbose_name='Рейтинг')
 
 
 class HouseReservation(models.Model):
