@@ -70,6 +70,8 @@ class HouseFavoriteViewSet(mixins.ListModelMixin,
             return Response({'message': 'Удалено из избранного.'}, status=status.HTTP_200_OK)
         except HouseFavorite.DoesNotExist:
             return Response({'message': 'Не найдено в избранном.'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = HouseReservation.objects.all()
     serializer_class = HouseReservationSerializer

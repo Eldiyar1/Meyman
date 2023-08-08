@@ -17,7 +17,6 @@ CREATE_APPS = [
     'apps.travel_service',
     'apps.users',
     'apps.weather_forecast',
-    'phonenumbers',
 
 ]
 INSTALLED_LIBRARY = [
@@ -25,9 +24,11 @@ INSTALLED_LIBRARY = [
     'jazzmin',
     'rest_framework',
     'drf_yasg',
+    "corsheaders",
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
-    "corsheaders",
+    'phonenumbers',
+
 
 ]
 
