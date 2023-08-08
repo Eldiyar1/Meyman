@@ -3,7 +3,7 @@ from .constants import CHOICES
 from apps.news.models import News
 from apps.travel.models import Hotel
 from apps.travel_service.models import Transfer
-# from apps.users.models import CustomUser
+from apps.users.models import CustomUser
 
 
 class Review(models.Model):

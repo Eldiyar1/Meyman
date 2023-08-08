@@ -111,21 +111,25 @@ class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
     image = models.ImageField(upload_to='images/rooms/', verbose_name='Изображение номера')
 
+class HouseFavorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    item = models.ForeignKey(Housing, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранные"
 
 class Rating(models.Model):
-    class Meta:
-        verbose_name = 'Рейтинг'
-        verbose_name_plural = 'Рейтинги'
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
     rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='Не оценено', verbose_name='Рейтинг')
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
 
 
 class HouseReservation(models.Model):
-    class Meta:
-        verbose_name = "Бронь жилья"
-        verbose_name_plural = "Бронь жилищ"
 
     destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
@@ -137,6 +141,9 @@ class HouseReservation(models.Model):
     pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
     housing = models.OneToOneField(Housing, on_delete=models.CASCADE, verbose_name="Жилье")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
+    class Meta:
+        verbose_name = "Бронь жилья"
+        verbose_name_plural = "Бронь жилищ"
 
 
 class Hotel(Housing):
