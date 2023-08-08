@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room, HousingImage
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer
+    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer, HousingImageSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter, RoomFilter
 from googletrans import Translator
 
@@ -36,9 +36,6 @@ class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
         instance.food_type = translator.translate(instance.food_type, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
 
 class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):

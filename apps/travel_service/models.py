@@ -7,7 +7,7 @@ from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, 
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
     BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_CAPACITY_CHOICES
 from apps.travel.constants import PAYMENT_CHOICES
-from apps.users.email import CustomUser
+# from apps.users.email import CustomUser
 
 
 class Transfer(models.Model):
@@ -16,6 +16,7 @@ class Transfer(models.Model):
         verbose_name_plural = 'Трансферы'
 
     brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка автомобиля')
+    transfer_image = models.ImageField(upload_to='transfer/housing', verbose_name="Изображение автомобиля")
     description = models.TextField(verbose_name='Описание автомобиля', blank=True)
     category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория автомобиля')
     body_type = models.CharField(choices=BODY_TYPES, max_length=50, verbose_name='Тип кузова')
@@ -58,15 +59,6 @@ class Transfer(models.Model):
         super().save(*args, **kwargs)
 
 
-class TransferImage(models.Model):
-    class Meta:
-        verbose_name = 'Изображение трансфера'
-        verbose_name_plural = 'Изображения тарнсферов'
-
-    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    image = models.ImageField(upload_to='images/car/', verbose_name="Изображение автомобиля")
-
-
 class TransferReservation(models.Model):
     class Meta:
         verbose_name = "Бронь трансфера"
@@ -84,4 +76,4 @@ class TransferReservation(models.Model):
     different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
     transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, verbose_name="Трансфер")
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
+    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")

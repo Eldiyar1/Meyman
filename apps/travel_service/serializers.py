@@ -1,35 +1,16 @@
-from django.core.validators import MinLengthValidator
 from rest_framework import serializers
-from .models import Transfer, TransferReservation, TransferImage
+from .models import Transfer, TransferReservation
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
-
-
-class TransferImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TransferImage
-        fields = '__all__'
 
 
 class TransferSerializer(serializers.ModelSerializer):
     operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                     label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
-    images = TransferImageSerializer(many=True, read_only=True, label='Изображение трансфера')
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
-        write_only=True, validators=[MinLengthValidator(5)])
 
     class Meta:
         model = Transfer
         fields = '__all__'
-
-    def create(self, validated_data):
-        uploaded_images = validated_data.pop('uploaded_images', [])
-        transfer = Transfer.objects.create(**validated_data)
-        for image in uploaded_images:
-            TransferImage.objects.create(transfer=transfer, image=image)
-
-        return transfer
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

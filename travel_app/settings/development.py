@@ -28,6 +28,7 @@ INSTALLED_LIBRARY = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     "corsheaders",
+
 ]
 
 DJANGO_APPS = [
