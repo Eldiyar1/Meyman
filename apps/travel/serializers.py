@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
 from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, HousingImage, \
-    Room, RoomImage, HouseFavorite
+    Room, RoomImage
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -17,10 +17,6 @@ class HousingImageSerializer(serializers.ModelSerializer):
         model = HousingImage
         fields = '__all__'
 
-class HouseFavoriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HouseFavorite
-        fields = '__all__'
 class HousingSerializer(serializers.ModelSerializer):
     housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Жилищные удобства")
     ratings_received = RatingSerializer(many=True, read_only=True, label="Рейтинги")
@@ -100,3 +96,4 @@ class GuestHouseSerializer(HousingSerializer):
 class SanatoriumSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
         model = Sanatorium
+

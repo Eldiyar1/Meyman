@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
@@ -10,6 +9,7 @@ from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROO
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
+
 
 
 class Housing(models.Model):
@@ -102,7 +102,6 @@ class Room(models.Model):
     def __str__(self):
         return self.room_name
 
-
 class RoomImage(models.Model):
     class Meta:
         verbose_name = 'Изображение места жительства'
@@ -111,13 +110,6 @@ class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
     image = models.ImageField(upload_to='images/rooms/', verbose_name='Изображение номера')
 
-class HouseFavorite(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    item = models.ForeignKey(Housing, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Избранное"
-        verbose_name_plural = "Избранные"
 
 class Rating(models.Model):
 

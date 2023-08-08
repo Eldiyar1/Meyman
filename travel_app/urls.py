@@ -16,7 +16,7 @@ router.registry.extend(travel_service_router.registry)
 
 urlpatterns = [
         path('admin/', admin.site.urls),
-        # path('api/users/', include('apps.users.urls')),
+        path('api/users/', include('apps.users.urls')),
         path('api/travel/', include('apps.travel.urls')),
         path('api/travel_sevice/', include('apps.travel_service.urls')),
         path('api/news/', include('apps.news.urls')),
@@ -24,6 +24,7 @@ urlpatterns = [
         path('api/currency_conversion', include('apps.currency_conversion.urls')),
         path('api/advertising', include('apps.advertising.urls')),
         path('api/review/', include('apps.review.urls')),
+        path('api/favorite/', include('apps.favorite.urls')),
           ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += doc_urls

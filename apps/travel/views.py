@@ -1,13 +1,13 @@
-from rest_framework import mixins, viewsets, status
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsRegisteredUserOrReadOnly
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room, HouseFavorite, \
-    Housing
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room  \
+    
 
 from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer, HouseFavoriteSerializer
+    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer
 from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter, RoomFilter
 from googletrans import Translator
 
@@ -42,37 +42,7 @@ class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-
-class HouseFavoriteViewSet(mixins.ListModelMixin,
-                           mixins.CreateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    queryset = HouseFavorite.objects.all()
-    serializer_class = HouseFavoriteSerializer
-    permission_classes = [IsRegisteredUserOrReadOnly]
-
-    @action(detail=False, methods=['POST'])
-    def add(self, request):
-        post_id = request.data.get('post_id')
-        try:
-            post = Housing.objects.get(id=post_id)
-            favorite, created = HouseFavorite.objects.get_or_create(user=request.user, item=post)
-            if created:
-                return Response({'message': 'Добавлено в избранное.'}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({'message': 'Уже в избранном.'}, status=status.HTTP_200_OK)
-        except Housing.DoesNotExist:
-            return Response({'message': 'Пост не найден.'}, status=status.HTTP_404_NOT_FOUND)
-
-    @action(detail=False, methods=['POST'])
-    def remove(self, request):
-        post_id = request.data.get('post_id')
-        try:
-            favorite = HouseFavorite.objects.get(user=request.user, item_id=post_id)
-            favorite.delete()
-            return Response({'message': 'Удалено из избранного.'}, status=status.HTTP_200_OK)
-        except HouseFavorite.DoesNotExist:
-            return Response({'message': 'Не найдено в избранном.'}, status=status.HTTP_404_NOT_FOUND)
+        
 class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = HouseReservation.objects.all()
     serializer_class = HouseReservationSerializer

@@ -17,6 +17,7 @@ CREATE_APPS = [
     'apps.travel_service',
     'apps.users',
     'apps.weather_forecast',
+    'apps.favorite',
     'phonenumbers',
 
 ]
