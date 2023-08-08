@@ -1,22 +1,5 @@
-from django import forms
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room, Housing, \
-    HousingImage, RoomImage
-from multiupload.fields import MultiFileField
-
-
-class HousingImageForm(forms.ModelForm):
-    class Meta:
-        model = HousingImage
-        fields = '__all__'
-
-    images = MultiFileField(min_num=5, max_num=20, max_file_size=1024 * 1024 * 5)
-
-
-class HousingImageInline(admin.TabularInline):
-    model = HousingImage
-    form = HousingImageForm
-    extra = 1
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
 
 
 class HousingAdmin(admin.ModelAdmin):
@@ -24,34 +7,19 @@ class HousingAdmin(admin.ModelAdmin):
     list_filter = ['housing_type']
     search_fields = ['housing_name']
     prepopulated_fields = {'slug': ('housing_name',)}
-    inlines = [HousingImageInline]
 
 
-admin.site.register(Housing, HousingAdmin)
+class HouseFavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'item')
+    list_filter = ('user', 'item')
+    search_fields = ('user__username', 'item__title')
 
 
-class RoomImageForm(forms.ModelForm):
-    class Meta:
-        model = RoomImage
-        fields = '__all__'
-
-    images = MultiFileField(min_num=5, max_num=20, max_file_size=1024 * 1024 * 5)
-
-
-class RoomImageinline(admin.TabularInline):
-    model = RoomImage
-    form = RoomImageForm
-    extra = 1
-
-
+@admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('room_name', 'housing', 'price_per_night', 'max_guest_capacity', 'room_area')
     list_filter = ('room_name', 'housing', 'max_guest_capacity', 'room_amenities')
     search_fields = ('room_name',)
-    inlines = [RoomImageinline]
-
-
-admin.site.register(Room, RoomAdmin)
 
 
 @admin.register(HouseReservation)
