@@ -1,14 +1,15 @@
-from django.shortcuts import render
+import requests
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .serializers import CurrencyConverterSerializer
 from bs4 import BeautifulSoup
-import requests
+from .permissions import IsRegisteredUserOrReadOnly
+from .serializers import CurrencyConverterSerializer
 
 
 # Create your models here.
 class CurrencyConverterViewSet(viewsets.ViewSet):
     serializer_class = CurrencyConverterSerializer
+    permission_classes = [IsRegisteredUserOrReadOnly]
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)

@@ -19,7 +19,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         total_reviews = reviews.count()
         if total_reviews > 0:
             sum_stars = sum(review.stars for review in reviews)
-            return sum_stars / total_reviews
+            return round(sum_stars / total_reviews, 2)
         return 0
 
     def get_total_reviews(self, obj):

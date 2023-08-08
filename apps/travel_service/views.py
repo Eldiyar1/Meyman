@@ -1,15 +1,16 @@
 from rest_framework import viewsets
-from .models import Search, Transfer, Car
-from .serializers import SearchSerializer, TransferSerializer, CarSerializer
-from .filters import SearchFilter, TransferFilter, CarFilter
+from rest_framework.response import Response
+from .models import Transfer, TransferReservation
+from .serializers import TransferSerializer, TransferReservationSerializer
+from .filters import TransferFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from googletrans import Translator
+translator = Translator()
 
 
-class SearchViewSet(viewsets.ModelViewSet):
-    queryset = Search.objects.all()
-    serializer_class = SearchSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = SearchFilter
+class LanguageParamMixin:
+    def get_language(self):
+        return self.request.query_params.get('lang', 'ru')
 
 
 class TransferViewSet(viewsets.ModelViewSet):
@@ -19,8 +20,16 @@ class TransferViewSet(viewsets.ModelViewSet):
     filterset_class = TransferFilter
 
 
-class CarViewSet(viewsets.ModelViewSet):
-    queryset = Car.objects.all()
-    serializer_class = CarSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = CarFilter
+class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
+    queryset = TransferReservation.objects.all()
+    serializer_class = TransferReservationSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lang = self.get_language()
+
+        instance.transfer_location = translator.translate(instance.transfer_location, dest=lang).text
+        instance.return_location = translator.translate(instance.return_location, dest=lang).text
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

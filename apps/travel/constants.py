@@ -1,36 +1,36 @@
 HOUSING_CHOICES = (
-    ('Отели', 'Отели'),
-    ('Хостелы', 'Хостелы'),
-    ('Апартаменты', 'Апартаменты'),
-    ('Гостевые дома', 'Гостевые дома'),
-    ('Санатории', 'Санатории'),
+    ('Hotels', 'Отели'),
+    ('Hostels', 'Хостелы'),
+    ('Apartments', 'Квартиры'),
+    ('Guesthouses', 'Гостевые дома'),
+    ('Sanatoriums', 'Санатории'),
 )
 
 ACCOMMODATION_CHOICES = (
-    ("Жилье целиком", "Жилье целиком"),
-    ("Комната", "Комната"),
-    ("Общая комната", "Общая комната"),
+    ("Entire place", "Жилье целиком"),
+    ("Room", "Комната"),
+    ("Shared room", "Общая комната"),
 )
 
 BEDROOM_CHOICES = (
-    ("1 спальня", "1 спальня"),
-    ("2 спальни", "2 спальни"),
-    ("Больше 3 спален", "Больше 3 спален"),
+    ("1 bedroom", "1 спальня"),
+    ("2 bedrooms", "2 спальни"),
+    ("More than 3 bedrooms", "Больше 3 спален"),
 )
 
 BED_CHOICES = (
-    ("Отдельные", "Отдельные"),
-    ("Двуспальная", "Двуспальная"),
-    ("Больше 3х", "Больше 3х"),
+    ("Single", "Отдельные"),
+    ("Double", "Двуспальная"),
     ("Kingsize", "Kingsize"),
-    ("Queensize ", "Queensize "),
+    ("Queensize", "Queensize"),
+    ("Диван-кровать", "Диван-кровать"),
 )
 
 FOOD_CHOICES = (
-    ("Все включено", "Все включено"),
-    ("Завтрак включен", "Завтрак включен"),
-    ("Не включено", "Не включено"),
-    ("С собственной кухней", "С собственной кухней"),
+    ("all-inclusive", "Все включено"),
+    ("Breakfast included", "Завтрак включен"),
+    ("Not included", "Не включено"),
+    ("With own kitchen", "С собственной кухней"),
 )
 
 PARKING_CHOICES = (
@@ -39,14 +39,25 @@ PARKING_CHOICES = (
     ('no', 'Нет')
 )
 
+PARKING_LOCATION_CHOICES = (
+    ('On-site', 'На территории'),
+    ('Off-site', 'За территорией'),
+)
+
+PAYMENT_CHOICES = (
+    ("Pay now", "К оплате сейчас"),
+    ("Prepayment", "Предоплата"),
+    ("Cash payment", "Оплата наличными"),
+)
+
 HOUSING_AMENITIES_CHOICES = (
     ('free_internet', 'Бесплатный интернет'),
     ('spa_services', 'Спа услуги'),
-    ('bar_or_restaurant', 'Бар/Ресторан'),
+    ('restaurant', 'Ресторан'),
+    ('Sports Hall', 'Спортивный зал'),
     ('pool', 'Бассейн'),
     ('airport_transfer', 'Трансфер от/до аэропорта'),
     ('fitness', 'Фитнес'),
-    ('pet_allowed', 'Можно с питомцами'),
     ('indoor_pool', 'Крытый бассейн'),
     ('non_smoking_rooms', 'Номера для некурящих'),
     ('wifi', 'Wifi'),
@@ -59,6 +70,7 @@ HOUSING_AMENITIES_CHOICES = (
     ('wine_champagne', 'Вино/шампанское (платно)'),
     ('kids_menu', 'Детское меню (платно)'),
     ('breakfast_in_room', 'Завтрак в номер'),
+    ('breakfast_paid', 'Завтрак включен в стоимость проживания?'),
     ('free_wifi', 'Бесплатный Wi-Fi на территории всего отеля'),
     ('daily_cleaning', 'Ежедневная уборка'),
     ('laundry_service', 'Услуги по глажению одежды (платно)'),
@@ -80,7 +92,6 @@ HOUSING_AMENITIES_CHOICES = (
     ('luggage_storage', 'Хранение багажа'),
     ('express_check_in', 'Ускоренная регистрация'),
     ('full_time_front_desk', 'Круглосуточная стойка регистрации'),
-    ('indoor_pool_heated', 'Крытый бассейн/бассейн с подогревом'),
     ('transfer_paid', 'Трансфер (платно)'),
     ('food_delivery_to_room_paid', 'Доставка продуктов питания в номер (платно)'),
     ('smoking_areas', 'Места для курения'),
@@ -111,8 +122,21 @@ HOUSING_AMENITIES_CHOICES = (
     ('dry_cleaning', 'Сухая чистка'),
     ('shoe_shine', 'Чистка обуви'),
     ('kids_playground', 'Детская площадка'),
-    ('allow_children', 'C детьми?'),
+    ('allow_children', 'Можно c детьми'),
     ('allow_pets', 'C домашними животными'),
+    ('pets_paid', 'Берете ли вы плату за домашних животных?'),
+    ('Parking lot', 'Парковка'),
+    ('Jacuzzi', 'Джакузи'),
+    ('Sauna', 'Сауна'),
+    ('Luggage storage', 'Камера хранения багажа'),
+    ('Accessible for people with disabilities', 'Доступ людям с ограниченными возможностями'),
+    ('Souvenir shop', 'Сувенирный магазин'),
+    ('Internet access: in rooms', 'Доступ в интернет: в номерах'),
+    ('Internet access: throughout the hotel', 'Доступ в интернет: на всей территории отеля'),
+    ('Car rental', 'Прокат автомобиля'),
+    ('Dining', 'Питание'),
+    ('Poolside bar', 'Бар у бассейна'),
+    ('Cafe', 'Кафе'),
 )
 
 ROOM_AMENITIES_CHOICES = (
@@ -127,6 +151,7 @@ ROOM_AMENITIES_CHOICES = (
     ('heating', 'Отопление'),
     ('sofa_bed', 'Диван-кровать'),
     ('folding_bed', 'Раскладная кровать'),
+    ('Double bed', 'Двуспальная кровать'),
     ('wardrobe', 'Шкаф или гардероб'),
     ('linen', 'Белье'),
     ('clothes_hanger', 'Вешалка для одежды'),
@@ -150,19 +175,74 @@ ROOM_AMENITIES_CHOICES = (
     ('sitting_area', 'Зона отдыха'),
     ('telephone', 'Телефон'),
     ('bottled_water', 'Бутилированная вода'),
+    ('Safe', 'Сейф'),
     ('laptop_safe_box', 'Сейф для ноутбука'),
     ('private_bathroom', 'Частные ванные комнаты'),
     ('wake_up_service', 'Услуга будильник / будильник'),
     ('minibar', 'Минибар'),
-    ('flat_screen_tv', 'Телевизор с плоским экраном'),
     ('bath_or_shower', 'Ванна/душ'),
+    ('Dressers', 'Комоды'),
+    ('Mini kitchen', 'Мини кухня'),
+    ('Fireplace', 'Камин'),
+    ('Appetizers', 'Закуски'),
+    ('2 rooms', '2 комнаты'),
+    ('Nightstand', 'Тумба'),
+    ('Television', 'Телевизор'),
+    ('Bathroom', 'Ванная комната'),
+    ('Phone', 'Телефон'),
+    ('Chest of drawers', 'Комоды'),
+    ('Slippers', 'Тапочки'),
+    ('Bathrobe', 'Халат'),
 )
 
-STAR_CHOICES = [
+RATING_CHOICES = (
+    ('Замечательно', '9+: Замечательно'),
+    ('Отлично', '8+: Отлично'),
+    ('Хорошо', '7+: Хорошо'),
+    ('Неплохо', '5+: Неплохо'),
+    ('Не оценено', 'Не оценено'),
+)
+
+ACCOMMODATION_TYPE_CHOICES = (
+    ('1_bedroom_double', 'Двухместный номер с 1 кроватью'),
+    ('2_bedroom_twin', 'Двухместный с 2 отдельными кроватями'),
+    ('1_or_2_bedroom', 'Двухместный номер с 1 кроватью или 2 отдельными кроватями'),
+    ('luxury', 'Люкс'),
+    ('3_bedroom', 'Трехместный номер'),
+    ('family', 'Семейный'),
+    ('deluxe', 'Делюкс'),
+    ('4_bedroom', 'Четырехместный'),
+    ('penthouse', 'Пентхаус'),
+    ('connecting', 'Коннектирующийся номер'),
+    ('business', 'Бизнес'),
+    ('royal_luxury', 'Королевский люкс'),
+    ('economy', 'Эконом'),
+    ('standard', 'Стандартный'),
+)
+
+CHOICES_DA_NET = (
+    (True, 'Да'),
+    (False, 'Нет'),
+)
+
+TIME_CHOICES = [(hour, f'{hour:02d}:00') for hour in range(24)]
+
+BREAKFAST_CHOICES = (
+    ('Asian', 'Азиатский'),
+    ('Continental', 'Континентальный'),
+    ('Swedish', 'Шведский'),
+)
+
+CANCELLATION_CHOICES = (
+    ('before_00_00_on_check_in_day', 'До 00:00 в день заезда'),
+    ('anytime', 'В любое время'),
+)
+
+STAR_CHOICES = (
     (1, '*'),
     (2, '**'),
     (3, '***'),
     (4, '****'),
     (5, '*****'),
     (0, 'Без звезд'),
-]
+)

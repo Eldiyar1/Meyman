@@ -1,42 +1,35 @@
+from django.core.validators import MinLengthValidator
 from rest_framework import serializers
-from .models import Search, Transfer, Car
+from .models import Transfer, TransferReservation, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 
-class SearchSerializer(serializers.ModelSerializer):
-    check_in_date = serializers.DateField(format='%d-%m-%Y')
-    check_out_date = serializers.DateField(format='%d-%m-%Y')
-
+class TransferImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Search
-        fields = (
-            'destination', 'check_in_date', 'check_out_date', 'adults',
-            'teens', 'children', 'infants', 'pets',
-        )
+        model = TransferImage
+        fields = '__all__'
 
 
 class TransferSerializer(serializers.ModelSerializer):
-    pickup_date = serializers.DateField(format='%d-%m-%Y')
-    return_date = serializers.DateField(format='%d-%m-%Y')
+    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+                                                    label="Территории эксплуатации")
+    safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
+    images = TransferImageSerializer(many=True, read_only=True, label='Изображение трансфера')
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
+        write_only=True, validators=[MinLengthValidator(5)])
 
     class Meta:
         model = Transfer
-        fields = (
-            'transfer_location', 'destination_location', 'pickup_date', 'pickup_time', 'return_location',
-            'return_date', 'return_time', 'with_driver', 'different_pickup_places'
-        )
-
-
-class CarSerializer(serializers.ModelSerializer):
-    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                     label="Территория эксплуатации")
-    has_safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
-                                                           label="Наличие системы безопасности",
-                                                           allow_blank=True, required=False)
-
-    class Meta:
-        model = Car
         fields = '__all__'
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop('uploaded_images', [])
+        transfer = Transfer.objects.create(**validated_data)
+        for image in uploaded_images:
+            TransferImage.objects.create(transfer=transfer, image=image)
+
+        return transfer
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -46,3 +39,11 @@ class CarSerializer(serializers.ModelSerializer):
             data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
 
         return data
+
+class TransferReservationSerializer(serializers.ModelSerializer):
+    pickup_date = serializers.DateField(format='%d-%m-%Y')
+    return_date = serializers.DateField(format='%d-%m-%Y')
+
+    class Meta:
+        model = TransferReservation
+        fields = '__all__'
