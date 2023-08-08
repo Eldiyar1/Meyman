@@ -39,9 +39,6 @@ class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
         instance.food_type = translator.translate(instance.food_type, dest=lang).text
 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
 
 class HouseFavoriteViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
