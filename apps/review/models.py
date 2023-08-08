@@ -11,7 +11,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='review_news',
                              verbose_name='Новости',
                              null=True, blank=True)

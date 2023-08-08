@@ -1,8 +1,8 @@
-# USER_TYPE_CHOICES = [
-#     ('client', 'Client'),
-#     ('owner', 'Owner'),
-#     ('admin', 'Admin'),
-# ]
+USER_TYPE_CHOICES = [
+    ('client', 'Client'),
+    ('owner', 'Owner'),
+    ('admin', 'Admin'),
+]
 
 
 

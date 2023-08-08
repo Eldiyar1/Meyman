@@ -88,37 +88,37 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'apps.users.email.EmailBackend',
-# ]
-# REST_FRAMEWORK = {
-#     "NON_FIELD_ERRORS_KEY": "errors",
-#     "DEFAULT_AUTHENTICATION_CLASSES": (
-#         "rest_framework.authentication.SessionAuthentication",
-#         "rest_framework_simplejwt.authentication.JWTAuthentication",
-#
-#         'apps.users.permissions.CustomTokenAuthentication',
-#
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ],
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 2,
-#     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-# }
-# REST_USE_JWT = True
-# JWT_AUTH = {
-#     'JWT_EXPIRATION_DELTA': timedelta(days=1),
-# }
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-#     "SIGNING_KEY": SECRET_KEY,
-#     "AUTH_HEADER_TYPES": ("Bearer",),
-# }
-# AUTH_USER_MODEL = 'users.CustomUser'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'apps.users.email.EmailBackend',
+]
+REST_FRAMEWORK = {
+    "NON_FIELD_ERRORS_KEY": "errors",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+
+        'apps.users.permissions.CustomTokenAuthentication',
+
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+REST_USE_JWT = True
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+AUTH_USER_MODEL = 'users.CustomUser'
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,

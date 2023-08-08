@@ -6,8 +6,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3080",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
-    "https://b40d-212-112-103-156.ngrok-free.app",
+    "https://d6a8-185-138-186-141.ngrok-free.app",
 ]
 ALLOWED_HOSTS = ['*'] + CORS_ALLOWED_ORIGINS
 
-CSRF_TRUSTED_ORIGINS = ["https://b40d-212-112-103-156.ngrok-free.app"]
+CSRF_TRUSTED_ORIGINS = ["https://d6a8-185-138-186-141.ngrok-free.app"]
