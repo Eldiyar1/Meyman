@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room, HouseFavorite
+from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
 
 
 class HousingAdmin(admin.ModelAdmin):
@@ -7,12 +7,6 @@ class HousingAdmin(admin.ModelAdmin):
     list_filter = ['housing_type']
     search_fields = ['housing_name']
     prepopulated_fields = {'slug': ('housing_name',)}
-
-
-class HouseFavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'item')
-    list_filter = ('user', 'item')
-    search_fields = ('user__username', 'item__title')
 
 
 @admin.register(Room)
@@ -28,10 +22,6 @@ class HouseReservationAdmin(admin.ModelAdmin):
     list_filter = ('destination', 'check_in_date', 'check_out_date')
     search_fields = ('region',)
 
-
-@admin.register(HouseFavorite)
-class HouseFavoriteAdmin(admin.ModelAdmin):
-    fields = ('user', 'item')
 
 
 @admin.register(Rating)
