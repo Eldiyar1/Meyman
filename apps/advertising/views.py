@@ -5,7 +5,7 @@ from .models import Advertising
 from .serializers import AdvertisingSerializer
 from rest_framework.response import Response
 from googletrans import Translator
-from .permissions import IsRegisteredUserOrReadOnly
+from .permissions import IsAdminUserOrReadOnly
 translator = Translator()
 
 
@@ -21,7 +21,7 @@ class AdvertisingAPI(LanguageParamMixin, GenericViewSet,
               mixins.UpdateModelMixin):
     queryset = Advertising.objects.all()
     serializer_class = AdvertisingSerializer
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
     def retrieve(self, request, *args, **kwargs):

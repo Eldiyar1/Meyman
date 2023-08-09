@@ -5,7 +5,7 @@ from googletrans import Translator
 from .models import Transfer, TransferReservation
 from .serializers import TransferSerializer, TransferReservationSerializer
 from .filters import TransferFilter
-from .permissions import IsRegisteredUserOrReadOnly
+from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 translator = Translator()
 
 
@@ -19,13 +19,13 @@ class TransferViewSet(viewsets.ModelViewSet):
     serializer_class = TransferSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TransferFilter
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    permission_classes = [IsOwnerUserOrReadOnly]
 
 
 class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = TransferReservation.objects.all()
     serializer_class = TransferReservationSerializer
-    permission_classes = [IsRegisteredUserOrReadOnly]
+    permission_classes = [IsClientUserOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

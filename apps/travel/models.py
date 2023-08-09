@@ -64,13 +64,6 @@ class Housing(models.Model):
         super().save(*args, **kwargs)
 
 
-class HouseFavorite(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    item = models.ForeignKey(Housing, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Избранное"
-        verbose_name_plural = "Избранные"
 
 
 class Room(models.Model):
@@ -113,6 +106,7 @@ class Rating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='ratings_given')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='ratings_received')
     rating = models.CharField(max_length=20, choices=RATING_CHOICES, default='Не оценено', verbose_name='Рейтинг')
+
 
 
 class HouseReservation(models.Model):
