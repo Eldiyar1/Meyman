@@ -27,7 +27,7 @@ class Housing(models.Model):
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
-    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=1300, verbose_name='Удобства')
+    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=1800, verbose_name='Удобства')
     check_in_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд С", null=True, blank=True)
     check_in_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд До", null=True, blank=True)
     check_out_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Отъезд С", null=True, blank=True)
@@ -129,7 +129,7 @@ class Room(models.Model):
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     room_image = models.ImageField(upload_to='images/rooms', verbose_name="Изображение")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
-    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=700, verbose_name='Удобства')
+    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=850, verbose_name='Удобства')
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
     bedrooms = models.CharField(max_length=50, choices=BEDROOM_CHOICES, verbose_name="Количество спален")

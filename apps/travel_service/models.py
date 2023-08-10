@@ -34,8 +34,8 @@ class Transfer(models.Model):
     year = models.PositiveIntegerField(verbose_name='Год выпуска',
                                        validators=[MinValueValidator(1970), MaxValueValidator(2025)])
     driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
-    amenities = MultiSelectField(choices=AMENITIES_CHOICES, max_length=100, verbose_name="Внутренние удобства")
-    safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=100,
+    amenities = MultiSelectField(choices=AMENITIES_CHOICES, max_length=150, verbose_name="Внутренние удобства")
+    safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=255,
                                         verbose_name='Наличие системы безопасности')
     pickup_location = models.CharField(choices=DESTINATION_CHOICES, max_length=100, verbose_name='Место получения')
     car_address = models.CharField(max_length=255, verbose_name='Адрес получения')
