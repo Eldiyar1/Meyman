@@ -16,7 +16,7 @@ class Transfer(models.Model):
         verbose_name_plural = 'Трансферы'
 
     brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка автомобиля')
-    transfer_image = models.ImageField(upload_to='images/housing', verbose_name="Изображение автомобиля")
+    transfer_image = models.ImageField(upload_to='transfer', verbose_name="Изображение автомобиля")
     description = models.TextField(verbose_name='Описание автомобиля', blank=True)
     category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория автомобиля')
     body_type = models.CharField(choices=BODY_TYPES, max_length=50, verbose_name='Тип кузова')

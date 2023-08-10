@@ -18,7 +18,7 @@ class Housing(models.Model):
         verbose_name_plural = "Места жительства"
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    image = models.ImageField(upload_to='images/housing', verbose_name="Изображение")
+    image = models.ImageField(upload_to='housing', verbose_name="Изображение")
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
@@ -127,7 +127,7 @@ class Room(models.Model):
 
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
-    room_image = models.ImageField(upload_to='images/rooms', verbose_name="Изображение")
+    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображение")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=850, verbose_name='Удобства')
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
