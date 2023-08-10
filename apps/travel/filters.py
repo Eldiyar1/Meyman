@@ -1,20 +1,24 @@
 from django_filters import FilterSet, ChoiceFilter, MultipleChoiceFilter, NumberFilter
 
-from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, RATING_CHOICES
-from .models import Housing, Room, Hotel, Hostel, Apartment, GuestHouse, Sanatorium
+from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, RATING_RANGE_CHOICES
+from .models import Housing, Room, Hotel, Hostel, Apartment, Sanatorium, House
 
 
-class AbstractHousingFilter(FilterSet):
+class HousingFilter(FilterSet):
     housing_amenities = MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="Удобства жилья")
-    rating = ChoiceFilter(choices=RATING_CHOICES, label="Рейтинг", method='filter_by_rating')
+    rating_range = ChoiceFilter(choices=RATING_RANGE_CHOICES, method="filter_by_rating_range", label="Рейтинг по отзывам")
 
-    def filter_by_rating(self, queryset, name, value):
-        return queryset.filter(ratings_received__rating=value)
+    def filter_by_rating_range(self, queryset, name, value):
+        lower_rate, upper_rate = value.split('-')
+        return queryset.filter(
+            housingreview__overall_experience__gte=lower_rate,
+            housingreview__overall_experience__lte=upper_rate
+        )
 
     class Meta:
         model = Housing
         fields = (
-            'housing_type', 'housing_type', 'accommodation_type', 'food_type', 'stars', 'housing_amenities',
+            'housing_type', 'accommodation_type', 'food_type', 'stars', 'housing_amenities',
         )
 
 
@@ -30,26 +34,26 @@ class RoomFilter(FilterSet):
             'without_card', 'free_cancellation', 'payment')
 
 
-class HotelFilter(AbstractHousingFilter):
-    class Meta(AbstractHousingFilter.Meta):
+class HotelFilter(HousingFilter):
+    class Meta(HousingFilter.Meta):
         model = Hotel
 
 
-class HostelFilter(AbstractHousingFilter):
-    class Meta(AbstractHousingFilter.Meta):
+class HostelFilter(HousingFilter):
+    class Meta(HousingFilter.Meta):
         model = Hostel
 
 
-class ApartmentFilter(AbstractHousingFilter):
-    class Meta(AbstractHousingFilter.Meta):
+class ApartmentFilter(HousingFilter):
+    class Meta(HousingFilter.Meta):
         model = Apartment
 
 
-class GuestHouseFilter(AbstractHousingFilter):
-    class Meta(AbstractHousingFilter.Meta):
-        model = GuestHouse
+class HouseFilter(HousingFilter):
+    class Meta(HousingFilter.Meta):
+        model = House
 
 
-class SanatoriumFilter(AbstractHousingFilter):
-    class Meta(AbstractHousingFilter.Meta):
+class SanatoriumFilter(HousingFilter):
+    class Meta(HousingFilter.Meta):
         model = Sanatorium

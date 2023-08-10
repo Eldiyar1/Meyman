@@ -13,7 +13,6 @@ CREATE_APPS = [
     'apps.travel',
     'apps.advertising',
     'apps.news',
-    'apps.review',
     'apps.travel_service',
     'apps.users',
     'apps.weather_forecast',

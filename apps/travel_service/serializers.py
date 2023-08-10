@@ -1,12 +1,18 @@
 from rest_framework import serializers
-from .models import Transfer, TransferReservation
+from .models import Transfer, TransferReservation, TransferReview
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
+
+class TransferReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransferReview
+        fields = '__all__'
 
 class TransferSerializer(serializers.ModelSerializer):
     operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                     label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
+    ratings = TransferReviewSerializer(many=True, read_only=True, label="Отзывы")
 
     class Meta:
         model = Transfer

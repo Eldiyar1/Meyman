@@ -1,32 +1,40 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
+from .models import Hotel, Hostel, Apartment, Sanatorium, HousingReview, HousingReservation, Room, House
 
 
 class HousingAdmin(admin.ModelAdmin):
     list_display = ['housing_name', 'address', 'housing_type', 'accommodation_type', 'food_type']
-    list_filter = ['housing_type']
-    search_fields = ['housing_name']
+    list_filter = ['housing_type', 'region', 'stars', 'food_type']
+    search_fields = ['housing_name', 'address']
     prepopulated_fields = {'slug': ('housing_name',)}
+
+
+@admin.register(HousingReservation)
+class HousingReservationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'housing', 'check_in_date', 'check_out_date', 'get_total_guests', 'pets')
+    list_filter = ('destination', 'check_in_date', 'check_out_date')
+    search_fields = ('user__username', 'housing__housing_name')
+
+    def get_total_guests(self, obj):
+        return obj.adults + obj.teens + obj.children + obj.infants
+
+    get_total_guests.short_description = 'Total Guests'
+
+
+@admin.register(HousingReview)
+class HousingReviewAdmin(admin.ModelAdmin):
+    list_display = ('user', 'housing', 'overall_experience', 'staff_rating', 'comfort_rating', 'cleanliness_rating',
+                    'value_for_money_rating', 'food_rating', 'location_rating')
+    list_filter = ('overall_experience', 'staff_rating', 'comfort_rating', 'cleanliness_rating',
+                   'value_for_money_rating', 'food_rating', 'location_rating')
+    search_fields = ('user__username', 'housing__housing_name')
 
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('room_name', 'housing', 'price_per_night', 'max_guest_capacity', 'room_area')
-    list_filter = ('room_name', 'housing', 'max_guest_capacity', 'room_amenities')
-    search_fields = ('room_name',)
-
-
-@admin.register(HouseReservation)
-class HouseReservationAdmin(admin.ModelAdmin):
-    list_display = ('destination', 'check_in_date', 'check_out_date', 'adults', 'teens', 'children', 'infants', 'pets')
-    list_filter = ('destination', 'check_in_date', 'check_out_date')
-    search_fields = ('region',)
-
-
-
-@admin.register(Rating)
-class RatingAdmin(admin.ModelAdmin):
-    list_display = ('rating',)
+    list_display = ('housing', 'room_name', 'price_per_night', 'max_guest_capacity', 'room_area')
+    list_filter = ('housing', 'room_name', 'smoking_allowed', 'without_card', 'free_cancellation')
+    search_fields = ('housing__housing_name', 'room_name')
 
 
 @admin.register(Hotel)
@@ -44,8 +52,8 @@ class ApartmentAdmin(HousingAdmin):
     pass
 
 
-@admin.register(GuestHouse)
-class GuestHouseAdmin(HousingAdmin):
+@admin.register(House)
+class HouseAdmin(HousingAdmin):
     pass
 
 

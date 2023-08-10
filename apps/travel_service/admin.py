@@ -1,19 +1,27 @@
 from django.contrib import admin
-from .models import Transfer, TransferReservation
+from .models import Transfer, TransferReservation, TransferReview
 
 
 @admin.register(Transfer)
 class TransferAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_consumption',  'year')
-    list_filter = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_consumption', 'year')
-    search_fields = ('brand', 'year')
+    list_display = ('brand', 'category', 'body_type', 'transmission', 'rental_price', 'fuel_type', 'year',
+                    'pickup_location')
+    list_filter = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_type', 'year',
+                   'pickup_location')
+    search_fields = ('brand', 'category', 'year', 'pickup_location')
 
 
 @admin.register(TransferReservation)
 class TransferReservationAdmin(admin.ModelAdmin):
-    list_display = (
-        'destination_location', 'transfer_location', 'pickup_date', 'pickup_time', 'return_location', 'return_date',
-        'return_time', 'with_driver')
-    list_filter = ('transfer_location', 'destination_location', 'pickup_date', 'return_location', 'return_date',
+    list_display = ('user', 'destination_location', 'transfer_location', 'pickup_date', 'pickup_time',
+                    'return_location', 'return_date', 'return_time', 'with_driver')
+    list_filter = ('user', 'transfer_location', 'destination_location', 'pickup_date', 'return_location', 'return_date',
                    'different_pickup_places')
-    search_fields = ('transfer_location',)
+    search_fields = ('user', 'transfer_location', 'destination_location')
+
+
+@admin.register(TransferReview)
+class TransferReviewAdmin(admin.ModelAdmin):
+    list_display = ('user', 'transfer', 'comment')
+    list_filter = ('user', 'transfer')
+    search_fields = ('user', 'transfer__brand', 'comment')

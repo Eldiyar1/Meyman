@@ -9,6 +9,7 @@ decorator==5.1.1
 Django==4.2.3
 django-cors-headers==4.2.0
 django-filter==23.2
+django-inline-media==1.4.2
 django-jazzmin==2.6.0
 django-multiselectfield==0.1.12
 django-multiupload==0.6.1
@@ -24,6 +25,7 @@ geojson==2.5.0
 googletrans==4.0.0rc1
 h11==0.9.0
 h2==3.2.0
+housing==0.3
 hpack==3.0.0
 hstspreload==2023.1.1
 httpcore==0.9.1
@@ -58,3 +60,4 @@ typing_extensions==4.7.1
 tzdata==2023.3
 uritemplate==4.1.1
 urllib3==2.0.4
+validators==0.20.0

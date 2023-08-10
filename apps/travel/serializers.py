@@ -1,49 +1,43 @@
-from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, \
-    Room
+from .models import Hotel, Hostel, Apartment, Sanatorium, Housing, HousingReview, HousingReservation, \
+    Room, House
 
 
-class RatingSerializer(serializers.ModelSerializer):
+class HousingReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Rating
+        model = HousingReview
         fields = '__all__'
 
 
-
-
-
-
-
 class HousingSerializer(serializers.ModelSerializer):
-    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Жилищные удобства")
-    ratings_received = RatingSerializer(many=True, read_only=True, label="Рейтинги")
+    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Удобства")
+    ratings = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Housing
         fields = '__all__'
 
+    def get_average_rating(self, obj):
+        return obj.get_average_rating()
 
 
-
-
-class RoomSerializer(serializers.ModelSerializer):
-    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства номера")
-
-    class Meta:
-        model = Room
-        fields = '__all__'
-
-
-
-class HouseReservationSerializer(serializers.ModelSerializer):
+class HousingReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
 
     class Meta:
-        model = HouseReservation
+        model = HousingReservation
+        fields = '__all__'
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства")
+
+    class Meta:
+        model = Room
         fields = '__all__'
 
 
@@ -62,9 +56,9 @@ class ApartmentSerializer(HousingSerializer):
         model = Apartment
 
 
-class GuestHouseSerializer(HousingSerializer):
+class HouseSerializer(HousingSerializer):
     class Meta(HousingSerializer.Meta):
-        model = GuestHouse
+        model = House
 
 
 class SanatoriumSerializer(HousingSerializer):
