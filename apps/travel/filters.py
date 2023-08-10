@@ -9,10 +9,9 @@ class HousingFilter(FilterSet):
     rating_range = ChoiceFilter(choices=RATING_RANGE_CHOICES, method="filter_by_rating_range", label="Рейтинг по отзывам")
 
     def filter_by_rating_range(self, queryset, name, value):
-        lower_rate, upper_rate = value.split('-')
+        lower_rate, upper_rate = map(int, value.split('-'))
         return queryset.filter(
-            housingreview__overall_experience__gte=lower_rate,
-            housingreview__overall_experience__lte=upper_rate
+            id__in=[housing.id for housing in queryset if lower_rate <= housing.get_average_rating() <= upper_rate]
         )
 
     class Meta:
