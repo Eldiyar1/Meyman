@@ -166,8 +166,8 @@ class Hostel(Housing):
 
 class Apartment(Housing):
     class Meta:
-        verbose_name = "Апартаменты"
-        verbose_name_plural = "Апартаменты"
+        verbose_name = "Квартира"
+        verbose_name_plural = "Квартиры"
 
 
 class House(Housing):
