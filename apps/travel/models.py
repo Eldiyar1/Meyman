@@ -81,8 +81,8 @@ class Housing(models.Model):
 
 class HousingReservation(models.Model):
     class Meta:
-        verbose_name = "Бронь места жительста"
-        verbose_name_plural = "Бронь мест жительст"
+        verbose_name = "Бронь жилища"
+        verbose_name_plural = "Бронь жилищ"
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
