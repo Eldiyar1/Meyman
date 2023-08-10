@@ -10,9 +10,11 @@ from .tokens import create_jwt_pair_for_user
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
+    permission_classes = [IsUnregistered]
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
+    permission_classes = [IsUnregistered]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
