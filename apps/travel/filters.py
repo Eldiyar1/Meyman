@@ -6,7 +6,8 @@ from .models import Housing, Room, Hotel, Hostel, Apartment, Sanatorium, House
 
 class HousingFilter(FilterSet):
     housing_amenities = MultipleChoiceFilter(choices=HOUSING_AMENITIES_CHOICES, label="Удобства жилья")
-    rating_range = ChoiceFilter(choices=RATING_RANGE_CHOICES, method="filter_by_rating_range", label="Рейтинг по отзывам")
+    rating_range = ChoiceFilter(choices=RATING_RANGE_CHOICES, method="filter_by_rating_range",
+                                label="Рейтинг по отзывам")
 
     def filter_by_rating_range(self, queryset, name, value):
         lower_rate, upper_rate = map(int, value.split('-'))
@@ -16,9 +17,7 @@ class HousingFilter(FilterSet):
 
     class Meta:
         model = Housing
-        fields = (
-            'housing_type', 'accommodation_type', 'food_type', 'stars', 'housing_amenities',
-        )
+        fields = ('housing_type', 'accommodation_type', 'food_type', 'stars', 'housing_amenities',)
 
 
 class RoomFilter(FilterSet):
