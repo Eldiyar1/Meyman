@@ -150,4 +150,4 @@ AMENITIES_CHOICES = (
     ('Детское кресло', 'Детское кресло'),
 )
 
-PASSENGER_CAPACITY_CHOICES = [(i, i) for i in range(1, 21)]
+PASSENGER_SITS_CHOICES = [(i, i) for i in range(1, 21)]

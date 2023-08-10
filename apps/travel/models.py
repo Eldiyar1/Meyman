@@ -18,7 +18,6 @@ class Housing(models.Model):
         verbose_name_plural = "Места жительства"
 
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    image = models.ImageField(upload_to='housing', verbose_name="Изображение")
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
@@ -41,17 +40,12 @@ class Housing(models.Model):
                                              verbose_name='Стоимость завтрака в US$ (с человека за ночь)')
     breakfast_type = MultiSelectField(choices=BREAKFAST_CHOICES, max_length=100, blank=True, null=True,
                                       verbose_name='Какой тип завтрака вы предлагаете?')
-    parking = models.CharField(max_length=50, choices=PARKING_CHOICES, default='no', verbose_name='Услуги парковки')
+    parking = models.CharField(max_length=50, choices=PARKING_CHOICES, default='Нет', verbose_name='Услуги парковки')
     parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
                                            verbose_name='Стоимость парковки в US$ (за день)')
     parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES, blank=True, null=True,
                                         verbose_name='Местонахождение парковки')
-    slug = models.SlugField(
-        max_length=255,
-        unique=True,
-        verbose_name="человеко-понятный url",
-        blank=True, null=True
-    )
+    slug = models.SlugField(max_length=255, unique=True, verbose_name="человеко-понятный url", blank=True, null=True)
 
     def __str__(self):
         return self.housing_name
@@ -79,9 +73,21 @@ class Housing(models.Model):
         return 0
 
 
+class HousingImage(models.Model):
+    class Meta:
+        verbose_name = 'Изображение места жительства'
+        verbose_name_plural = 'Изображения места жительств'
+
+    image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
+
+    def __str__(self):
+        return f"Image for {self.housing.housing_name}"
+
+
 class HousingReservation(models.Model):
     class Meta:
-        verbose_name = "Бронь жилища"
+        verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
@@ -127,18 +133,17 @@ class Room(models.Model):
 
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
-    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображение")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=850, verbose_name='Удобства')
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
     bedrooms = models.CharField(max_length=50, choices=BEDROOM_CHOICES, verbose_name="Количество спален")
     bed_type = models.CharField(max_length=50, choices=BED_CHOICES, verbose_name="Тип кроватей")
-    single_bed_count = models.PositiveIntegerField(default=0, verbose_name="Количество односпальных кроватей")
-    double_bed_count = models.PositiveIntegerField(default=0, verbose_name="Количество двуспальных кроватей")
-    queen_bed_count = models.PositiveIntegerField(default=0, verbose_name="Количество широких (queen-size) кроватей")
-    king_bed_count = models.PositiveIntegerField(default=0, verbose_name="Количество широких (king-size) кроватей")
-    sofa_bed_count = models.PositiveIntegerField(default=0, verbose_name="Количество диван-кроватей")
+    single_bed = models.PositiveIntegerField(default=1, verbose_name="Односпальных кроватей")
+    double_bed = models.PositiveIntegerField(verbose_name="Двуспальных кроватей", null=True, blank=True)
+    queen_bed = models.PositiveIntegerField(verbose_name="Широких (queen-size) кроватей", null=True, blank=True)
+    king_bed = models.PositiveIntegerField(verbose_name="Широких (king-size) кроватей", null=True, blank=True)
+    sofa_bed = models.PositiveIntegerField(verbose_name="Диван-кроватей", null=True, blank=True)
     max_guest_capacity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(6)],
                                                      verbose_name="Максимальная вместимость гостей в номере")
     room_area = models.PositiveIntegerField(verbose_name="Площадь комнаты(м²)")
@@ -150,6 +155,18 @@ class Room(models.Model):
 
     def __str__(self):
         return self.room_name
+
+
+class RoomImage(models.Model):
+    class Meta:
+        verbose_name = 'Изображение номера'
+        verbose_name_plural = 'Изображения номеров'
+
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
+    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
+
+    def __str__(self):
+        return f"Image for {self.room.room_name}"
 
 
 class Hotel(Housing):

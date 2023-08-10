@@ -5,7 +5,7 @@ from django.utils import timezone
 from multiselectfield import MultiSelectField
 from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
-    BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_CAPACITY_CHOICES
+    BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_SITS_CHOICES
 from apps.travel.constants import PAYMENT_CHOICES
 from apps.users.email import CustomUser
 
@@ -15,22 +15,20 @@ class Transfer(models.Model):
         verbose_name = 'Трансфер'
         verbose_name_plural = 'Трансферы'
 
-    brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка автомобиля')
-    transfer_image = models.ImageField(upload_to='transfer', verbose_name="Изображение автомобиля")
-    description = models.TextField(verbose_name='Описание автомобиля', blank=True)
-    category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория автомобиля')
+    brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка трансфера')
+    description = models.TextField(verbose_name='Описание', blank=True, null=True)
+    category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория')
     body_type = models.CharField(choices=BODY_TYPES, max_length=50, verbose_name='Тип кузова')
     transmission = models.CharField(choices=TRANSMISSION_TYPES, max_length=50, verbose_name='Тип коробки передач')
     steering = models.CharField(choices=STEERING_TYPES, max_length=50, verbose_name='Руль')
     drive_type = models.CharField(choices=DRIVE_TYPES, max_length=50, verbose_name='Тип привода')
     fuel_type = models.CharField(choices=FUEL_TYPES, max_length=50, verbose_name='Тип топлива')
-    color = models.CharField(max_length=50, choices=COLOR_CHOICES, verbose_name='Цвет автомобиля')
+    color = models.CharField(max_length=50, choices=COLOR_CHOICES, verbose_name='Цвет')
     passenger = models.CharField(choices=SEATING_CAPACITY, max_length=50, verbose_name='Вместимость пассажиров')
     condition = models.CharField(choices=CONDITION_CHOICES, max_length=50, verbose_name='Состояние автомобиля')
     fuel_consumption = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход топлива на 100км')
     minimum_age = models.PositiveIntegerField(verbose_name='Минимальный возраст водителя')
-    passenger_capacity = models.IntegerField(choices=PASSENGER_CAPACITY_CHOICES, default=1,
-                                             verbose_name="Количество пассажирских мест")
+    passenger_sits = models.IntegerField(choices=PASSENGER_SITS_CHOICES, default=1, verbose_name="Пассажирских мест")
     year = models.PositiveIntegerField(verbose_name='Год выпуска',
                                        validators=[MinValueValidator(1970), MaxValueValidator(2025)])
     driving_experience = models.PositiveIntegerField(verbose_name='Минимальный стаж вождения для аренды')
@@ -57,6 +55,18 @@ class Transfer(models.Model):
         if 'По всему КР' in self.operating_area:
             self.operating_area = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'По всему КР']
         super().save(*args, **kwargs)
+
+
+class TransferImage(models.Model):
+    class Meta:
+        verbose_name = 'Изображение трансфера'
+        verbose_name_plural = 'Изображения трансферов'
+
+    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
+    transfer_image = models.ImageField(upload_to='rooms', verbose_name="Изображения Трансфера")
+
+    def __str__(self):
+        return f"Image for {self.transfer.brand}"
 
 
 class TransferReservation(models.Model):

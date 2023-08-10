@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Transfer, TransferReservation, TransferReview
+from .models import Transfer, TransferReservation, TransferReview, TransferImage
+
+
+class TransferImageInline(admin.TabularInline):
+    model = TransferImage
+    min_num = 5
+    max_num = 20
+    extra = 1
 
 
 @admin.register(Transfer)
@@ -9,6 +16,7 @@ class TransferAdmin(admin.ModelAdmin):
     list_filter = ('brand', 'category', 'body_type', 'transmission', 'passenger', 'fuel_type', 'year',
                    'pickup_location')
     search_fields = ('brand', 'category', 'year', 'pickup_location')
+    inlines = (TransferImageInline,)
 
 
 @admin.register(TransferReservation)
