@@ -63,7 +63,7 @@ class TransferImage(models.Model):
         verbose_name_plural = 'Изображения трансферов'
 
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    transfer_image = models.ImageField(upload_to='rooms', verbose_name="Изображения Трансфера")
+    transfer_image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
 
     def __str__(self):
         return f"Image for {self.transfer.brand}"
