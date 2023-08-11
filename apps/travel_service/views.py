@@ -2,10 +2,11 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from googletrans import Translator
-from .models import Transfer, TransferReservation
-from .serializers import TransferSerializer, TransferReservationSerializer
+from .models import Transfer, TransferReservation, TransferReview
+from .serializers import TransferSerializer, TransferReservationSerializer, TransferReviewSerializer
 from .filters import TransferFilter
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
+
 translator = Translator()
 
 
@@ -36,3 +37,9 @@ class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = TransferReview.objects.all()
+    serializer_class = TransferReviewSerializer
+    permission_classes = [IsOwnerUserOrReadOnly]

@@ -1,12 +1,26 @@
 from rest_framework import serializers
-from .models import Transfer, TransferReservation
+from .models import Transfer, TransferReservation, TransferReview, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
+
+
+class TransferReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransferReview
+        fields = '__all__'
+
+
+class TransferImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransferImage
+        fields = '__all__'
 
 
 class TransferSerializer(serializers.ModelSerializer):
     operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                    label="Территории эксплуатации")
+                                                     label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
+    ratings = TransferReviewSerializer(many=True, read_only=True, label="Отзывы")
+    transfer_images = TransferImageSerializer(many=True, read_only=True,)
 
     class Meta:
         model = Transfer
@@ -20,6 +34,7 @@ class TransferSerializer(serializers.ModelSerializer):
             data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
 
         return data
+
 
 class TransferReservationSerializer(serializers.ModelSerializer):
     pickup_date = serializers.DateField(format='%d-%m-%Y')

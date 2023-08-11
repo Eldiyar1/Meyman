@@ -5,7 +5,7 @@ from django.utils.text import slugify
 class News(models.Model):
 
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    image = models.ImageField(upload_to='media/images/news', verbose_name='Изображение новости', blank=True, null=True)
+    image = models.ImageField(upload_to='news', verbose_name='Изображение новости', blank=True, null=True)
     content = models.TextField(verbose_name="Содержание")
     published_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата публикации")
     link = models.URLField(max_length=200, blank=True, null=True, verbose_name="Ссылка на источник")

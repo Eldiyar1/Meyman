@@ -41,24 +41,5 @@ class Profile(models.Model):
         return self.email
 
 
-class CarReservation(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())],
-                                     verbose_name="дата бронирование")
-    check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())])
-
-    def __str__(self):
-        return str(self.user)
-
-
-class AccommodationReservation(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
-    check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
-
-    def __str__(self):
-        return str(self.user)
-
-
 
 
