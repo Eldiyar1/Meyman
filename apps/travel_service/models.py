@@ -11,10 +11,6 @@ from apps.users.email import CustomUser
 
 
 class Transfer(models.Model):
-    class Meta:
-        verbose_name = 'Трансфер'
-        verbose_name_plural = 'Трансферы'
-
     brand = models.CharField(max_length=50, choices=BRAND_CHOICES, verbose_name='Марка трансфера')
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     category = models.CharField(choices=CAR_CATEGORIES, max_length=50, verbose_name='Категория')
@@ -48,6 +44,10 @@ class Transfer(models.Model):
     rental_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма аренды (Сутки)')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
 
+    class Meta:
+        verbose_name = 'Трансфер'
+        verbose_name_plural = 'Трансферы'
+
     def __str__(self):
         return self.brand
 
@@ -58,22 +58,18 @@ class Transfer(models.Model):
 
 
 class TransferImage(models.Model):
+    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
+    transfer_image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
+
     class Meta:
         verbose_name = 'Изображение трансфера'
         verbose_name_plural = 'Изображения трансферов'
-
-    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    transfer_image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
 
     def __str__(self):
         return f"Image for {self.transfer.brand}"
 
 
 class TransferReservation(models.Model):
-    class Meta:
-        verbose_name = "Бронь трансфера"
-        verbose_name_plural = "Бронь Трансферов"
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, verbose_name="Трансфер")
     transfer_location = models.CharField(max_length=255, verbose_name="Место получения трансфера")
@@ -88,18 +84,22 @@ class TransferReservation(models.Model):
     different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
 
+    class Meta:
+        verbose_name = "Бронь трансфера"
+        verbose_name_plural = "Бронь Трансферов"
+
     def __str__(self):
         return f"Бронь трансфера для {self.user} на {self.pickup_date}"
 
 
 class TransferReview(models.Model):
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, verbose_name='Название трансфера')
     comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
     def __str__(self):
         return f"Отзыв от {self.user} на {self.transfer}"

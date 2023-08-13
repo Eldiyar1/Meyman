@@ -68,7 +68,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
     serializer_class = HousingReviewSerializer
-    permission_classes = [IsOwnerUserOrReadOnly]
+    permission_classes = [IsClientUserOrReadOnly]
 
 
 class HotelViewSet(HousingModelViewSet):

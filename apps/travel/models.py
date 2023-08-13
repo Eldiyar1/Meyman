@@ -13,10 +13,6 @@ from apps.users.email import CustomUser
 
 
 class Housing(models.Model):
-    class Meta:
-        verbose_name = "Место жительства"
-        verbose_name_plural = "Места жительства"
-
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     address = models.CharField(max_length=255, verbose_name="Адрес")
@@ -47,6 +43,10 @@ class Housing(models.Model):
                                         verbose_name='Местонахождение парковки')
     slug = models.SlugField(max_length=255, unique=True, verbose_name="человеко-понятный url", blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Место жительства"
+        verbose_name_plural = "Места жительства"
+
     def __str__(self):
         return self.housing_name
 
@@ -74,22 +74,18 @@ class Housing(models.Model):
 
 
 class HousingImage(models.Model):
+    image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
+
     class Meta:
         verbose_name = 'Изображение места жительства'
         verbose_name_plural = 'Изображения места жительств'
-
-    image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
 
     def __str__(self):
         return f"Image for {self.housing.housing_name}"
 
 
 class HousingReservation(models.Model):
-    class Meta:
-        verbose_name = "Бронь жилья"
-        verbose_name_plural = "Бронь жилищ"
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
@@ -101,15 +97,15 @@ class HousingReservation(models.Model):
     infants = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Младенцы(младше 2)")
     pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
 
+    class Meta:
+        verbose_name = "Бронь жилья"
+        verbose_name_plural = "Бронь жилищ"
+
     def __str__(self):
         return f"Бронь жилья для {self.user}"
 
 
 class HousingReview(models.Model):
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name='Название места жительства')
     overall_experience = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Общий опыт проживания')
@@ -122,15 +118,15 @@ class HousingReview(models.Model):
     location_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Оценка местоположения')
     comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
 
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
     def __str__(self):
         return f"Отзыв от {self.user} на {self.housing} ({self.overall_experience})"
 
 
 class Room(models.Model):
-    class Meta:
-        verbose_name = 'Номер'
-        verbose_name_plural = 'Номера'
-
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
@@ -153,17 +149,21 @@ class Room(models.Model):
     payment = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас", verbose_name="Оплата")
     policy = models.CharField(choices=CANCELLATION_CHOICES, max_length=50, verbose_name='Правила бесплатной отмены')
 
+    class Meta:
+        verbose_name = 'Номер'
+        verbose_name_plural = 'Номера'
+
     def __str__(self):
         return self.room_name
 
 
 class RoomImage(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
+    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
+
     class Meta:
         verbose_name = 'Изображение номера'
         verbose_name_plural = 'Изображения номеров'
-
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
-    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
 
     def __str__(self):
         return f"Image for {self.room.room_name}"
