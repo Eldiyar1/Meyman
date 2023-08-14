@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .tokens import create_jwt_pair_for_user
-from .models import CustomUser, Profile
+from .models import CustomUser, Profile, ReviewSite
 
 
 
@@ -53,3 +53,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['avatar', 'email', 'phone_number']
+
+class ReviewSiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewSite
+        fields = ['user', 'avatar', 'content', 'created_at']

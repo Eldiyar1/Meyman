@@ -3,14 +3,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .models import CustomUser
-from .serializers import SignUpSerializer,LoginSerializer, ProfileSerializer
+from .models import CustomUser, ReviewSite
+from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
 from .tokens import create_jwt_pair_for_user
+
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     permission_classes = [IsUnregistered]
+
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
@@ -42,6 +44,7 @@ class ClientProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+
 class OwnerProfileView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
@@ -49,6 +52,7 @@ class OwnerProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
 
 class AdminProfileView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
@@ -58,20 +62,24 @@ class AdminProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+
 class ClientListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='client')
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminUser]
+
 
 class OwnerListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='owner')
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminUser]
 
+
 class AdminListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='admin')
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminUser]
+
 
 class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = CustomUser.objects.all()
@@ -82,5 +90,7 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
         return self.request.user
 
 
-
-
+class ReviewSiteViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    queryset = ReviewSite.objects.all()
+    serializer_class = ReviewSiteSerializer
+    permission_classes = [IsAdminUser]
