@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
-from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
+from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .tokens import create_jwt_pair_for_user
 
 
@@ -96,4 +96,4 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
 class ReviewSiteViewSet(ModelViewSet):
     queryset = ReviewSite.objects.all()
     serializer_class = ReviewSiteSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsOwnerAndClient]

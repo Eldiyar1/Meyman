@@ -57,4 +57,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ReviewSiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewSite
-        fields = ['user', 'avatar', 'content', 'created_at']
+        fields = "__all__"

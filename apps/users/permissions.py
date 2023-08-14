@@ -33,3 +33,9 @@ class IsAdminUser(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return request.user.is_authenticated and request.user.is_staff
+class IsOwnerAndClient(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return request.user.is_authenticated and request.user.user_type == "owner" or "client"
