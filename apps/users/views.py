@@ -2,7 +2,10 @@ from rest_framework import generics, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
+
 from django.contrib.auth import authenticate
+
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered
@@ -90,7 +93,7 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
         return self.request.user
 
 
-class ReviewSiteViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class ReviewSiteViewSet(ModelViewSet):
     queryset = ReviewSite.objects.all()
     serializer_class = ReviewSiteSerializer
     permission_classes = [IsAdminUser]
