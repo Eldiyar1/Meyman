@@ -7,7 +7,7 @@ class HousingImageInline(admin.TabularInline):
     model = HousingImage
     min_num = 5
     max_num = 20
-    extra = 1
+    extra = 0
 
 
 class HousingAdmin(admin.ModelAdmin):
@@ -43,7 +43,7 @@ class RoomImageInline(admin.TabularInline):
     model = RoomImage
     min_num = 5
     max_num = 20
-    extra = 1
+    extra = 0
 
 
 @admin.register(Room)

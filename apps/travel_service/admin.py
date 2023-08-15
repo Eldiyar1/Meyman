@@ -6,7 +6,7 @@ class TransferImageInline(admin.TabularInline):
     model = TransferImage
     min_num = 5
     max_num = 20
-    extra = 1
+    extra = 0
 
 
 @admin.register(Transfer)
