@@ -6,7 +6,7 @@ from .models import Transfer, TransferReservation, TransferReview
 from .serializers import TransferSerializer, TransferReservationSerializer, TransferReviewSerializer
 from .filters import TransferFilter
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-
+from .paginations import StandardResultsSetPagination
 translator = Translator()
 
 
@@ -21,6 +21,7 @@ class TransferViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = TransferFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
 
 class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):

@@ -2,13 +2,14 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from googletrans import Translator
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
+from .paginations import StandardResultsSetPagination
 from .models import Room, HousingReview, HousingReservation, Hotel, Hostel, Apartment, House, Sanatorium
 from .serializers import RoomSerializer, HousingReviewSerializer, HousingReservationSerializer, \
     HotelSerializer, HostelSerializer, ApartmentSerializer, HouseSerializer, SanatoriumSerializer
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
-from googletrans import Translator
 
 translator = Translator()
 
@@ -19,6 +20,7 @@ class LanguageParamMixin:
 
 
 class HousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
+
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -63,6 +65,8 @@ class RoomViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RoomFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -77,6 +81,8 @@ class HotelViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = HotelFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
 
 class HostelViewSet(HousingModelViewSet):
@@ -85,6 +91,8 @@ class HostelViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = HostelFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
 
 class ApartmentViewSet(HousingModelViewSet):
@@ -93,6 +101,8 @@ class ApartmentViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = ApartmentFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
 
 class HouseViewSet(HousingModelViewSet):
@@ -101,6 +111,8 @@ class HouseViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = HouseFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
 
 class SanatoriumViewSet(HousingModelViewSet):
@@ -109,4 +121,6 @@ class SanatoriumViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = SanatoriumFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
 
