@@ -9,7 +9,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         if len(value) < 8 or len(value) > 20:
             raise ValidationError("Password must be between 8 and 20 characters long.")
-
+        return value
     def validate_email(self, value):
         if CustomUser.objects.filter(email=value).exists():
             raise ValidationError("Email has already been used")

@@ -103,3 +103,4 @@ class LogoutView(APIView):
     def post(self, request):
         request.auth.delete()
         return Response({"message": "Logout Successful"}, status=status.HTTP_200_OK)
+
