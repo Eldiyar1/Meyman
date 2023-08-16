@@ -65,7 +65,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
                   )
 
     def get_average_rating(self, obj):
-        reviews = HousingReview.objects.filter(housing=obj)  # Получаем все связанные отзывы
+        reviews = HousingReview.objects.filter(housing=obj)
         if reviews:
             total_rating = sum([
                 (review.staff_rating +
