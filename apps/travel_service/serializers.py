@@ -4,6 +4,8 @@ from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 
 class TransferReviewSerializer(serializers.ModelSerializer):
+    date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
+
     class Meta:
         model = TransferReview
         fields = '__all__'
@@ -19,8 +21,8 @@ class TransferSerializer(serializers.ModelSerializer):
     operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
                                                      label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
-    ratings = TransferReviewSerializer(many=True, read_only=True, label="Отзывы")
-    transfer_images = TransferImageSerializer(many=True, read_only=True,)
+    transfer_images = TransferImageSerializer(many=True, read_only=True, )
+    reviews = TransferReviewSerializer(many=True, read_only=True, label="Отзывы")
 
     class Meta:
         model = Transfer

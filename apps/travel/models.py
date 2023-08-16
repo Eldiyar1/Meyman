@@ -4,33 +4,28 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
 from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
-    FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, PAYMENT_CHOICES, \
-    RATING_CHOICES, PARKING_LOCATION_CHOICES, ACCOMMODATION_TYPE_CHOICES, BREAKFAST_CHOICES, CANCELLATION_CHOICES, \
-    TIME_CHOICES, CHOICES_DA_NET
+    FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, \
+    RATING_CHOICES, PARKING_LOCATION_CHOICES, ACCOMMODATION_TYPE_CHOICES, BREAKFAST_CHOICES, TIME_CHOICES
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
+from PIL import Image
 
 
 class Housing(models.Model):
-    class Meta:
-        verbose_name = "Место жительства"
-        verbose_name_plural = "Места жительства"
-
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
-    address = models.CharField(max_length=255, verbose_name="Адрес")
+    address = models.URLField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
-    stars = models.IntegerField(default=1, validators=[MinValueValidator(0), MaxValueValidator(5)],
-                                choices=STAR_CHOICES, verbose_name='Количество звезд')
+    stars = models.IntegerField(default=1, choices=STAR_CHOICES, verbose_name='Количество звезд')
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
     housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=1800, verbose_name='Удобства')
-    check_in_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд С", null=True, blank=True)
-    check_in_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Заезд До", null=True, blank=True)
-    check_out_time_start = models.IntegerField(choices=TIME_CHOICES, verbose_name="Отъезд С", null=True, blank=True)
-    check_out_time_end = models.IntegerField(choices=TIME_CHOICES, verbose_name="Отъезд До", null=True, blank=True)
+    check_in_time_start = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Заезд С")
+    check_in_time_end = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Заезд До")
+    check_out_time_start = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Отъезд С")
+    check_out_time_end = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Отъезд До")
     children_allowed = models.BooleanField(default=False, verbose_name='Можно ли проживать с детьми?')
     pets_allowed = models.BooleanField(default=False, verbose_name='Можно ли проживать с домашними животными?')
     pet_fee = models.BooleanField(default=False, verbose_name='Берете ли вы плату за домашних животных?')
@@ -55,34 +50,53 @@ class Housing(models.Model):
             self.slug = slugify(self.housing_name)
         super().save(*args, **kwargs)
 
-    def get_average_rating(self):
-        ratings = HousingReview.objects.filter(housing=self)
-        if ratings:
-            total_rating = sum([
-                (rating.overall_experience +
-                 rating.staff_rating +
-                 rating.comfort_rating +
-                 rating.cleanliness_rating +
-                 rating.value_for_money_rating +
-                 rating.food_rating +
-                 rating.location_rating) / 7
-                for rating in ratings
-            ])
-            average_rating = total_rating / len(ratings)
-            return round(average_rating, 1)
-        return 0
+    class Meta:
+        verbose_name = "Место жительства"
+        verbose_name_plural = "Места жительства"
+
+
+class HousingReview(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
+    housing = models.ForeignKey("Housing", on_delete=models.CASCADE, verbose_name='Название места жительства',
+                                related_name='reviews')
+    comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
+    date_added = models.DateField(auto_now_add=True, verbose_name="Дата")
+    cleanliness_rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='Чистота')
+    comfort_rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='Комфорт')
+    staff_rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='Персонал')
+    value_for_money_rating = models.IntegerField(choices=RATING_CHOICES,
+                                                 verbose_name='Цена/Качества')
+    food_rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='Питание')
+    location_rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='Местоположение')
+
+    def __str__(self):
+        return f"Отзыв от {self.user} на {self.housing}"
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
 
 class HousingImage(models.Model):
-    class Meta:
-        verbose_name = 'Изображение места жительства'
-        verbose_name_plural = 'Изображения места жительств'
-
     image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
 
     def __str__(self):
         return f"Image for {self.housing.housing_name}"
+
+    def compress_image(self):
+        img = Image.open(self.image.path)
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.image.path, 'JPEG', quality=90)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.compress_image()
+
+    class Meta:
+        verbose_name = 'Изображение места жительства'
+        verbose_name_plural = 'Изображения места жительств'
 
 
 class HousingReservation(models.Model):
@@ -105,33 +119,9 @@ class HousingReservation(models.Model):
         return f"Бронь жилья для {self.user}"
 
 
-class HousingReview(models.Model):
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name='Название места жительства')
-    overall_experience = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Общий опыт проживания')
-    staff_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Оценка персонала')
-    comfort_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Уровень комфорта')
-    cleanliness_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Чистота')
-    value_for_money_rating = models.PositiveIntegerField(choices=RATING_CHOICES,
-                                                         verbose_name='Соотношение цены и качества')
-    food_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Оценка питания')
-    location_rating = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name='Оценка местоположения')
-    comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
-
-    def __str__(self):
-        return f"Отзыв от {self.user} на {self.housing} ({self.overall_experience})"
-
-
 class Room(models.Model):
-    class Meta:
-        verbose_name = 'Номер'
-        verbose_name_plural = 'Номера'
-
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства",
+                                related_name='rooms')
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=850, verbose_name='Удобства')
@@ -148,52 +138,32 @@ class Room(models.Model):
                                                      verbose_name="Максимальная вместимость гостей в номере")
     room_area = models.PositiveIntegerField(verbose_name="Площадь комнаты(м²)")
     smoking_allowed = models.BooleanField(default=False, verbose_name="Разрешено ли курение в комнате")
-    without_card = models.BooleanField(default=True, choices=CHOICES_DA_NET, verbose_name="Без банковской карты")
-    free_cancellation = models.BooleanField(default=False, choices=CHOICES_DA_NET, verbose_name="Бесплатная отмена")
-    payment = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default="К оплате сейчас", verbose_name="Оплата")
-    policy = models.CharField(choices=CANCELLATION_CHOICES, max_length=50, verbose_name='Правила бесплатной отмены')
 
     def __str__(self):
         return self.room_name
 
+    class Meta:
+        verbose_name = 'Номер'
+        verbose_name_plural = 'Номера'
+
 
 class RoomImage(models.Model):
-    class Meta:
-        verbose_name = 'Изображение номера'
-        verbose_name_plural = 'Изображения номеров'
-
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
     room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
 
     def __str__(self):
         return f"Image for {self.room.room_name}"
 
+    def compress_image(self):
+        img = Image.open(self.room_image.path)
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.room_image.path, 'JPEG', quality=90)
 
-class Hotel(Housing):
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.compress_image()
+
     class Meta:
-        verbose_name = "Отель"
-        verbose_name_plural = "Отели"
-
-
-class Hostel(Housing):
-    class Meta:
-        verbose_name = "Хостел"
-        verbose_name_plural = "Хостелы"
-
-
-class Apartment(Housing):
-    class Meta:
-        verbose_name = "Квартира"
-        verbose_name_plural = "Квартиры"
-
-
-class House(Housing):
-    class Meta:
-        verbose_name = "Дом"
-        verbose_name_plural = "Дома"
-
-
-class Sanatorium(Housing):
-    class Meta:
-        verbose_name = "Санаторий"
-        verbose_name_plural = "Санатории"
+        verbose_name = 'Изображение номера'
+        verbose_name_plural = 'Изображения номеров'

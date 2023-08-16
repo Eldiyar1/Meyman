@@ -22,7 +22,7 @@ class NewsViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     permission_classes = [IsRegisteredUserOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = NewsFilter
-    search_fields = ['title', 'content',]
+    search_fields = ['title', 'content']
 
 
     @action(detail=True, methods=['POST'])

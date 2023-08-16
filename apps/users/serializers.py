@@ -6,7 +6,6 @@ from .tokens import create_jwt_pair_for_user
 from .models import CustomUser, Profile
 
 
-
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 from .service import CustomUserManager
-
+from PIL import Image
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -40,6 +40,14 @@ class Profile(models.Model):
     def __str__(self):
         return self.email
 
+    def compress_image(self):
+        img = Image.open(self.avatar.path)
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.avatar.path, 'JPEG', quality=90)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.compress_image()
 
 
