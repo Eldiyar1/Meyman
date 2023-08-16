@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from .tokens import create_jwt_pair_for_user
 from .models import CustomUser, ReviewSite
@@ -95,3 +96,10 @@ class ReviewSiteViewSet(ModelViewSet):
     queryset = ReviewSite.objects.all()
     serializer_class = ReviewSiteSerializer
     permission_classes = [IsOwnerAndClient]
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.auth.delete()
+        return Response({"message": "Logout Successful"}, status=status.HTTP_200_OK)
