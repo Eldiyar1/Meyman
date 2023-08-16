@@ -6,12 +6,10 @@ from .tokens import create_jwt_pair_for_user
 from .models import CustomUser, Profile, ReviewSite
 
 
-
 class SignUpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'username', 'user_type', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+    def validate_password(self, value):
+        if len(value) < 8 or len(value) > 20:
+            raise ValidationError("Password must be between 8 and 20 characters long.")
 
     def validate_email(self, value):
         if CustomUser.objects.filter(email=value).exists():
@@ -25,6 +23,11 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         Token.objects.get_or_create(user=user)
         return user
+
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'firstname', 'lastname', 'user_type', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class LoginSerializer(serializers.Serializer):
@@ -53,6 +56,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['avatar', 'email', 'phone_number']
+
 
 class ReviewSiteSerializer(serializers.ModelSerializer):
     class Meta:

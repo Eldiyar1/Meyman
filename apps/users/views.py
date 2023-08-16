@@ -1,15 +1,13 @@
 from rest_framework import generics, mixins, viewsets
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet
-
 from django.contrib.auth import authenticate
-
+from .tokens import create_jwt_pair_for_user
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
-from .tokens import create_jwt_pair_for_user
 
 
 class SignUpView(generics.CreateAPIView):
