@@ -2,11 +2,11 @@ from django.db import models
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from PIL import Image
 from multiselectfield import MultiSelectField
 from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
     FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
     BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_SITS_CHOICES
-from apps.travel.constants import PAYMENT_CHOICES
 from apps.users.email import CustomUser
 
 
@@ -42,11 +42,6 @@ class Transfer(models.Model):
                                       verbose_name='Территории эксплуатации')
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=25, verbose_name='Валюта')
     rental_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма аренды (Сутки)')
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
-
-    class Meta:
-        verbose_name = 'Трансфер'
-        verbose_name_plural = 'Трансферы'
 
     def __str__(self):
         return self.brand
@@ -56,17 +51,31 @@ class Transfer(models.Model):
             self.operating_area = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'По всему КР']
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = 'Трансфер'
+        verbose_name_plural = 'Трансферы'
+
 
 class TransferImage(models.Model):
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
     transfer_image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
 
+    def __str__(self):
+        return f"Image for {self.transfer.brand}"
+
+    def compress_image(self):
+        img = Image.open(self.transfer_image.path)
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.transfer_image.path, 'JPEG', quality=90)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.compress_image()
+
     class Meta:
         verbose_name = 'Изображение трансфера'
         verbose_name_plural = 'Изображения трансферов'
-
-    def __str__(self):
-        return f"Image for {self.transfer.brand}"
 
 
 class TransferReservation(models.Model):
@@ -84,22 +93,24 @@ class TransferReservation(models.Model):
     different_pickup_places = models.BooleanField(default=False, verbose_name='Разные места получения')
     with_driver = models.BooleanField(default=False, verbose_name='Трансфер с водителем')
 
+    def __str__(self):
+        return f"Бронь трансфера для {self.user} на {self.pickup_date}"
+
     class Meta:
         verbose_name = "Бронь трансфера"
         verbose_name_plural = "Бронь Трансферов"
 
-    def __str__(self):
-        return f"Бронь трансфера для {self.user} на {self.pickup_date}"
-
 
 class TransferReview(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
-    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, verbose_name='Название трансфера')
+    transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, verbose_name='Название трансфера',
+                                 related_name='reviews')
     comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
+    date_added = models.DateField(auto_now_add=True, verbose_name="Дата")
+
+    def __str__(self):
+        return f"Отзыв от {self.user} на {self.transfer}"
 
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-
-    def __str__(self):
-        return f"Отзыв от {self.user} на {self.transfer}"

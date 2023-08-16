@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Hotel, Hostel, Apartment, Sanatorium, HousingReview, HousingReservation, Room, House, HousingImage, \
-    RoomImage
+from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing
 
 
 class HousingImageInline(admin.TabularInline):
@@ -10,6 +9,7 @@ class HousingImageInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Housing)
 class HousingAdmin(admin.ModelAdmin):
     list_display = ('housing_name', 'address', 'housing_type', 'accommodation_type', 'food_type')
     list_filter = ('housing_type', 'region', 'stars', 'food_type')
@@ -32,10 +32,10 @@ class HousingReservationAdmin(admin.ModelAdmin):
 
 @admin.register(HousingReview)
 class HousingReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'housing', 'overall_experience', 'staff_rating', 'comfort_rating', 'cleanliness_rating',
+    list_display = ('user', 'housing', 'staff_rating', 'comfort_rating', 'cleanliness_rating',
                     'value_for_money_rating', 'food_rating', 'location_rating')
-    list_filter = ('overall_experience', 'staff_rating', 'comfort_rating', 'cleanliness_rating',
-                   'value_for_money_rating', 'food_rating', 'location_rating')
+    list_filter = ('staff_rating', 'comfort_rating', 'cleanliness_rating', 'value_for_money_rating', 'food_rating',
+                   'location_rating')
     search_fields = ('user__username', 'housing__housing_name')
 
 
@@ -49,31 +49,6 @@ class RoomImageInline(admin.TabularInline):
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('housing', 'room_name', 'price_per_night', 'max_guest_capacity', 'room_area')
-    list_filter = ('housing', 'room_name', 'smoking_allowed', 'without_card', 'free_cancellation')
+    list_filter = ('housing', 'room_name', 'smoking_allowed')
     search_fields = ('housing__housing_name', 'room_name')
     inlines = (RoomImageInline,)
-
-
-@admin.register(Hotel)
-class HotelAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Hostel)
-class HostelAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Apartment)
-class ApartmentAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(House)
-class HouseAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Sanatorium)
-class SanatoriumAdmin(HousingAdmin):
-    pass

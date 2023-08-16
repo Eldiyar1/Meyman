@@ -1,7 +1,7 @@
 from django_filters import FilterSet, ChoiceFilter, MultipleChoiceFilter, NumberFilter
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, RATING_RANGE_CHOICES
-from .models import Housing, Room, Hotel, Hostel, Apartment, Sanatorium, House
+from .models import Housing, Room
 
 
 class HousingFilter(FilterSet):
@@ -28,30 +28,4 @@ class RoomFilter(FilterSet):
     class Meta:
         model = Room
         fields = (
-            'price_per_night__gte', 'price_per_night__lte', 'bedrooms', 'room_amenities', 'bed_type',
-            'without_card', 'free_cancellation', 'payment')
-
-
-class HotelFilter(HousingFilter):
-    class Meta(HousingFilter.Meta):
-        model = Hotel
-
-
-class HostelFilter(HousingFilter):
-    class Meta(HousingFilter.Meta):
-        model = Hostel
-
-
-class ApartmentFilter(HousingFilter):
-    class Meta(HousingFilter.Meta):
-        model = Apartment
-
-
-class HouseFilter(HousingFilter):
-    class Meta(HousingFilter.Meta):
-        model = House
-
-
-class SanatoriumFilter(HousingFilter):
-    class Meta(HousingFilter.Meta):
-        model = Sanatorium
+            'price_per_night__gte', 'price_per_night__lte', 'bedrooms', 'room_amenities', 'bed_type',)

@@ -1,8 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
+from PIL import Image
 
 
 class News(models.Model):
+    class Meta:
+        verbose_name = "Новость"
+        verbose_name_plural = "Новости"
 
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     image = models.ImageField(upload_to='news', verbose_name='Изображение новости', blank=True, null=True)
@@ -16,14 +20,20 @@ class News(models.Model):
         blank=True, null=True
     )
 
-    class Meta:
-        verbose_name = "Новость"
-        verbose_name_plural = "Новости"
-
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+
         super().save(*args, **kwargs)
+
+        if self.image:
+            self.compress_image()
+
+    def compress_image(self):
+        img = Image.open(self.image.path)
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.image.path, 'JPEG', quality=90)

@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate
 from .tokens import create_jwt_pair_for_user
 from .models import CustomUser, Profile, ReviewSite
 
-
 class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         if len(value) < 8 or len(value) > 20:

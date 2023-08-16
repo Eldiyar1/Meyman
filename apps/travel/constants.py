@@ -44,11 +44,6 @@ PARKING_LOCATION_CHOICES = (
     ('За территорией', 'За территорией'),
 )
 
-PAYMENT_CHOICES = (
-    ("К оплате сейчас", "К оплате сейчас"),
-    ("Предоплата", "Предоплата"),
-    ("Оплата наличными", "Оплата наличными"),
-)
 
 HOUSING_AMENITIES_CHOICES = (
     ('Бесплатный интернет', 'Бесплатный интернет'),
@@ -213,12 +208,7 @@ ACCOMMODATION_TYPE_CHOICES = (
     ('Стандартный', 'Стандартный'),
 )
 
-CHOICES_DA_NET = (
-    (True, 'Да'),
-    (False, 'Нет'),
-)
-
-TIME_CHOICES = [(hour, f'{hour:02d}:00') for hour in range(24)]
+TIME_CHOICES = [(f'{hour:02d}:00', f'{hour:02d}:00') for hour in range(24)]
 
 BREAKFAST_CHOICES = (
     ('Азиатский', 'Азиатский'),
@@ -226,10 +216,6 @@ BREAKFAST_CHOICES = (
     ('Шведский', 'Шведский'),
 )
 
-CANCELLATION_CHOICES = (
-    ('До 00:00 в день заезда', 'До 00:00 в день заезда'),
-    ('В любое время', 'В любое время'),
-)
 
 STAR_CHOICES = (
     (1, '*'),
