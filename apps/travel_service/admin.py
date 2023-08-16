@@ -30,6 +30,6 @@ class TransferReservationAdmin(admin.ModelAdmin):
 
 @admin.register(TransferReview)
 class TransferReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'transfer', 'comment')
+    list_display = ('user', 'transfer', 'comment', 'date_added')
     list_filter = ('user', 'transfer')
     search_fields = ('user', 'transfer__brand', 'comment')

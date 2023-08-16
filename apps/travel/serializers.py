@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage
+from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, Hotel, Hostel, Apartment, \
+    House, Sanatorium
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -23,7 +24,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('price_per_night', 'room_images', 'room_amenities', 'num_rooms',  'max_guest_capacity',
+        fields = ('price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
                   'room_area', 'single_bed', 'double_bed', 'queen_bed', 'king_bed', 'sofa_bed')
 
 
@@ -87,3 +88,28 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReservation
         fields = '__all__'
+
+
+class HotelSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = Hotel
+
+
+class HostelSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = Hostel
+
+
+class ApartmentSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = Apartment
+
+
+class HouseSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = House
+
+
+class SanatoriumSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = Sanatorium

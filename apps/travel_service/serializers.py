@@ -5,11 +5,11 @@ from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
 
 class TransferReviewSerializer(serializers.ModelSerializer):
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
+    transfer = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Transfer.objects.all())
 
     class Meta:
         model = TransferReview
         fields = '__all__'
-
 
 class TransferImageSerializer(serializers.ModelSerializer):
     class Meta:

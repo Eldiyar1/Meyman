@@ -2,11 +2,15 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+
+from .paginations import StandardResultsSetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import Room, HousingReview, HousingReservation, Housing
+from .models import Room, HousingReview, HousingReservation, Sanatorium, House, Apartment, Hostel, Hotel
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer
-from .filters import RoomFilter, HousingFilter
+    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, SanatoriumSerializer, HouseSerializer, \
+    ApartmentSerializer, HostelSerializer, HotelSerializer
+from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
+    SanatoriumFilter
 from googletrans import Translator
 
 translator = Translator()
@@ -18,10 +22,6 @@ class LanguageParamMixin:
 
 
 class HousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
-    queryset = Housing.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = HousingFilter
-    permission_classes = [IsOwnerUserOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -71,6 +71,7 @@ class RoomViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RoomFilter
     permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -78,7 +79,53 @@ class RoomViewSet(viewsets.ModelViewSet):
         elif self.request.method == 'POST':
             return RoomPostSerializer
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
     serializer_class = HousingReviewSerializer
     permission_classes = [IsOwnerUserOrReadOnly]
+
+
+class HotelViewSet(HousingModelViewSet):
+    queryset = Hotel.objects.all()
+    serializer_class = HotelSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HotelFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+
+class HostelViewSet(HousingModelViewSet):
+    queryset = Hostel.objects.all()
+    serializer_class = HostelSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HostelFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+
+class ApartmentViewSet(HousingModelViewSet):
+    queryset = Apartment.objects.all()
+    serializer_class = ApartmentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ApartmentFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+
+class HouseViewSet(HousingModelViewSet):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HouseFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+
+class SanatoriumViewSet(HousingModelViewSet):
+    queryset = Sanatorium.objects.all()
+    serializer_class = SanatoriumSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SanatoriumFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
