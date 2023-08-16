@@ -11,28 +11,28 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('travel_service', '0001_initial'),
+        ('travel', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='transferreview',
+            model_name='housingreview',
             name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
         ),
         migrations.AddField(
-            model_name='transferreservation',
-            name='transfer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='travel_service.transfer', verbose_name='Трансфер'),
+            model_name='housingreservation',
+            name='housing',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='travel.housing', verbose_name='Название места жительства'),
         ),
         migrations.AddField(
-            model_name='transferreservation',
+            model_name='housingreservation',
             name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
         ),
         migrations.AddField(
-            model_name='transferimage',
-            name='transfer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transfer_images', to='travel_service.transfer'),
+            model_name='housingimage',
+            name='housing',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='housing_images', to='travel.housing'),
         ),
     ]
