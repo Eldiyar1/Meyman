@@ -17,7 +17,6 @@ CREATE_APPS = [
     'apps.users',
     'apps.weather_forecast',
     'apps.favorite',
-    'phonenumbers',
 
 ]
 INSTALLED_LIBRARY = [
@@ -28,6 +27,7 @@ INSTALLED_LIBRARY = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     "corsheaders",
+    'phonenumbers',
 ]
 
 DJANGO_APPS = [

@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
@@ -12,12 +12,12 @@ from .utils import login_user
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
-    # permission_classes = [IsUnregistered]
+    permission_classes = [AllowAny]
 
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
-    # permission_classes = [IsUnregistered]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)

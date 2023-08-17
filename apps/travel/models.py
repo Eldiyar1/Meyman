@@ -14,7 +14,7 @@ from PIL import Image
 
 class Housing(models.Model):
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    address = models.URLField(max_length=255, verbose_name="Адрес")
+    address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
     stars = models.IntegerField(default=1, choices=STAR_CHOICES, verbose_name='Количество звезд')
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
