@@ -13,7 +13,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
 from googletrans import Translator
-from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+from openexchangerates import OpenExchangeRatesClient
 from decimal import Decimal
 
 
@@ -88,14 +88,13 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
         target_currency = self.get_currency()
         api_key = '5a3f772434804d4f842dd628f620c198'
 
-        client = OpenExchangeRatesClient(api_key)  # Use the API key directly
+        client = OpenExchangeRatesClient(api_key)  
 
         try:
             exchange_rates = client.latest(base=base_currency)
             if target_currency in exchange_rates['rates']:
                 exchange_rate = exchange_rates['rates'][target_currency]
 
-                # Debugging output
                 print("Exchange rate:", exchange_rate)
                 print("Original price:", instance.price_per_night)
 
