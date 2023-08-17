@@ -4,9 +4,6 @@ from PIL import Image
 
 
 class Advertising(models.Model):
-    class Meta:
-        verbose_name = "Реклама"
-        verbose_name_plural = "Рекламы"
 
     title = models.CharField(
         max_length=155,
@@ -46,5 +43,8 @@ class Advertising(models.Model):
         img = img.convert('RGB')
         img.thumbnail((800, 800))
         img.save(self.image.path, 'JPEG', quality=90)
+    class Meta:
+        verbose_name = "Реклама"
+        verbose_name_plural = "Рекламы"
 
 # Пока только базовые данные
