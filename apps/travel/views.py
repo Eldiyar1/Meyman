@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+import requests
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,6 +13,9 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
 from googletrans import Translator
+from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+from decimal import Decimal
+
 
 translator = Translator()
 
@@ -19,7 +23,10 @@ translator = Translator()
 class LanguageParamMixin:
     def get_language(self):
         return self.request.query_params.get('lang', 'ru')
-
+    
+class CurrencyParaMixin:
+    def get_currency(self):
+        return self.request.query_params.get('currency', 'USD')
 
 class HousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
@@ -66,20 +73,49 @@ class HousingReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class RoomViewSet(viewsets.ModelViewSet):
+class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = RoomFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
+    # Define your filter_backends, filterset_class, permission_classes, and pagination_class here
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        base_currency = 'USD'
+        target_currency = self.get_currency()
+        api_key = '5a3f772434804d4f842dd628f620c198'
+
+        client = OpenExchangeRatesClient(api_key)  # Use the API key directly
+
+        try:
+            exchange_rates = client.latest(base=base_currency)
+            if target_currency in exchange_rates['rates']:
+                exchange_rate = exchange_rates['rates'][target_currency]
+
+                # Debugging output
+                print("Exchange rate:", exchange_rate)
+                print("Original price:", instance.price_per_night)
+
+                # Convert the price
+                instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
+
+                # Debugging output
+                print("Converted price:", instance.price_per_night)
+        except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
+            print("Error while fetching exchange rates:", e)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RoomGetSerializer
         elif self.request.method == 'POST':
             return RoomPostSerializer
-
-
+        
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
     serializer_class = HousingReviewSerializer

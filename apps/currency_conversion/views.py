@@ -6,6 +6,8 @@ from .permissions import IsAdminUserOrReadOnly
 from .serializers import CurrencyConverterSerializer
 
 
+
+
 # Create your models here.
 class CurrencyConverterViewSet(viewsets.ViewSet):
     serializer_class = CurrencyConverterSerializer
@@ -53,3 +55,8 @@ class CurrencyConverterViewSet(viewsets.ViewSet):
 
         except requests.RequestException:
             return Response({'error': 'Failed to fetch currency rates'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+    
+
