@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .paginations import StandardResultsSetPagination
+from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 from .models import Room, HousingReview, HousingReservation, Sanatorium, House, Apartment, Hostel, Hotel
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
@@ -92,7 +92,8 @@ class HotelViewSet(HousingModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = HotelFilter
     permission_classes = [IsOwnerUserOrReadOnly]
-    pagination_class = StandardResultsSetPagination
+    pagination_class = TravelLimitOffsetPagination
+
 
 
 class HostelViewSet(HousingModelViewSet):

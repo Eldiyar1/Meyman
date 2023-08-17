@@ -13,12 +13,12 @@ from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwner
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
-    permission_classes = [IsUnregistered]
+    # permission_classes = [IsUnregistered]
 
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
-    permission_classes = [IsUnregistered]
+    # permission_classes = [IsUnregistered]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)

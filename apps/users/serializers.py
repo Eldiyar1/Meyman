@@ -1,13 +1,12 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
-from django.contrib.auth import authenticate
-from .tokens import create_jwt_pair_for_user
+
 from .models import CustomUser, Profile, ReviewSite
 
 class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
-        if len(value) < 8 or len(value) > 20:
+        if len(value) < 6 or len(value) > 20:
             raise ValidationError("Password must be between 8 and 20 characters long.")
         return value
     def validate_email(self, value):
@@ -35,20 +34,7 @@ class LoginSerializer(serializers.Serializer):
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
 
-    def validate(self, data):
-        email = data.get('email')
-        password = data.get('password')
 
-        user = authenticate(email=email, password=password)
-
-        if user and user.is_active:
-            tokens = create_jwt_pair_for_user(user)
-            data['access_token'] = tokens['access']
-            data['refresh_token'] = tokens['refresh']
-        else:
-            raise serializers.ValidationError('Invalid email or password')
-
-        return data
 
 
 class ProfileSerializer(serializers.ModelSerializer):
