@@ -4,10 +4,6 @@ from PIL import Image
 
 
 class News(models.Model):
-    class Meta:
-        verbose_name = "Новость"
-        verbose_name_plural = "Новости"
-
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     image = models.ImageField(upload_to='news', verbose_name='Изображение новости', blank=True, null=True)
     content = models.TextField(verbose_name="Содержание")
@@ -37,3 +33,7 @@ class News(models.Model):
         img = img.convert('RGB')
         img.thumbnail((800, 800))
         img.save(self.image.path, 'JPEG', quality=90)
+
+    class Meta:
+        verbose_name = "Новость"
+        verbose_name_plural = "Новости"

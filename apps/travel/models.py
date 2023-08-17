@@ -99,9 +99,6 @@ class HousingImage(models.Model):
 
 
 class HousingReservation(models.Model):
-    class Meta:
-        verbose_name = "Бронь жилья"
-        verbose_name_plural = "Бронь жилищ"
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
@@ -116,6 +113,9 @@ class HousingReservation(models.Model):
 
     def __str__(self):
         return f"Бронь жилья для {self.user}"
+    class Meta:
+        verbose_name = "Бронь жилья"
+        verbose_name_plural = "Бронь жилищ"
 
 
 class Room(models.Model):

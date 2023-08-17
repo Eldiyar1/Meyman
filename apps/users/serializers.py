@@ -1,18 +1,17 @@
-from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 
+from .methods import validate_email, validate_password
 from .models import CustomUser, Profile, ReviewSite
+
 
 class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
-        if len(value) < 6 or len(value) > 20:
-            raise ValidationError("Password must be between 8 and 20 characters long.")
-        return value
+        return validate_password(value)
+
     def validate_email(self, value):
-        if CustomUser.objects.filter(email=value).exists():
-            raise ValidationError("Email has already been used")
-        return value
+        queryset = CustomUser.objects.all()
+        return validate_email(value, queryset)
 
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -33,8 +32,6 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
-
-
 
 
 class ProfileSerializer(serializers.ModelSerializer):
