@@ -13,7 +13,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
 from googletrans import Translator
-from openexchangerates import OpenExchangeRatesClient
+from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 from decimal import Decimal
 
 
@@ -79,7 +79,6 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     filterset_class = RoomFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
-    # Define your filter_backends, filterset_class, permission_classes, and pagination_class here
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -98,10 +97,8 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
                 print("Exchange rate:", exchange_rate)
                 print("Original price:", instance.price_per_night)
 
-                # Convert the price
                 instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
 
-                # Debugging output
                 print("Converted price:", instance.price_per_night)
         except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
             print("Error while fetching exchange rates:", e)
