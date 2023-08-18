@@ -4,9 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from PIL import Image
 from multiselectfield import MultiSelectField
-from .constants import DESTINATION_CHOICES, CAR_CATEGORIES, TRANSMISSION_TYPES, STEERING_TYPES, BODY_TYPES, DRIVE_TYPES, \
-    FUEL_TYPES, SEATING_CAPACITY, CONDITION_CHOICES, CURRENCY_CHOICES, SAFETY_EQUIPMENT_CHOICES, \
-    BRAND_CHOICES, COLOR_CHOICES, AMENITIES_CHOICES, PASSENGER_SITS_CHOICES
+from .constants import *
 from apps.users.email import CustomUser
 
 

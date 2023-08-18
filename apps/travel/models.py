@@ -3,9 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
-from apps.travel.constants import HOUSING_CHOICES, ACCOMMODATION_CHOICES, BEDROOM_CHOICES, BED_CHOICES, \
-    FOOD_CHOICES, PARKING_CHOICES, HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES, STAR_CHOICES, \
-    RATING_CHOICES, PARKING_LOCATION_CHOICES, ACCOMMODATION_TYPE_CHOICES, BREAKFAST_CHOICES, TIME_CHOICES
+from .constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
