@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 import requests
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -16,17 +16,18 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
 
-
 translator = Translator()
 
 
 class LanguageParamMixin:
     def get_language(self):
         return self.request.query_params.get('lang', 'ru')
-    
+
+
 class CurrencyParaMixin:
     def get_currency(self):
         return self.request.query_params.get('currency', 'USD')
+
 
 class HousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
 
@@ -79,7 +80,7 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     filterset_class = RoomFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
-    
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
 
@@ -87,7 +88,7 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
         target_currency = self.get_currency()
         api_key = '5a3f772434804d4f842dd628f620c198'
 
-        client = OpenExchangeRatesClient(api_key)  
+        client = OpenExchangeRatesClient(api_key)
 
         try:
             exchange_rates = client.latest(base=base_currency)
@@ -111,7 +112,8 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
             return RoomGetSerializer
         elif self.request.method == 'POST':
             return RoomPostSerializer
-        
+
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
     serializer_class = HousingReviewSerializer
@@ -125,7 +127,6 @@ class HotelViewSet(HousingModelViewSet):
     filterset_class = HotelFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
-
 
 
 class HostelViewSet(HousingModelViewSet):

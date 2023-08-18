@@ -14,7 +14,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             return Response(data=serializer.data, status=status.HTTP_200_OK)
