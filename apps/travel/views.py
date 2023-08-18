@@ -3,6 +3,9 @@ import requests
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from decimal import Decimal
+from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+from googletrans import Translator
 
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
@@ -12,9 +15,6 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     ApartmentSerializer, HostelSerializer, HotelSerializer
 from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
     SanatoriumFilter
-from googletrans import Translator
-from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
-from decimal import Decimal
 
 
 translator = Translator()
