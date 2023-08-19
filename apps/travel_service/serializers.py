@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Transfer, TransferReservation, TransferReview, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
+from .service import to_representation
 
 
 class TransferReviewSerializer(serializers.ModelSerializer):
@@ -27,13 +28,7 @@ class TransferSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        data = super().to_representation(instance)
-        operating_area = data.get('operating_area', [])
-
-        if 'Все' in operating_area:
-            data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
-
-        return data
+        return to_representation(self, instance)
 
 
 class TransferReservationSerializer(serializers.ModelSerializer):

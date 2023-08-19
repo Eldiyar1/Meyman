@@ -2,10 +2,10 @@ from django.db import models
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
-from PIL import Image
 from multiselectfield import MultiSelectField
 from .constants import *
 from apps.users.email import CustomUser
+from ..travel.service import compress_image
 
 
 class Transfer(models.Model):
@@ -62,10 +62,7 @@ class TransferImage(models.Model):
         return f"Image for {self.transfer.brand}"
 
     def compress_image(self):
-        img = Image.open(self.transfer_image.path)
-        img = img.convert('RGB')
-        img.thumbnail((800, 800))
-        img.save(self.transfer_image.path, 'JPEG', quality=90)
+        return compress_image(self)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
