@@ -1,7 +1,8 @@
-from apps.travel.models import HousingReview
+
 
 
 def get_average_rating(self, obj):
+    from apps.travel.models import HousingReview
     reviews = HousingReview.objects.filter(housing=obj)
     if reviews:
         total_rating = sum([
@@ -17,6 +18,7 @@ def get_average_rating(self, obj):
         return round(average_rating, 1)
     return 0
 def compress_image(self):
+    from PIL.Image import Image
     img = Image.open(self.room_image.path)
     img = img.convert('RGB')
     img.thumbnail((800, 800))
