@@ -1,7 +1,7 @@
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 
-from .methods import validate_email, validate_password
+from .validators import validate_email, validate_password
 from .models import CustomUser, Profile, ReviewSite
 
 

@@ -9,6 +9,8 @@ from django.utils.text import slugify
 from apps.users.email import CustomUser
 from PIL import Image
 
+from .service import compress_image
+
 
 class Housing(models.Model):
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
@@ -82,10 +84,7 @@ class HousingImage(models.Model):
         return f"Image for {self.housing.housing_name}"
 
     def compress_image(self):
-        img = Image.open(self.image.path)
-        img = img.convert('RGB')
-        img.thumbnail((800, 800))
-        img.save(self.image.path, 'JPEG', quality=90)
+        return compress_image(self)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -152,10 +151,7 @@ class RoomImage(models.Model):
         return f"Image for {self.room.room_name}"
 
     def compress_image(self):
-        img = Image.open(self.room_image.path)
-        img = img.convert('RGB')
-        img.thumbnail((800, 800))
-        img.save(self.room_image.path, 'JPEG', quality=90)
+        return compress_image(self)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

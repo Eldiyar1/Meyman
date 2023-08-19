@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, Hotel, Hostel, Apartment, \
     House, Sanatorium
+from .service import get_average_rating
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -65,20 +66,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
                   )
 
     def get_average_rating(self, obj):
-        reviews = HousingReview.objects.filter(housing=obj)
-        if reviews:
-            total_rating = sum([
-                (review.staff_rating +
-                 review.comfort_rating +
-                 review.cleanliness_rating +
-                 review.value_for_money_rating +
-                 review.food_rating +
-                 review.location_rating) / 6
-                for review in reviews
-            ])
-            average_rating = total_rating / len(reviews)
-            return round(average_rating, 1)
-        return 0
+        return get_average_rating(self, obj)
 
 
 class HousingReservationSerializer(serializers.ModelSerializer):
