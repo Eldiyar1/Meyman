@@ -4,5 +4,5 @@ from .views import TransferViewSet, TransferReservationViewSet, ReviewViewSet
 router = DefaultRouter()
 router.register('transfers', TransferViewSet)
 router.register('transfer_reservations', TransferReservationViewSet)
-router.register('reviews', ReviewViewSet)
+router.register('transfer_reviews', ReviewViewSet)
 urlpatterns = router.urls

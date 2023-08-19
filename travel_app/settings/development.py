@@ -1,7 +1,6 @@
 from .base import *
 import os
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9'
 
@@ -17,7 +16,6 @@ CREATE_APPS = [
     'apps.users',
     'apps.weather_forecast',
     'apps.favorite',
-
 ]
 INSTALLED_LIBRARY = [
     'django_filters',
@@ -39,5 +37,3 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 INSTALLED_APPS = INSTALLED_LIBRARY + CREATE_APPS + DJANGO_APPS
-
-

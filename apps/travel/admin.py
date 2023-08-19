@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib import admin
+from multiupload.fields import MultiFileField
 from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing, Hotel, Hostel, Apartment, \
     House, Sanatorium
 

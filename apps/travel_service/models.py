@@ -5,6 +5,7 @@ from django.utils import timezone
 from multiselectfield import MultiSelectField
 from .constants import *
 from apps.users.email import CustomUser
+from ..travel.constants import RATING_CHOICES
 from ..travel.service import compress_image
 
 
@@ -102,6 +103,12 @@ class TransferReview(models.Model):
                                  related_name='reviews')
     comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
     date_added = models.DateField(auto_now_add=True, verbose_name="Дата")
+    how_it_went = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Как все прошло")
+    comfortable_driving = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Комфорт вождения")
+    technical_condition = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Техническое состояние")
+    cleanliness_level = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Уровень чистоты")
+    price_quality_ratio = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Соотношение цены и качества")
+    safety_level = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Уровень безопасности")
 
     def __str__(self):
         return f"Отзыв от {self.user} на {self.transfer}"
