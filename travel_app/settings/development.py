@@ -1,4 +1,3 @@
-from decouple import config
 import os
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -27,7 +26,6 @@ INSTALLED_LIBRARY = [
     'rest_framework.authtoken',
     "corsheaders",
     'phonenumbers',
-    'channels',
 ]
 
 DJANGO_APPS = [

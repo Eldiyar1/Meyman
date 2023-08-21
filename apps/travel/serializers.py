@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, Hotel, Hostel, Apartment, \
-    House, Sanatorium
+from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage
 from .service import get_average_rating
 
 
@@ -76,28 +75,3 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReservation
         fields = '__all__'
-
-
-class HotelSerializer(HousingPostSerializer):
-    class Meta(HousingPostSerializer.Meta):
-        model = Hotel
-
-
-class HostelSerializer(HousingPostSerializer):
-    class Meta(HousingPostSerializer.Meta):
-        model = Hostel
-
-
-class ApartmentSerializer(HousingPostSerializer):
-    class Meta(HousingPostSerializer.Meta):
-        model = Apartment
-
-
-class HouseSerializer(HousingPostSerializer):
-    class Meta(HousingPostSerializer.Meta):
-        model = House
-
-
-class SanatoriumSerializer(HousingPostSerializer):
-    class Meta(HousingPostSerializer.Meta):
-        model = Sanatorium

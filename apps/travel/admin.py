@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib import admin
 from multiupload.fields import MultiFileField
-from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing, Hotel, Hostel, Apartment, \
-    House, Sanatorium
+from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing
 
 
 class HousingImageInline(admin.TabularInline):
@@ -12,6 +11,7 @@ class HousingImageInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Housing)
 class HousingAdmin(admin.ModelAdmin):
     list_display = ('housing_name', 'address', 'housing_type', 'accommodation_type', 'food_type')
     list_filter = ('housing_type', 'region', 'stars', 'food_type')
@@ -54,28 +54,3 @@ class RoomAdmin(admin.ModelAdmin):
     list_filter = ('housing', 'room_name', 'smoking_allowed')
     search_fields = ('housing__housing_name', 'room_name')
     inlines = (RoomImageInline,)
-
-
-@admin.register(Hotel)
-class HotelAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Hostel)
-class HostelAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Apartment)
-class ApartmentAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(House)
-class HouseAdmin(HousingAdmin):
-    pass
-
-
-@admin.register(Sanatorium)
-class SanatoriumAdmin(HousingAdmin):
-    pass

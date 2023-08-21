@@ -144,7 +144,7 @@ class Room(models.Model):
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
-    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
+    image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
 
     def __str__(self):
         return f"Image for {self.room.room_name}"
@@ -159,33 +159,3 @@ class RoomImage(models.Model):
     class Meta:
         verbose_name = 'Изображение номера'
         verbose_name_plural = 'Изображения номеров'
-
-
-class Hotel(Housing):
-    class Meta:
-        verbose_name = "Отель"
-        verbose_name_plural = "Отели"
-
-
-class Hostel(Housing):
-    class Meta:
-        verbose_name = "Хостел"
-        verbose_name_plural = "Хостелы"
-
-
-class Apartment(Housing):
-    class Meta:
-        verbose_name = "Квартира"
-        verbose_name_plural = "Квартиры"
-
-
-class House(Housing):
-    class Meta:
-        verbose_name = "Дом"
-        verbose_name_plural = "Дома"
-
-
-class Sanatorium(Housing):
-    class Meta:
-        verbose_name = "Санаторий"
-        verbose_name_plural = "Санатории"
