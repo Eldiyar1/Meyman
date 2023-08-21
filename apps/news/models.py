@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.text import slugify
-from PIL import Image
 
 from apps.travel.service import compress_image
 

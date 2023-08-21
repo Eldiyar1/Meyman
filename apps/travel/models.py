@@ -7,7 +7,6 @@ from .constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
-from PIL import Image
 
 from .service import compress_image
 
