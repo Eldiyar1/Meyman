@@ -1,35 +1,17 @@
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework.viewsets import GenericViewSet
-from .models import Advertising
-from .serializers import AdvertisingSerializer
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from googletrans import Translator
-from .permissions import IsUnregistered
-translator = Translator()
+from .models import Advertising
+from .permissions import IsAdminUserOrReadOnly
+from .serializers import AdvertisingSerializer
+from .utils import retrieve_trans
 
 
-class LanguageParamMixin:
-    def get_language(self):
-        return self.request.query_params.get('lang', 'ru')  
 
-class AdvertisingAPI(LanguageParamMixin, GenericViewSet,
-              mixins.ListModelMixin,
-              mixins.CreateModelMixin,
-              mixins.RetrieveModelMixin,
-              mixins.DestroyModelMixin,
-              mixins.UpdateModelMixin):
+class AdvertisingAPI(ModelViewSet):
     queryset = Advertising.objects.all()
     serializer_class = AdvertisingSerializer
-    permission_classes = [IsUnregistered]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        lang = self.get_language()
-
-        instance.title = translator.translate(instance.title, dest=lang).text
-        instance.text = translator.translate(instance.text, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+def retrieve(self, request, *args, **kwargs):
+   return retrieve_trans(self, request, *args, **kwargs)

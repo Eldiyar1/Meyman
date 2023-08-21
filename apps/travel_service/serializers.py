@@ -1,8 +1,14 @@
-from django.core.validators import MinLengthValidator
 from rest_framework import serializers
-from .models import Transfer, TransferReservation, TransferImage
+from .models import Transfer, TransferReservation, TransferReview, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
+from .service import to_representation
 
+
+class TransferReviewSerializer(serializers.ModelSerializer):
+    date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
+    class Meta:
+        model = TransferReview
+        fields = '__all__'
 
 class TransferImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,34 +17,18 @@ class TransferImageSerializer(serializers.ModelSerializer):
 
 
 class TransferSerializer(serializers.ModelSerializer):
-    pickup_region = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
-                                                    label="Регион получения")
+    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+                                                     label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES, label="Система безопасности")
-    images = TransferImageSerializer(many=True, read_only=True, label='Изображение трансфера')
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
-        write_only=True, validators=[MinLengthValidator(5)])
+    transfer_images = TransferImageSerializer(many=True, read_only=True, )
+    reviews = TransferReviewSerializer(many=True, read_only=True, label="Отзывы")
 
     class Meta:
         model = Transfer
         fields = '__all__'
 
-    def create(self, validated_data):
-        uploaded_images = validated_data.pop('uploaded_images')
-        transfer = Transfer.objects.create(**validated_data)
-        for image in uploaded_images:
-            TransferImage.objects.create(transfer=transfer, image=image)
-
-        return transfer
-
     def to_representation(self, instance):
-        data = super().to_representation(instance)
-        operating_area = data.get('operating_area', [])
-
-        if 'Все' in operating_area:
-            data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'Все']
-
-        return data
+        return to_representation(self, instance)
 
 
 class TransferReservationSerializer(serializers.ModelSerializer):

@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 
-# Create your models here.
+from apps.travel.service import compress_image
+
+
 class Advertising(models.Model):
     title = models.CharField(
         max_length=155,
@@ -13,7 +15,6 @@ class Advertising(models.Model):
     image = models.ImageField(
         upload_to='ad_images/',
         verbose_name="Изображение"
-
     )
     link = models.URLField(
         verbose_name="Ссылка на рекламадателя"
@@ -31,10 +32,15 @@ class Advertising(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+
         super().save(*args, **kwargs)
+
+        if self.image:
+            self.compress_image()
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = "Реклама"
         verbose_name_plural = "Рекламы"
-
-# Пока только базовые данные 

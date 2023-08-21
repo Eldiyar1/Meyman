@@ -1,14 +1,39 @@
-from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 
 from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Housing, Rating, HouseReservation, HousingImage, \
-    Room, RoomImage
+from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, Hotel, Hostel, Apartment, \
+    House, Sanatorium
+from .service import get_average_rating
 
 
-class RatingSerializer(serializers.ModelSerializer):
+class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Rating
+        model = RoomImage
+        fields = '__all__'
+
+
+class RoomPostSerializer(serializers.ModelSerializer):
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства")
+
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class RoomGetSerializer(serializers.ModelSerializer):
+    room_images = RoomImageSerializer(many=True, read_only=True, )
+
+    class Meta:
+        model = Room
+        fields = ('price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
+                  'room_area', 'single_bed', 'double_bed', 'queen_bed', 'king_bed', 'sofa_bed')
+
+
+class HousingReviewSerializer(serializers.ModelSerializer):
+    date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
+
+    class Meta:
+        model = HousingReview
         fields = '__all__'
 
 
@@ -18,83 +43,61 @@ class HousingImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class HousingSerializer(serializers.ModelSerializer):
-    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Жилищные удобства")
-    ratings_received = RatingSerializer(many=True, read_only=True, label="Рейтинги")
-    housing_images = HousingImageSerializer(many=True, read_only=True, label="Изображение жилья")
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
-        write_only=True, validators=[MinLengthValidator(5)])
+class HousingPostSerializer(serializers.ModelSerializer):
+    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Удобства")
 
     class Meta:
         model = Housing
         fields = '__all__'
 
-    def create(self, validated_data):
-        uploaded_images = validated_data.get('uploaded_images')
 
-        housing = Housing.objects.create(**validated_data)
-        for image in uploaded_images:
-            HousingImage.objects.create(housing=housing, image=image)
-
-        return housing
-
-
-class RoomImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomImage
-        fields = '__all__'
-
-
-class RoomSerializer(serializers.ModelSerializer):
-    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства номера")
-    room_images = RoomImageSerializer(many=True, read_only=True, label="Изображение номера")
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
-        write_only=True, validators=[MinLengthValidator(5)])
+class HousingGetSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+    housing_images = HousingImageSerializer(many=True, read_only=True, )
+    reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
+    rooms = RoomGetSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Room
-        fields = '__all__'
+        model = Housing
+        fields = ('housing_name', 'stars', 'average_rating', 'reviews',
+                  'housing_amenities', 'address', 'housing_images',
+                  'check_in_time_start', 'check_in_time_end',
+                  'check_out_time_start', 'check_out_time_end', 'rooms'
+                  )
 
-    def create(self, validated_data):
-        uploaded_images = validated_data.pop('uploaded_images')
-        room = Room.objects.create(**validated_data)
-        for image in uploaded_images:
-            RoomImage.objects.create(room=room, image=image)
-
-        return room
+    def get_average_rating(self, obj):
+        return get_average_rating(self, obj)
 
 
-class HouseReservationSerializer(serializers.ModelSerializer):
+class HousingReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
 
     class Meta:
-        model = HouseReservation
+        model = HousingReservation
         fields = '__all__'
 
 
-class HotelSerializer(HousingSerializer):
-    class Meta(HousingSerializer.Meta):
+class HotelSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
         model = Hotel
 
 
-class HostelSerializer(HousingSerializer):
-    class Meta(HousingSerializer.Meta):
+class HostelSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
         model = Hostel
 
 
-class ApartmentSerializer(HousingSerializer):
-    class Meta(HousingSerializer.Meta):
+class ApartmentSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
         model = Apartment
 
 
-class GuestHouseSerializer(HousingSerializer):
-    class Meta(HousingSerializer.Meta):
-        model = GuestHouse
+class HouseSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
+        model = House
 
 
-class SanatoriumSerializer(HousingSerializer):
-    class Meta(HousingSerializer.Meta):
+class SanatoriumSerializer(HousingPostSerializer):
+    class Meta(HousingPostSerializer.Meta):
         model = Sanatorium

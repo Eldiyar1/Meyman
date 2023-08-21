@@ -1,23 +1,27 @@
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Hotel, Hostel, Apartment, GuestHouse, Sanatorium, Rating, HouseReservation, Room
-from .serializers import HotelSerializer, HostelSerializer, ApartmentSerializer, GuestHouseSerializer, \
-    SanatoriumSerializer, RatingSerializer, HouseReservationSerializer, RoomSerializer
-from .filters import HotelFilter, HostelFilter, ApartmentFilter, GuestHouseFilter, SanatoriumFilter, RoomFilter
-from googletrans import Translator
-
-translator = Translator()
-
-
-class LanguageParamMixin:
-    def get_language(self):
-        return self.request.query_params.get('lang', 'ru')
+from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
+from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
+from .models import Room, HousingReview, HousingReservation, Sanatorium, House, Apartment, Hostel, Hotel
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
+    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, SanatoriumSerializer, HouseSerializer, \
+    ApartmentSerializer, HostelSerializer, HotelSerializer
+from .filters import RoomFilter, HotelFilter, HostelFilter, ApartmentFilter, HouseFilter, \
+    SanatoriumFilter
+from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
+    retrieve_reservationtrans
 
 
-class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
+class HousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return HousingGetSerializer
+        elif self.request.method == 'POST':
+            return HousingPostSerializer
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -27,76 +31,81 @@ class AbstractHousingModelViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         return Response('Объект успешно добавлен в избранное!')
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        lang = self.get_language()
-
-        instance.description = translator.translate(instance.description, dest=lang).text
-        instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
-        instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
-        instance.bedrooms = translator.translate(instance.bedrooms, dest=lang).text
-        instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
-        instance.food_type = translator.translate(instance.food_type, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        return retrieve_housetrans(self, request, *args, **kwargs)
 
 
-class HouseReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
-    queryset = HouseReservation.objects.all()
-    serializer_class = HouseReservationSerializer
+class HousingReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
+    queryset = HousingReservation.objects.all()
+    serializer_class = HousingReservationSerializer
+    permission_classes = [IsClientUserOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        lang = self.get_language()
-
-        instance.destination = translator.translate(instance.destination, dest=lang).text
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        return retrieve_reservationtrans(self, request, *args, **kwargs)
 
 
-class HotelViewSet(AbstractHousingModelViewSet):
+class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
+    queryset = Room.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RoomFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+    def retrieve(self, request, *args, **kwargs):
+        return retrieve_currency(self, request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return RoomGetSerializer
+        elif self.request.method == 'POST':
+            return RoomPostSerializer
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = HousingReview.objects.all()
+    serializer_class = HousingReviewSerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
+
+
+class HotelViewSet(HousingModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = HotelFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = TravelLimitOffsetPagination
 
 
-class HostelViewSet(AbstractHousingModelViewSet):
+class HostelViewSet(HousingModelViewSet):
     queryset = Hostel.objects.all()
     serializer_class = HostelSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = HostelFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
 
-class ApartmentViewSet(AbstractHousingModelViewSet):
+class ApartmentViewSet(HousingModelViewSet):
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ApartmentFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
 
-class GuestHouseViewSet(AbstractHousingModelViewSet):
-    queryset = GuestHouse.objects.all()
-    serializer_class = GuestHouseSerializer
+class HouseViewSet(HousingModelViewSet):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_class = GuestHouseFilter
+    filterset_class = HouseFilter
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
 
-class SanatoriumViewSet(AbstractHousingModelViewSet):
+class SanatoriumViewSet(HousingModelViewSet):
     queryset = Sanatorium.objects.all()
     serializer_class = SanatoriumSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SanatoriumFilter
-
-
-class RoomViewSet(viewsets.ModelViewSet):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = RoomFilter
-
-
-class RatingViewSet(viewsets.ModelViewSet):
-    queryset = Rating.objects.all()
-    serializer_class = RatingSerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination

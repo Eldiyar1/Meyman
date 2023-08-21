@@ -8,5 +8,5 @@ class TransferFilter(django_filters.FilterSet):
 
     class Meta:
         model = Transfer
-        fields = ('min_rental_price', 'max_rental_price', 'category', 'brand', 'passenger_capacity', 'steering',
+        fields = ('min_rental_price', 'max_rental_price', 'category', 'brand', 'passenger_sits', 'steering',
                   'fuel_type', 'color', 'drive_type', 'transmission', 'body_type', 'condition', 'amenities')

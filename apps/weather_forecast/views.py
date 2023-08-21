@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from geocoder import ip
 from django_filters.rest_framework import DjangoFilterBackend
+from geocoder import ip
 import pyowm
 from .filters import WeatherFilter
 from .serializers import WeatherSerializer
