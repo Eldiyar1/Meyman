@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
-from PIL import Image
+
+from apps.travel.service import compress_image
 
 
 class News(models.Model):
@@ -29,10 +30,7 @@ class News(models.Model):
             self.compress_image()
 
     def compress_image(self):
-        img = Image.open(self.image.path)
-        img = img.convert('RGB')
-        img.thumbnail((800, 800))
-        img.save(self.image.path, 'JPEG', quality=90)
+        return compress_image(self)
 
     class Meta:
         verbose_name = "Новость"
