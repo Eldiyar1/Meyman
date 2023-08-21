@@ -144,7 +144,7 @@ class Room(models.Model):
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
-    room_image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
+    image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
 
     def __str__(self):
         return f"Image for {self.room.room_name}"

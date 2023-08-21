@@ -8,6 +8,7 @@ from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .utils import login_user
+from .paginations import ReviewPagination
 
 
 class SignUpView(generics.CreateAPIView):
@@ -92,6 +93,7 @@ class ReviewSiteViewSet(ModelViewSet):
     queryset = ReviewSite.objects.all()
     serializer_class = ReviewSiteSerializer
     permission_classes = [IsOwnerAndClient]
+    pagination_class = ReviewPagination
 
 
 class LogoutView(APIView):

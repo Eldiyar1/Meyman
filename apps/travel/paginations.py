@@ -9,3 +9,4 @@ class StandardResultsSetPagination(PageNumberPagination):
 class TravelLimitOffsetPagination(LimitOffsetPagination):
     default_limit = 12
     max_limit = 12
+

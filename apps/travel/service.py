@@ -18,8 +18,8 @@ def get_average_rating(self, obj):
         return round(average_rating, 1)
     return 0
 def compress_image(self):
-    from PIL.Image import Image
-    img = Image.open(self.room_image.path)
+    from PIL import Image
+    img = Image.open(self.image.path)
     img = img.convert('RGB')
     img.thumbnail((800, 800))
-    img.save(self.room_image.path, 'JPEG', quality=90)
+    img.save(self.image.path, 'JPEG', quality=90)
