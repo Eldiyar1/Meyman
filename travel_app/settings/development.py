@@ -16,7 +16,6 @@ CREATE_APPS = [
     'apps.users',
     'apps.weather_forecast',
     'apps.favorite',
-    'apps.notifications',
 ]
 INSTALLED_LIBRARY = [
     'django_filters',
