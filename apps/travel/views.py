@@ -18,7 +18,7 @@ class HousingViewSet(viewsets.ModelViewSet):
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
-    ordering_fields = ['stars']
+    ordering_fields = ['stars',]
     serializer_class = HousingPostSerializer
 
     def get_serializer_class(self):
