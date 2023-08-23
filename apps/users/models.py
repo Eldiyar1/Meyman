@@ -32,7 +32,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE
     )
-    image = models.ImageField(
+    avatar = models.ImageField(
         upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar',
     )
     email = models.EmailField(

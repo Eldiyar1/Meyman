@@ -63,7 +63,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
-        fields = (
+        fields = ('id',
             'housing_name', 'stars', 'average_rating', 'reviews', 'free_internet', 'restaurant', 'airport_transfer',
             'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
             'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
