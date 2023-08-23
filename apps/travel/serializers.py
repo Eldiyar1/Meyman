@@ -24,7 +24,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
+        fields = ('id', 'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
                   'room_area', 'bed_type')
 
 
@@ -33,7 +33,7 @@ class HousingReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HousingReview
-        fields = ('user', 'housing', 'comment', 'date_added', 'cleanliness_rating', 'comfort_rating', 'staff_rating',
+        fields = ('id', 'user', 'housing', 'comment', 'date_added', 'cleanliness_rating', 'comfort_rating', 'staff_rating',
                   'value_for_money_rating', 'food_rating', 'location_rating')
 
 
@@ -80,5 +80,5 @@ class HousingReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HousingReservation
-        fields = ('user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
+        fields = ("id", 'user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
                   'teens', 'children', 'infants', 'pets')

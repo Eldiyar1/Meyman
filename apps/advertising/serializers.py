@@ -9,7 +9,7 @@ class AdvertisingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertising
-        fields = '__all__'
+        fields = ('id', 'title', 'text', 'image', 'link', 'slug')
 
     def create(self, validated_data):
         return create_slug(self, validated_data)
