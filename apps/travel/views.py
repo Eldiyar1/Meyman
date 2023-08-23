@@ -9,11 +9,7 @@ from .models import HousingReview, HousingReservation, Housing, Room
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer
 from .filters import HousingFilter, RoomFilter
-from apps.travel.utils import retrieve_currency
-
-
-from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
-    retrieve_reservationtrans
+from .utils import retrieve_currency, CurrencyParaMixin
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -50,7 +46,7 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
 
 
-class RoomViewSet(viewsets.ModelViewSet,CurrencyParaMixin):
+class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -66,6 +62,7 @@ class RoomViewSet(viewsets.ModelViewSet,CurrencyParaMixin):
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_currency(self, request, *args, **kwargs)
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
