@@ -31,6 +31,7 @@ def retrieve_currency(self, request, *args, **kwargs):
             instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
     except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
         return "Error while fetching exchange rates:", e
+   
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
 
