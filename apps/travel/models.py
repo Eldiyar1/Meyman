@@ -3,11 +3,11 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
-from .constants import *
+from .service import validate_beds
+from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
 from apps.users.email import CustomUser
-
 from .service import compress_image
 
 
@@ -19,7 +19,21 @@ class Housing(models.Model):
     housing_type = models.CharField(max_length=50, choices=HOUSING_CHOICES, verbose_name="Тип жилья")
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
-    housing_amenities = MultiSelectField(choices=HOUSING_AMENITIES_CHOICES, max_length=1800, verbose_name='Удобства')
+    free_internet = models.BooleanField(default=False, verbose_name='Бесплатный интернет')
+    restaurant = models.BooleanField(default=False, verbose_name='Ресторан')
+    airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
+    paid_transfer = models.BooleanField(default=False, verbose_name='Платно за трансфер')
+    park = models.BooleanField(default=False, verbose_name='Парковка')
+    paid_parking = models.BooleanField(default=False, verbose_name='Платно за парковку')
+    spa_services = models.BooleanField(default=False, verbose_name='Спа услуги')
+    bar = models.BooleanField(default=False, verbose_name='Бар')
+    paid_bar = models.BooleanField(default=False, verbose_name='Платно за бар')
+    pool = models.BooleanField(default=False, verbose_name='Бассейн')
+    room_service = models.BooleanField(default=False, verbose_name='Обслуживание номеров')
+    poolside_bar = models.BooleanField(default=False, verbose_name='Бар у бассейна')
+    cafe = models.BooleanField(default=False, verbose_name='Кафе')
+    in_room_internet = models.BooleanField(default=False, verbose_name='Доступ в интернет: в номерах')
+    hotel_wide_internet = models.BooleanField(default=False, verbose_name='Доступ в интернет: на всей территории отеля')
     check_in_time_start = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Заезд С")
     check_in_time_end = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Заезд До")
     check_out_time_start = models.CharField(max_length=5, choices=TIME_CHOICES, verbose_name="Отъезд С")
@@ -33,9 +47,6 @@ class Housing(models.Model):
                                              verbose_name='Стоимость завтрака в US$ (с человека за ночь)')
     breakfast_type = MultiSelectField(choices=BREAKFAST_CHOICES, max_length=100, blank=True, null=True,
                                       verbose_name='Какой тип завтрака вы предлагаете?')
-    parking = models.CharField(max_length=50, choices=PARKING_CHOICES, default='Нет', verbose_name='Услуги парковки')
-    parking_cost_usd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
-                                           verbose_name='Стоимость парковки в US$ (за день)')
     parking_location = models.CharField(max_length=50, choices=PARKING_LOCATION_CHOICES, blank=True, null=True,
                                         verbose_name='Местонахождение парковки')
     slug = models.SlugField(max_length=255, unique=True, verbose_name="человеко-понятный url", blank=True, null=True)
@@ -82,12 +93,12 @@ class HousingImage(models.Model):
     def __str__(self):
         return f"Image for {self.housing.housing_name}"
 
-    def compress_image(self):
-        return compress_image(self)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.compress_image()
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = 'Изображение места жительства'
@@ -95,7 +106,6 @@ class HousingImage(models.Model):
 
 
 class HousingReservation(models.Model):
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
@@ -109,6 +119,7 @@ class HousingReservation(models.Model):
 
     def __str__(self):
         return f"Бронь жилья для {self.user}"
+
     class Meta:
         verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
@@ -119,11 +130,14 @@ class Room(models.Model):
                                 related_name='rooms')
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
-    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=850, verbose_name='Удобства')
+    room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255, verbose_name='Удобства')
+    kitchen = MultiSelectField(choices=KITCHEN_CHOICES, max_length=255, verbose_name="Кухня")
+    amenities = MultiSelectField(choices=OUTSIDE_CHOICES, max_length=255, verbose_name="На улице")
+    bathroom = MultiSelectField(choices=BATHROOM_AMENITIES_CHOICES, max_length=255, verbose_name="Ванная")
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
     bedrooms = models.CharField(max_length=50, choices=BEDROOM_CHOICES, verbose_name="Количество спален")
-    bed_type = models.CharField(max_length=50, choices=BED_CHOICES, verbose_name="Тип кроватей")
+    bed_type = MultiSelectField(choices=BED_CHOICES, max_length=100, verbose_name="Тип кроватей")
     single_bed = models.PositiveIntegerField(default=1, verbose_name="Односпальных кроватей")
     double_bed = models.PositiveIntegerField(verbose_name="Двуспальных кроватей", null=True, blank=True)
     queen_bed = models.PositiveIntegerField(verbose_name="Широких (queen-size) кроватей", null=True, blank=True)
@@ -137,6 +151,9 @@ class Room(models.Model):
     def __str__(self):
         return self.room_name
 
+    def clean(self):
+        validate_beds(self.single_bed, self.double_bed, self.queen_bed, self.king_bed, self.sofa_bed)
+
     class Meta:
         verbose_name = 'Номер'
         verbose_name_plural = 'Номера'
@@ -149,12 +166,12 @@ class RoomImage(models.Model):
     def __str__(self):
         return f"Image for {self.room.room_name}"
 
-    def compress_image(self):
-        return compress_image(self)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.compress_image()
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = 'Изображение номера'

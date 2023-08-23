@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib import admin
-from multiupload.fields import MultiFileField
 from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing
 
 
@@ -10,6 +9,9 @@ class HousingImageInline(admin.TabularInline):
     max_num = 20
     extra = 0
 
+    class Meta:
+        model = Housing
+        fields = '__all__'
 
 @admin.register(Housing)
 class HousingAdmin(admin.ModelAdmin):

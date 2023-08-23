@@ -1,4 +1,4 @@
-
+from rest_framework.exceptions import ValidationError
 
 
 def get_average_rating(self, obj):
@@ -25,3 +25,9 @@ def compress_image(self):
     img = img.convert('RGB')
     img.thumbnail((800, 800))
     img.save(self.image.path, 'JPEG', quality=90)
+
+
+def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
+    total_beds = (single_bed or 0) + (double_bed or 0) + (queen_bed or 0) + (king_bed or 0) + (sofa_bed or 0)
+    if total_beds > 3:
+        raise ValidationError("Общее количество кроватей не может превышать три.")

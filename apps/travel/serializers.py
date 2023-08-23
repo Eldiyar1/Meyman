@@ -8,24 +8,24 @@ from .service import get_average_rating
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImage
-        fields = '__all__'
+        fields = ('id', 'image', 'room')
 
 
 class RoomPostSerializer(serializers.ModelSerializer):
-    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства")
-
     class Meta:
         model = Room
-        fields = '__all__'
+        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'amenities', 'num_rooms',
+                  'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
+                  'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed')
 
 
 class RoomGetSerializer(serializers.ModelSerializer):
-    room_images = RoomImageSerializer(many=True, read_only=True, )
+    room_images = RoomImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Room
         fields = ('price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
-                  'room_area', 'single_bed', 'double_bed', 'queen_bed', 'king_bed', 'sofa_bed')
+                  'room_area', 'bed_type')
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
@@ -33,39 +33,45 @@ class HousingReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HousingReview
-        fields = '__all__'
+        fields = ('user', 'housing', 'comment', 'date_added', 'cleanliness_rating', 'comfort_rating', 'staff_rating',
+                  'value_for_money_rating', 'food_rating', 'location_rating')
 
 
 class HousingImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingImage
-        fields = '__all__'
+        fields = ('id', 'image', 'housing')
 
 
 class HousingPostSerializer(serializers.ModelSerializer):
-    housing_amenities = serializers.MultipleChoiceField(choices=HOUSING_AMENITIES_CHOICES, label="Удобства")
-
     class Meta:
         model = Housing
-        fields = '__all__'
+        fields = (
+            'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
+            'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
+            'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
+            'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+            'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
+            'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
-    average_rating = serializers.SerializerMethodField()
-    housing_images = HousingImageSerializer(many=True, read_only=True, )
+    average_rating = serializers.SerializerMethodField(read_only=True)
+    housing_images = HousingImageSerializer(many=True, read_only=True)
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True)
 
     class Meta:
         model = Housing
-        fields = ('housing_name', 'stars', 'average_rating', 'reviews',
-                  'housing_amenities', 'address', 'housing_images',
-                  'check_in_time_start', 'check_in_time_end',
-                  'check_out_time_start', 'check_out_time_end', 'rooms'
-                  )
+        fields = (
+            'housing_name', 'stars', 'average_rating', 'reviews', 'free_internet', 'restaurant', 'airport_transfer',
+            'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
+            'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+            'address', 'housing_images', 'check_in_time_start', 'check_in_time_end',
+            'check_out_time_start', 'check_out_time_end', 'rooms')
 
     def get_average_rating(self, obj):
-        return get_average_rating(self, obj)
+        return get_average_rating(obj, obj)
 
 
 class HousingReservationSerializer(serializers.ModelSerializer):
@@ -74,4 +80,5 @@ class HousingReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HousingReservation
-        fields = '__all__'
+        fields = ('user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
+                  'teens', 'children', 'infants', 'pets')

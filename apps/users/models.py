@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 from .manager import CustomUserManager
 from .constants import *
+from apps.travel.service import compress_image
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -31,7 +32,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE
     )
-    avatar = models.ImageField(
+    image = models.ImageField(
         upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar',
     )
     email = models.EmailField(
@@ -40,6 +41,13 @@ class Profile(models.Model):
     phone_number = PhoneNumberField(
         null=True, verbose_name='Номер телефона',
     )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = 'Профиль'
@@ -51,9 +59,16 @@ class Profile(models.Model):
 
 class ReviewSite(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    avatar = models.ImageField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = 'Отзыв'

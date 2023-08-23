@@ -9,7 +9,6 @@ from .utils import retrieve_translate
 from ..travel.utils import LanguageParamMixin
 
 
-
 class TransferViewSet(viewsets.ModelViewSet):
     queryset = Transfer.objects.all()
     serializer_class = TransferSerializer
@@ -22,7 +21,7 @@ class TransferViewSet(viewsets.ModelViewSet):
 class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
     queryset = TransferReservation.objects.all()
     serializer_class = TransferReservationSerializer
-    permission_classes = [IsClientUserOrReadOnly]
+    permission_classes = [IsOwnerUserOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_translate(self, request, *args, **kwargs)

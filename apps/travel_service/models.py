@@ -45,11 +45,6 @@ class Transfer(models.Model):
     def __str__(self):
         return self.brand
 
-    def save(self, *args, **kwargs):
-        if 'По всему КР' in self.operating_area:
-            self.operating_area = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'По всему КР']
-        super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = 'Трансфер'
         verbose_name_plural = 'Трансферы'
@@ -57,17 +52,17 @@ class Transfer(models.Model):
 
 class TransferImage(models.Model):
     transfer = models.ForeignKey(Transfer, on_delete=models.CASCADE, related_name='transfer_images')
-    transfer_image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
+    image = models.ImageField(upload_to='transfers', verbose_name="Изображения Трансфера")
 
     def __str__(self):
         return f"Image for {self.transfer.brand}"
 
-    def compress_image(self):
-        return compress_image(self)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.compress_image()
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
 
     class Meta:
         verbose_name = 'Изображение трансфера'
@@ -103,12 +98,12 @@ class TransferReview(models.Model):
                                  related_name='reviews')
     comment = models.TextField(max_length=500, blank=True, null=True, verbose_name='Комментарий')
     date_added = models.DateField(auto_now_add=True, verbose_name="Дата")
-    how_it_went = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Как все прошло")
-    comfortable_driving = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Комфорт вождения")
-    technical_condition = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Техническое состояние")
-    cleanliness_level = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Уровень чистоты")
-    price_quality_ratio = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Соотношение цены и качества")
-    safety_level = models.CharField(max_length=2, choices=RATING_CHOICES, verbose_name="Уровень безопасности")
+    how_it_went = models.IntegerField(choices=RATING_CHOICES, verbose_name="Как все прошло")
+    comfortable_driving = models.IntegerField(choices=RATING_CHOICES, verbose_name="Комфорт вождения")
+    technical_condition = models.IntegerField(choices=RATING_CHOICES, verbose_name="Техническое состояние")
+    cleanliness_level = models.IntegerField(choices=RATING_CHOICES, verbose_name="Уровень чистоты")
+    price_quality_ratio = models.IntegerField(choices=RATING_CHOICES, verbose_name="Соотношение цены и качества")
+    safety_level = models.IntegerField(choices=RATING_CHOICES, verbose_name="Уровень безопасности")
 
     def __str__(self):
         return f"Отзыв от {self.user} на {self.transfer}"
