@@ -5,9 +5,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import HousingReview, HousingReservation, Housing, Room
+from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer
+    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
 from .utils import retrieve_currency, CurrencyParaMixin
 
@@ -44,7 +44,16 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
+class HousingAvailabilityViewSet(viewsets.ModelViewSet):
+    queryset = HousingAvailability.objects.all()
+    serializer_class = HousingAvailabilitySerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
 
+    def availability(self, request, pk=None):
+        housing = self.get_object()
+        availability = HousingAvailability.objects.filter(housing=housing)
+        serializer = HousingAvailabilitySerializer(availability, many=True)
+        return Response(serializer.data)
 
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
