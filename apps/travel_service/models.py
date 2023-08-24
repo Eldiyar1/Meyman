@@ -31,12 +31,13 @@ class Transfer(models.Model):
     safety_equipment = MultiSelectField(choices=SAFETY_EQUIPMENT_CHOICES, max_length=255,
                                         verbose_name='Наличие системы безопасности')
     pickup_location = models.CharField(choices=DESTINATION_CHOICES, max_length=100, verbose_name='Место получения')
-    car_address = models.CharField(max_length=255, verbose_name='Адрес получения')
     return_location = models.CharField(choices=DESTINATION_CHOICES, max_length=100, verbose_name='Место возврата')
     check_in_time = models.TimeField(verbose_name="Время заезда")
     check_out_time = models.TimeField(verbose_name="Время отъезда")
+
     can_arrange_pickup_return = models.BooleanField(default=True,
-                                                    verbose_name='Может ли клиент договориться о месте получения/возврата автомобиля')
+                                                    verbose_name='Договор о месте получения/возврата автомобиля')
+    driver_service = models.BooleanField(default=False, verbose_name="Услуга водителя")
     operating_area = MultiSelectField(choices=DESTINATION_CHOICES + (('По всему КР', 'По всему КР'),), max_length=100,
                                       verbose_name='Территории эксплуатации')
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=25, verbose_name='Валюта')

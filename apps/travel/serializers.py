@@ -15,12 +15,12 @@ class RoomPostSerializer(serializers.ModelSerializer):
     bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
-    amenities = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
+    outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
     bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная комната")
 
     class Meta:
         model = Room
-        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'amenities', 'bathroom',
+        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'outside', 'bathroom',
                   'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
                   'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed')
 
@@ -71,8 +71,8 @@ class HousingPostSerializer(serializers.ModelSerializer):
         fields = (
             'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
-            'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
-            'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+            'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar', 'gym', 'children_playground',
+            'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet', 'car_rental',
             'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
             'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
 
@@ -87,9 +87,9 @@ class HousingGetSerializer(serializers.ModelSerializer):
         model = Housing
         fields = ('id', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
                   'restaurant', 'airport_transfer', 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool',
-                  'paid_bar', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
-                  'address', 'check_in_time_start', 'check_in_time_end', 'check_out_time_start', 'check_out_time_end',
-                  'rooms')
+                  'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
+                  'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
+                  'check_out_time_start', 'check_out_time_end', 'rooms')
 
     def get_average_rating(self, obj):
         return get_average_rating(self, obj)

@@ -22,6 +22,9 @@ class Housing(models.Model):
     restaurant = models.BooleanField(default=False, verbose_name='Ресторан')
     airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
     paid_transfer = models.BooleanField(default=False, verbose_name='Платно за трансфер')
+    gym = models.BooleanField(default=False, verbose_name="Спортивный зал")#
+    children_playground = models.BooleanField(default=False, verbose_name="Детская площадка")#
+    car_rental = models.BooleanField(default=False, verbose_name="Прокат автомобиля")#
     park = models.BooleanField(default=False, verbose_name='Парковка')
     paid_parking = models.BooleanField(default=False, verbose_name='Платно за парковку')
     spa_services = models.BooleanField(default=False, verbose_name='Спа услуги')
@@ -143,7 +146,7 @@ class Room(models.Model):
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255, verbose_name='Удобства')
     kitchen = MultiSelectField(choices=KITCHEN_CHOICES, max_length=255, verbose_name="Кухня")
-    amenities = MultiSelectField(choices=OUTSIDE_CHOICES, max_length=255, verbose_name="На улице")
+    outside = MultiSelectField(choices=OUTSIDE_CHOICES, max_length=255, verbose_name="На улице")
     bathroom = MultiSelectField(choices=BATHROOM_AMENITIES_CHOICES, max_length=255, verbose_name="Ванная")
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
