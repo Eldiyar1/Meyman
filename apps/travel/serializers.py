@@ -40,8 +40,8 @@ class HousingReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReview
         fields = (
-        'id', 'user', 'housing', 'comment', 'date_added', 'cleanliness_rating', 'comfort_rating', 'staff_rating',
-        'value_for_money_rating', 'food_rating', 'location_rating')
+            'id', 'user', 'housing', 'comment', 'date_added', 'cleanliness_rating', 'comfort_rating', 'staff_rating',
+            'value_for_money_rating', 'food_rating', 'location_rating')
 
 
 class HousingImageSerializer(serializers.ModelSerializer):

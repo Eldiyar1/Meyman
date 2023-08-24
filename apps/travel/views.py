@@ -18,7 +18,7 @@ class HousingViewSet(viewsets.ModelViewSet):
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
-    ordering_fields = ['stars',]
+    ordering_fields = ['stars', ]
     serializer_class = HousingPostSerializer
 
     def get_serializer_class(self):
@@ -44,6 +44,8 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
+
+
 class HousingAvailabilityViewSet(viewsets.ModelViewSet):
     queryset = HousingAvailability.objects.all()
     serializer_class = HousingAvailabilitySerializer
@@ -54,6 +56,7 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         availability = HousingAvailability.objects.filter(housing=housing)
         serializer = HousingAvailabilitySerializer(availability, many=True)
         return Response(serializer.data)
+
 
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()

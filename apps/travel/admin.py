@@ -2,11 +2,14 @@ from django import forms
 from django.contrib import admin
 from .models import HousingReview, HousingReservation, Room, HousingImage, RoomImage, Housing, HousingAvailability
 
+
 @admin.register(HousingAvailability)
 class HousingAvailability(admin.ModelAdmin):
     list_display = ('housing', 'date', 'is_available')
     list_filter = ('housing', 'date', 'is_available')
     search_fields = ('housing', 'date', 'is_available')
+
+
 class HousingImageInline(admin.TabularInline):
     model = HousingImage
     min_num = 5
@@ -16,6 +19,7 @@ class HousingImageInline(admin.TabularInline):
     class Meta:
         model = Housing
         fields = '__all__'
+
 
 @admin.register(Housing)
 class HousingAdmin(admin.ModelAdmin):

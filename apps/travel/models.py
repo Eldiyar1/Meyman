@@ -65,7 +65,8 @@ class Housing(models.Model):
 
 
 class HousingAvailability(models.Model):
-    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE, verbose_name='Место жительство')
+    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE,
+                                verbose_name='Место жительство')
     date = models.DateField(verbose_name='Дата')
     is_available = models.BooleanField(default=True)
 
