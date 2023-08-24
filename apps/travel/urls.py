@@ -4,7 +4,7 @@ from .views import HousingViewSet, ReviewViewSet, HousingReservationViewSet, Roo
 router = DefaultRouter()
 router.register('housing', HousingViewSet)
 router.register('housing_reservations', HousingReservationViewSet)
-router.register('reviews', ReviewViewSet)
+router.register('housing_reviews', ReviewViewSet)
 router.register('rooms', RoomViewSet)
 router.register('availability', HousingAvailabilityViewSet)
 
