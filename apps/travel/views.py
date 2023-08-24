@@ -13,7 +13,7 @@ from .utils import retrieve_currency, CurrencyParaMixin, get_housing_serializer_
 
 
 class HousingViewSet(viewsets.ModelViewSet):
-    queryset = Housing.objects.all().prefetch_related('housing_images', 'reviews', 'rooms')
+    queryset = Housing.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
