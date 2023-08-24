@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -5,15 +6,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import HousingReview, HousingReservation, Housing, Room
+from .models import HousingReview, HousingReservation, Housing, Room, HistoryReservation
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer
+    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer
 from .filters import HousingFilter, RoomFilter
 from apps.travel.utils import retrieve_currency
 
 
 from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
-    retrieve_reservationtrans
+    retrieve_reservationtrans, perform_create
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -48,8 +49,20 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        return perform_create(self, request, *args, **kwargs)
+    
+    
+class History_reservationsViewSet(viewsets.ModelViewSet):
+    queryset = HistoryReservation.objects.all()
+    serializer_class = HistoryReservationSerializer
+    permission_classes = [IsClientUserOrReadOnly]
 
-
+    def get_queryset(self):
+        user = self.request.user
+        # Фильтровать только бронирования, сделанные клиентом (пользователем с user_type='клиент')
+        return HousingReservation.objects.filter(user=user, user__user_type='client') 
+    
 class RoomViewSet(viewsets.ModelViewSet,CurrencyParaMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]

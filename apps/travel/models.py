@@ -116,6 +116,8 @@ class HousingReservation(models.Model):
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
     infants = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Младенцы(младше 2)")
     pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
+    client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")  # Добавленное поле
+
 
     def __str__(self):
         return f"Бронь жилья для {self.user}"
@@ -123,6 +125,13 @@ class HousingReservation(models.Model):
     class Meta:
         verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
+
+class HistoryReservation(models.Model):
+    client = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(HousingReservation, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "История бронирований"
 
 
 class Room(models.Model):
