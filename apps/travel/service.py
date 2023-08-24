@@ -1,6 +1,5 @@
 from rest_framework.exceptions import ValidationError
 
-
 def get_average_rating(self, obj):
     from apps.travel.models import HousingReview
     reviews = HousingReview.objects.filter(housing=obj)

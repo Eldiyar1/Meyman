@@ -6,25 +6,22 @@ from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability
-from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HousingAvailabilitySerializer
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomPostSerializer, \
+    HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from .utils import retrieve_currency, CurrencyParaMixin
+from .utils import retrieve_currency, CurrencyParaMixin, get_housing_serializer_class, get_room_serializer_class
 
 
 class HousingViewSet(viewsets.ModelViewSet):
-    queryset = Housing.objects.all()
+    queryset = Housing.objects.all().prefetch_related('housing_images', 'reviews', 'rooms')
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
     ordering_fields = ['stars', ]
-    serializer_class = HousingPostSerializer
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return HousingGetSerializer
-        return self.serializer_class
+        return get_housing_serializer_class(self.request.method)
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -68,9 +65,7 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     serializer_class = RoomPostSerializer
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return RoomGetSerializer
-        return self.serializer_class
+        return get_room_serializer_class(self.request.method)
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_currency(self, request, *args, **kwargs)

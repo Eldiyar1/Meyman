@@ -17,3 +17,10 @@ def get_average_rating(self, obj):
         average_rating = total_rating / len(reviews)
         return round(average_rating, 1)
     return 0
+
+
+def update_operating_area(data):
+    operating_area = data.get('operating_area', [])
+    if 'По всему КР' in operating_area:
+        data['operating_area'] = [choice[0] for choice in DESTINATION_CHOICES if choice[0] != 'По всему КР']
+    return data

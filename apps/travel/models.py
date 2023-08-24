@@ -3,7 +3,6 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
-from .service import validate_beds
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
@@ -162,9 +161,6 @@ class Room(models.Model):
 
     def __str__(self):
         return self.room_name
-
-    def clean(self):
-        validate_beds(self.single_bed, self.double_bed, self.queen_bed, self.king_bed, self.sofa_bed)
 
     class Meta:
         verbose_name = 'Номер'

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
+from .constants import ROOM_AMENITIES_CHOICES
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
-from .service import get_average_rating
+from .service import get_average_rating, validate_beds
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -12,11 +12,21 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 
 class RoomPostSerializer(serializers.ModelSerializer):
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
+    kitchen = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Кухня")
+    amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="На улице")
+    bathroom = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Ванная комната")
+
     class Meta:
         model = Room
-        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'amenities', 'num_rooms',
-                  'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
+        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'amenities', 'bathroom',
+                  'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
                   'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed')
+
+    def validate(self, data):
+        validate_beds(data.get('single_bed'), data.get('double_bed'), data.get('queen_bed'),
+                      data.get('king_bed'), data.get('sofa_bed'))
+        return data
 
 
 class RoomGetSerializer(serializers.ModelSerializer):
@@ -70,16 +80,14 @@ class HousingGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
-        fields = ('id',
-                  'housing_name', 'stars', 'average_rating', 'reviews', 'free_internet', 'restaurant',
-                  'airport_transfer',
-                  'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
-                  'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
-                  'address', 'housing_images', 'check_in_time_start', 'check_in_time_end',
-                  'check_out_time_start', 'check_out_time_end', 'rooms')
+        fields = ('id', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
+                  'restaurant', 'airport_transfer', 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool',
+                  'paid_bar', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+                  'address', 'check_in_time_start', 'check_in_time_end', 'check_out_time_start', 'check_out_time_end',
+                  'rooms')
 
     def get_average_rating(self, obj):
-        return get_average_rating(obj, obj)
+        return get_average_rating(self, obj)
 
 
 class HousingReservationSerializer(serializers.ModelSerializer):

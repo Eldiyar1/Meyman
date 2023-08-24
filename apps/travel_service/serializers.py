@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Transfer, TransferReservation, TransferReview, TransferImage
 from .constants import DESTINATION_CHOICES, SAFETY_EQUIPMENT_CHOICES
-from .service import get_average_rating
+from .service import get_average_rating, update_operating_area
 
 
 class TransferReviewSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class TransferImageSerializer(serializers.ModelSerializer):
 
 class TransferSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField(read_only=True)
-    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('Все', 'Все'),),
+    operating_area = serializers.MultipleChoiceField(choices=DESTINATION_CHOICES + (('По всему КР', 'По всему КР'),),
                                                      label="Территории эксплуатации")
     safety_equipment = serializers.MultipleChoiceField(choices=SAFETY_EQUIPMENT_CHOICES,
                                                        label="Система безопасности")
@@ -40,6 +40,12 @@ class TransferSerializer(serializers.ModelSerializer):
 
     def get_average_rating(self, obj):
         return get_average_rating(obj, obj)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data = update_operating_area(data)
+        return data
+
 
 class TransferReservationSerializer(serializers.ModelSerializer):
     pickup_date = serializers.DateField(format='%d-%m-%Y')
