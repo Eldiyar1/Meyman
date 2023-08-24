@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .constants import ROOM_AMENITIES_CHOICES, BATHROOM_AMENITIES_CHOICES, OUTSIDE_CHOICES, KITCHEN_CHOICES
+from .constants import *
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
 from .service import get_average_rating, validate_beds
 
@@ -12,6 +12,7 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 
 class RoomPostSerializer(serializers.ModelSerializer):
+    bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
     amenities = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
@@ -31,6 +32,8 @@ class RoomPostSerializer(serializers.ModelSerializer):
 
 class RoomGetSerializer(serializers.ModelSerializer):
     room_images = RoomImageSerializer(many=True, read_only=True)
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
+    bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
 
     class Meta:
         model = Room
@@ -61,6 +64,8 @@ class HousingImageSerializer(serializers.ModelSerializer):
 
 
 class HousingPostSerializer(serializers.ModelSerializer):
+    breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
+
     class Meta:
         model = Housing
         fields = (
