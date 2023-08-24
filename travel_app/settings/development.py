@@ -7,6 +7,8 @@ SECRET_KEY='django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+
 CREATE_APPS = [
     'apps.travel',
     'apps.advertising',
@@ -37,3 +39,11 @@ DJANGO_APPS = [
 ]
 INSTALLED_APPS = INSTALLED_LIBRARY + CREATE_APPS + DJANGO_APPS
 from .base import *
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "abdykadyrovsyimyk0708@gmail.com"
+EMAIL_HOST_PASSWORD = "hoslbzoixgdjjwox"    
