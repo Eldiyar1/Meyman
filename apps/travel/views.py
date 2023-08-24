@@ -6,8 +6,7 @@ from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability
-from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomPostSerializer, \
-    HousingAvailabilitySerializer
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
 from .utils import retrieve_currency, CurrencyParaMixin, get_housing_serializer_class, get_room_serializer_class
 
@@ -62,7 +61,6 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     filterset_class = RoomFilter
     ordering_fields = ['price_per_night']
     pagination_class = StandardResultsSetPagination
-    serializer_class = RoomPostSerializer
 
     def get_serializer_class(self):
         return get_room_serializer_class(self.request.method)
