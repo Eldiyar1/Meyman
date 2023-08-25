@@ -1,3 +1,2 @@
-from django.test import TestCase
-
-# Create your tests here.
+import ssl
+print(ssl.get_default_verify_paths())
