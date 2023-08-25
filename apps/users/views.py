@@ -33,7 +33,6 @@ class VerifyOTP(APIView):
         return VerifyService.verify_code(serializer)
 
 
-
 class LoginView(APIView):
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
@@ -43,7 +42,7 @@ class LoginView(APIView):
         if serializer.is_valid():
             return login_user(serializer)
         else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ClientProfileView(generics.RetrieveUpdateAPIView):
