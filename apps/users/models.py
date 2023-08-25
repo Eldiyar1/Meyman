@@ -13,6 +13,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
     date_of_birth = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
+    verify_code = models.CharField(max_length=6, null=True, blank=True)
+
+    # is_active = models.BooleanField(default=True)
 
     objects = CustomUserManager()
 
@@ -25,7 +28,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
+    
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    code = models.CharField(max_length=100)
+    time = models.DateTimeField()
 
 class Profile(models.Model):
     user = models.OneToOneField(
