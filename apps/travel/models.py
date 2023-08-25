@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
+from .service import validate_beds
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
@@ -22,9 +23,6 @@ class Housing(models.Model):
     restaurant = models.BooleanField(default=False, verbose_name='Ресторан')
     airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
     paid_transfer = models.BooleanField(default=False, verbose_name='Платно за трансфер')
-    gym = models.BooleanField(default=False, verbose_name="Спортивный зал")#
-    children_playground = models.BooleanField(default=False, verbose_name="Детская площадка")#
-    car_rental = models.BooleanField(default=False, verbose_name="Прокат автомобиля")#
     park = models.BooleanField(default=False, verbose_name='Парковка')
     paid_parking = models.BooleanField(default=False, verbose_name='Платно за парковку')
     spa_services = models.BooleanField(default=False, verbose_name='Спа услуги')
@@ -64,18 +62,6 @@ class Housing(models.Model):
     class Meta:
         verbose_name = "Место жительства"
         verbose_name_plural = "Места жительства"
-
-
-class HousingAvailability(models.Model):
-    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE,
-                                verbose_name='Место жительство')
-    date = models.DateField(verbose_name='Дата')
-    is_available = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name = 'Календарь'
-        verbose_name_plural = 'Календари'
-        unique_together = ('housing', 'date')
 
 
 class HousingReview(models.Model):
@@ -146,7 +132,7 @@ class Room(models.Model):
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255, verbose_name='Удобства')
     kitchen = MultiSelectField(choices=KITCHEN_CHOICES, max_length=255, verbose_name="Кухня")
-    outside = MultiSelectField(choices=OUTSIDE_CHOICES, max_length=255, verbose_name="На улице")
+    amenities = MultiSelectField(choices=OUTSIDE_CHOICES, max_length=255, verbose_name="На улице")
     bathroom = MultiSelectField(choices=BATHROOM_AMENITIES_CHOICES, max_length=255, verbose_name="Ванная")
     num_rooms = models.IntegerField(default=1, choices=[(i, str(i)) for i in range(1, 6)],
                                     verbose_name="Количество комнат в номере")
@@ -164,6 +150,9 @@ class Room(models.Model):
 
     def __str__(self):
         return self.room_name
+
+    def clean(self):
+        validate_beds(self.single_bed, self.double_bed, self.queen_bed, self.king_bed, self.sofa_bed)
 
     class Meta:
         verbose_name = 'Номер'

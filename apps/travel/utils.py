@@ -1,9 +1,9 @@
 from decimal import Decimal
+
 from googletrans import Translator
 from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
 from rest_framework.response import Response
-from apps.travel.serializers import HousingGetSerializer, HousingPostSerializer, RoomGetSerializer, RoomPostSerializer
 
 translator = Translator()
 
@@ -56,21 +56,3 @@ def retrieve_reservationtrans(self, request, *args, **kwargs):
 
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
-
-
-def get_housing_serializer_class(request_method):
-    if request_method == 'GET':
-        return HousingGetSerializer
-    elif request_method == 'POST':
-        return HousingPostSerializer
-    else:
-        return HousingGetSerializer
-
-
-def get_room_serializer_class(request_method):
-    if request_method == 'GET':
-        return RoomGetSerializer
-    elif request_method == 'POST':
-        return RoomPostSerializer
-    else:
-        return RoomGetSerializer

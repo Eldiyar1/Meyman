@@ -1,12 +1,11 @@
 from rest_framework.routers import DefaultRouter
-from .views import HousingViewSet, ReviewViewSet, HousingReservationViewSet, RoomViewSet, HousingAvailabilityViewSet
+from .views import HousingViewSet, ReviewViewSet, HousingReservationViewSet, RoomViewSet
 
 router = DefaultRouter()
 router.register('housing', HousingViewSet)
 router.register('housing_reservations', HousingReservationViewSet)
-router.register('housing_reviews', ReviewViewSet)
+router.register('reviews', ReviewViewSet)
 router.register('rooms', RoomViewSet)
-router.register('availability', HousingAvailabilityViewSet)
 
 urlpatterns = router.urls
 
