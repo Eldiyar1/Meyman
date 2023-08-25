@@ -27,6 +27,11 @@ class SignUpSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
+class VerifySerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    verify_code = serializers.CharField()
+
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
