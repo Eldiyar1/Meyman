@@ -116,6 +116,7 @@ class HousingReservation(models.Model):
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
     infants = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Младенцы(младше 2)")
     pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
+    client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
 
     def __str__(self):
         return f"Бронь жилья для {self.user}"
@@ -123,6 +124,14 @@ class HousingReservation(models.Model):
     class Meta:
         verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
+
+
+class HistoryReservation(models.Model):
+    client = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(HousingReservation, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "История бронирований"
 
 
 class Room(models.Model):
@@ -157,6 +166,18 @@ class Room(models.Model):
     class Meta:
         verbose_name = 'Номер'
         verbose_name_plural = 'Номера'
+
+
+class HousingAvailability(models.Model):
+    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE,
+                                verbose_name='Место жительство')
+    date = models.DateField(verbose_name='Дата')
+    is_available = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Календарь'
+        verbose_name_plural = 'Календари'
+        unique_together = ('housing', 'date')
 
 
 class RoomImage(models.Model):

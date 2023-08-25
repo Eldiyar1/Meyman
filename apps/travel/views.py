@@ -5,12 +5,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import HousingReview, HousingReservation, Housing, Room
+from .models import HousingReview, HousingReservation, Housing, Room, HistoryReservation, HousingAvailability
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer
+    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
+    HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from apps.travel.utils import retrieve_currency
-
+from apps.travel.utils import retrieve_currency, perform_create
 
 from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
     retrieve_reservationtrans
@@ -49,8 +49,34 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        return perform_create(self, request)
 
-class RoomViewSet(viewsets.ModelViewSet,CurrencyParaMixin):
+
+class History_reservationsViewSet(viewsets.ModelViewSet):
+    queryset = HistoryReservation.objects.all()
+    serializer_class = HistoryReservationSerializer
+    permission_classes = [IsClientUserOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        # Фильтровать только бронирования, сделанные клиентом (пользователем с user_type='клиент')
+        return HousingReservation.objects.filter(user=user, user__user_type='client')
+
+
+class HousingAvailabilityViewSet(viewsets.ModelViewSet):
+    queryset = HousingAvailability.objects.all()
+    serializer_class = HousingAvailabilitySerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
+
+    def availability(self, request, pk=None):
+        housing = self.get_object()
+        availability = HousingAvailability.objects.filter(housing=housing)
+        serializer = HousingAvailabilitySerializer(availability, many=True)
+        return Response(serializer.data)
+
+
+class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -66,6 +92,7 @@ class RoomViewSet(viewsets.ModelViewSet,CurrencyParaMixin):
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_currency(self, request, *args, **kwargs)
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
