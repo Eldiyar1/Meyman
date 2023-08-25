@@ -10,7 +10,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
     HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from apps.travel.utils import retrieve_currency, perform_create
+from django.core.mail import send_mail
 
 from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
     retrieve_reservationtrans
@@ -46,12 +46,33 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
     serializer_class = HousingReservationSerializer
     permission_classes = [IsClientUserOrReadOnly]
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        subject = 'Новое бронирование'
+        message = (
+            f"Уважаемый {instance.user.firstname}\n\n"
+            f"Ваше бронирование на место жительства '{instance.housing}' ваша заявка принята.\n"
+            f"Дата заезда: {instance.check_in_date}\n"
+            f"Дата выезда: {instance.check_out_date}\n"
+            f"Количество взрослых: {instance.adults}\n"
+            f"Количество подростков: {instance.teens}\n"
+            f"Количество детей: {instance.children}\n"
+            f"Количество младенцев: {instance.infants}\n"
+            f"Количество домашних животных: {instance.pets}"
+        )
+        from_email = "abdykadyrovsyimyk0708@gmail.com"
+        recipient_email = instance.client_email
+        try:
+            send_mail(subject, message, from_email, [recipient_email])
+        except Exception as e:
+            return Response(
+                {"error": "Не удалось отправить уведомление на почту"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+  
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        return perform_create(self, request)
-
 
 class History_reservationsViewSet(viewsets.ModelViewSet):
     queryset = HistoryReservation.objects.all()
