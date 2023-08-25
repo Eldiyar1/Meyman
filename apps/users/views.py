@@ -5,10 +5,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import CustomUser, ReviewSite
-from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer
+from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .utils import login_user
 from .paginations import ReviewPagination
+from .service import VerifyService, RegisterService
 
 
 class SignUpView(generics.CreateAPIView):
@@ -16,11 +17,21 @@ class SignUpView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        return RegisterService.create_user(self.serializer_class(data=request.data), request)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(data={'errors': 'User already exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyOTP(APIView):
+    serializer_class = VerifySerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        return VerifyService.verify_code(serializer)
+
 
 
 class LoginView(APIView):
@@ -32,7 +43,7 @@ class LoginView(APIView):
         if serializer.is_valid():
             return login_user(serializer)
         else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 
 class ClientProfileView(generics.RetrieveUpdateAPIView):

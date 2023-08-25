@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path
 
 from .views import SignUpView, LoginView, ClientProfileView, OwnerProfileView, AdminProfileView, \
-    ClientListView, OwnerListView, AdminListView, ProfileViewSet, ReviewSiteViewSet, LogoutView
+    ClientListView, OwnerListView, AdminListView, ProfileViewSet, ReviewSiteViewSet, LogoutView, VerifyOTP
 
 router = DefaultRouter()
 router.register('profile', ProfileViewSet)
@@ -10,6 +10,7 @@ router.register('review', ReviewSiteViewSet)
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
+    path('verify/', VerifyOTP.as_view(), name='confirm'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/client/', ClientProfileView.as_view(), name='client-profile'),
