@@ -12,6 +12,7 @@ class WishlistAlbum(models.Model):
         verbose_name = "Альбом желаний"
         verbose_name_plural = "Альбомы желаний"
 
+
     def __str__(self):
         return self.title
 
