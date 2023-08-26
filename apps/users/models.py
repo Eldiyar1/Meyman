@@ -8,8 +8,7 @@ from apps.travel.service import compress_image
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    firstname = models.CharField(max_length=45)
-    lastname = models.CharField(max_length=45)
+    username = models.CharField(max_length=45)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
     date_of_birth = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
@@ -20,7 +19,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['firstname', 'lastname', 'user_type']
+    REQUIRED_FIELDS = ['username', 'user_type']
 
     class Meta:
         verbose_name = 'Пользователь'
