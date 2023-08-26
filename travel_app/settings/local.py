@@ -20,10 +20,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:4040",
-    "https://df01-185-138-186-241.ngrok-free.app",
+    "https://d181-212-112-103-156.ngrok-free.app",
 ]
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 LOCAL_HOST = ['*']
 ALLOWED_HOSTS = LOCAL_HOST + CORS_ALLOWED_ORIGINS
 
-CSRF_TRUSTED_ORIGINS = ["https://df01-185-138-186-241.ngrok-free.app"]
+CSRF_TRUSTED_ORIGINS = ["https://d181-212-112-103-156.ngrok-free.app"]
+#
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = "abdykadyrovsyimyk0708@gmail.com"
+# EMAIL_HOST_PASSWORD = "hoslbzoixgdjjwox"

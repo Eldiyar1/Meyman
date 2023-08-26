@@ -16,13 +16,13 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     permission_classes = [AllowAny]
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         return RegisterService.create_user(self.serializer_class(data=request.data), request)
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(data={'errors': 'User already exist'}, status=status.HTTP_400_BAD_REQUEST)
+        # serializer = self.serializer_class(data=request.data)
+        # if serializer.is_valid():
+        #     return Response(data=serializer.data, status=status.HTTP_200_OK)
+        # else:
+        #     return Response(data={'errors': 'User already exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class VerifyOTP(APIView):

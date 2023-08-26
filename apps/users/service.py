@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from apps.users import models
 from .emails import send_email_confirmation
 from .models import CustomUser
-# from .tokens import confirmation_code, recovery_code
+from .tokens import confirmation_code, recovery_code
 
 class RegisterService:
     @staticmethod

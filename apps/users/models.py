@@ -13,7 +13,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
     verify_code = models.CharField(max_length=6, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -66,7 +66,6 @@ class ReviewSite(models.Model):
     image = models.ImageField(blank=True, null=True)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         compress_image(self)

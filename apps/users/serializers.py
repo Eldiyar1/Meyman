@@ -1,30 +1,36 @@
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
+from .constants import USER_TYPE_CHOICES
 from .validators import validate_email, validate_password
 from .models import CustomUser, Profile, ReviewSite
 
 
-class SignUpSerializer(serializers.ModelSerializer):
-    def validate_password(self, value):
-        return validate_password(value)
-
-    def validate_email(self, value):
-        queryset = CustomUser.objects.all()
-        return validate_email(value, queryset)
-
+class SignUpSerializer(serializers.Serializer):
+    username = serializers.CharField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
+    user_type = serializers.ChoiceField(choices=USER_TYPE_CHOICES)
+    password = serializers.CharField(write_only=True)
+    # def validate_password(self, value):
+    #     return validate_password(value)
+    #
+    # def validate_email(self, value):
+    #     queryset = CustomUser.objects.all()
+    #     return validate_email(value, queryset)
+    #
     def create(self, validated_data):
         password = validated_data.pop("password")
-        user = super().create(validated_data)
+        user = CustomUser(**validated_data)
         user.set_password(password)
         user.save()
-        Token.objects.get_or_create(user=user)
+        # Token.objects.get_or_create(user=user)
         return user
 
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'username', 'user_type', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+    # class Meta:
+    #     model = CustomUser
+    #     fields = ['email', 'username', 'user_type', 'password']
+    #     extra_kwargs = {'password': {'write_only': True}}
 
 
 class VerifySerializer(serializers.Serializer):
