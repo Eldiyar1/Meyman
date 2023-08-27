@@ -20,6 +20,7 @@ class Housing(models.Model):
     accommodation_type = models.CharField(max_length=50, choices=ACCOMMODATION_CHOICES, verbose_name="Тип размещения")
     food_type = models.CharField(max_length=50, choices=FOOD_CHOICES, default="Не включено", verbose_name="Тип питания")
     free_internet = models.BooleanField(default=False, verbose_name='Бесплатный интернет')
+    gym = models.BooleanField(default=False, verbose_name='Спортзал',)
     restaurant = models.BooleanField(default=False, verbose_name='Ресторан')
     airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
     paid_transfer = models.BooleanField(default=False, verbose_name='Платно за трансфер')

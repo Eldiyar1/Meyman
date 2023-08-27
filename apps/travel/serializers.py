@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from .constants import HOUSING_AMENITIES_CHOICES, ROOM_AMENITIES_CHOICES
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HistoryReservation, \
     HousingAvailability
 from .service import get_average_rating
