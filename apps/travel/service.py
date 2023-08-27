@@ -35,7 +35,7 @@ def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
 
 def validate_people(adults, teens, children, ):
     total_people = (adults or 0) + (teens or 0) + (children or 0)
-    if total_people > 6:
+    if total_people > 6 :
         raise ValidationError('Общее количество Гостей не может превышать шести')
     elif total_people < 1:
         raise ValidationError('Количество Гостей не может быть пустым')
