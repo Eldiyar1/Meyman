@@ -83,7 +83,7 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReservation
         fields = ('user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
-                  'teens', 'children', 'infants', 'pets', 'client_email')
+                  'teens', 'children', 'client_email')
 
 
 class HousingAvailabilitySerializer(serializers.ModelSerializer):

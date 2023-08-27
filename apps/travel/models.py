@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
-from .service import validate_beds
+from .service import validate_beds, validate_people
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
@@ -114,12 +114,12 @@ class HousingReservation(models.Model):
     adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
     teens = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Подростки(от 13-18 лет)")
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
-    infants = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Младенцы(младше 2)")
-    pets = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Домашние животные")
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
-
     def __str__(self):
         return f"Бронь жилья для {self.user}"
+    def clean(self):
+        validate_people(self.adults, self.teens, self.children)
+
 
     class Meta:
         verbose_name = "Бронь жилья"
