@@ -20,11 +20,11 @@ django-multiselectfield==0.1.12
 django-multiupload==0.6.1
 django-phonenumber-field==7.1.0
 django-postgres-extra==2.0.8
+django-push-notifications==3.0.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 drf-writable-nested==0.7.0
 drf-yasg==1.21.7
-fixerio==0.1.1
 forex-python==1.8
 future==0.18.3
 geocoder==1.38.1
