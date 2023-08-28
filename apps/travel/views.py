@@ -8,7 +8,7 @@ from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from .utils import retrieve_currency, CurrencyParaMixin, get_housing_serializer_class, get_room_serializer_class
+from .utils import CurrencyParaMixin, get_housing_serializer_class, get_room_serializer_class
 
 
 class HousingViewSet(viewsets.ModelViewSet):

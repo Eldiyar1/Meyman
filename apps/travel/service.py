@@ -30,3 +30,8 @@ def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
     total_beds = (single_bed or 0) + (double_bed or 0) + (queen_bed or 0) + (king_bed or 0) + (sofa_bed or 0)
     if total_beds > 3:
         raise ValidationError("Общее количество кроватей не может превышать три.")
+
+
+def get_cheapest_room_price(self, obj):
+    cheapest_room = obj.rooms.order_by('price_per_night').first()
+    return cheapest_room.price_per_night if cheapest_room else None
