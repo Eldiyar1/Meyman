@@ -1,48 +1,51 @@
-import requests
+from rest_framework import viewsets, status 
 from rest_framework.response import Response
-from rest_framework import status
-from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup as bs
+import re
+from dateutil.parser import parse 
+from .serializers import CurrencyConversionSerializer
 
 
-def create_currency(self, request):
-    serializer = self.serializer_class(data=request.data)
-    serializer.is_valid(raise_exception=True)
+class CurrencyiewSet(viewsets.ModelViewSet):
+    serializer_class = CurrencyConversionSerializer
 
-    amount = serializer.validated_data.get('amount')
-    currency = serializer.validated_data.get('currency')
-
-    BANK = "https://www.nbkr.kg/index.jsp?lang=RUS"
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    }
-
-    try:
-        response = requests.get(BANK, headers=headers)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
-        convert = soup.find_all("td", {"class": "excurr", "class": "exrate"})
-        usd = float(convert[0].text.replace(',', '.'))
-        eur = float(convert[2].text.replace(',', '.'))
-        rub = float(convert[4].text.replace(',', '.'))
-        kzt = float(convert[6].text.replace(',', '.'))
-
-        if currency == 'USD':
-            result = amount / usd
-        elif currency == 'EUR':
-            result = amount / eur
-        elif currency == 'RUB':
-            result = amount / rub
-        elif currency == 'KZT':
-            result = amount / kzt
+    # def get_queryset(self):
+    #     return None  
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            currency_1 = serializer.validated_data['currency_1']
+            currency_2 = serializer.validated_data['currency_2']
+            amount = serializer.validated_data['amount']
+            
+            last_updated_datetime, exchange_rate = self.convert_currency_xe(currency_1, currency_2, amount)
+            
+            response_data = {
+                "last_updated_datetime": last_updated_datetime,
+                "exchange_rate": exchange_rate
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
         else:
-            result = 0.0
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def convert_currency_xe(self, src, dst, amount):
+        def get_digits(text):
+            """Returns the digits and dots only from an input `text` as a float
+            Args:
+                text (str): Target text to parse
+            """
+            new_text = ""
+            for c in text:
+                if c.isdigit() or c == ".":
+                    new_text += c
+            return float(new_text)
+        
+        url = f"https://www.xe.com/currencyconverter/convert/?Amount={amount}&From={src}&To={dst}"
+        content = requests.get(url).content
+        soup = bs(content, "html.parser")
+        exchange_rate_html = soup.find_all("p")[2]
+        # get the last updated datetime
+        last_updated_datetime = parse(re.search(r"Last updated (.+)", exchange_rate_html.parent.parent.find_all("div")[-2].text).group()[12:])
+        return last_updated_datetime, get_digits(exchange_rate_html.text) 
 
-        data = {
-            'amount': amount,
-            'currency': currency,
-            'result': result
-        }
-        return Response(data, status=status.HTTP_200_OK)
 
-    except requests.RequestException:
-        return Response({'error': 'Failed to fetch currency rates'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

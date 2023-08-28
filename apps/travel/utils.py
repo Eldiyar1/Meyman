@@ -1,6 +1,6 @@
 from decimal import Decimal
 from googletrans import Translator
-from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
 from rest_framework import status
 from rest_framework.response import Response

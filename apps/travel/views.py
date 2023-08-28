@@ -99,7 +99,7 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
 
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
-    permission_classes = [IsOwnerUserOrReadOnly]
+    # permission_classes = [IsOwnerUserOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = RoomFilter
     ordering_fields = ['price_per_night']

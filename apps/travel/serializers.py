@@ -18,6 +18,7 @@ class RoomPostSerializer(serializers.ModelSerializer):
         fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'amenities', 'num_rooms',
                   'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
                   'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed')
+        currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
 
 
 class RoomGetSerializer(serializers.ModelSerializer):
