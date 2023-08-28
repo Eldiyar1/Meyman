@@ -9,7 +9,6 @@ from apps.travel.views import HousingViewSet
 from apps.travel_service.urls import router as travel_service_router
 from apps.weather_forecast.urls import router as weather_router
 from apps.users.urls import router as users_router
-from apps.currency_conversion.urls import router as currency_conversion_router
 from apps.advertising.urls import router as advertising_router
 from .settings.yasg import urlpatterns_swagger as doc_urls
 
@@ -19,7 +18,6 @@ routers = [
     travel_service_router,
     weather_router,
     users_router,
-    currency_conversion_router,
     advertising_router,
 ]
 
@@ -34,7 +32,6 @@ urlpatterns = [
       path('api/travel_service/', include('apps.travel_service.urls')),
       path('api/news/', include('apps.news.urls')),
       path('api/weather/', include('apps.weather_forecast.urls')),
-      path('api/currency_conversion/', include('apps.currency_conversion.urls')),
       path('api/advertising/', include('apps.advertising.urls')),
       path('api/favorite/', include('apps.favorite.urls')),
       path('housing/<int:pk>/availability/', HousingViewSet.as_view({'get': 'availability'})),
