@@ -21,13 +21,13 @@ class VerifyService:
     def verify_code(serializer):
         serializer.is_valid(raise_exception=True)
         email = serializer.data['email']
-        verify_code = serializer.data['verify_code']
+        code = serializer.data['verify_code']
 
         user = CustomUser.objects.filter(email=email).first()
         if not user:
             return Response({'error': 'Неверный email.'}, status=400)
 
-        if user.verify_code != verify_code:
+        if user.verify_code != code:
             return Response({'error': 'Неверный код подтверждения.'}, status=400)
 
         user.is_active = True

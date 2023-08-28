@@ -43,9 +43,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['avatar', 'email', 'phone_number']
+        read_only_fields = ['email']
 
 
 class ReviewSiteSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = ReviewSite
         fields = "__all__"

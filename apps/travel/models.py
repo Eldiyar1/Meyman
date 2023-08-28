@@ -22,9 +22,9 @@ class Housing(models.Model):
     restaurant = models.BooleanField(default=False, verbose_name='Ресторан')
     airport_transfer = models.BooleanField(default=False, verbose_name='Трансфер от/до аэропорта')
     paid_transfer = models.BooleanField(default=False, verbose_name='Платно за трансфер')
-    gym = models.BooleanField(default=False, verbose_name="Спортивный зал")#
-    children_playground = models.BooleanField(default=False, verbose_name="Детская площадка")#
-    car_rental = models.BooleanField(default=False, verbose_name="Прокат автомобиля")#
+    gym = models.BooleanField(default=False, verbose_name="Спортивный зал")
+    children_playground = models.BooleanField(default=False, verbose_name="Детская площадка")
+    car_rental = models.BooleanField(default=False, verbose_name="Прокат автомобиля")
     park = models.BooleanField(default=False, verbose_name='Парковка')
     paid_parking = models.BooleanField(default=False, verbose_name='Платно за парковку')
     spa_services = models.BooleanField(default=False, verbose_name='Спа услуги')
