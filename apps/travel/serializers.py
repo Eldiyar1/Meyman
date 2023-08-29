@@ -90,7 +90,9 @@ class HousingGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Housing
         fields = ('id', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
-                  'restaurant', 'airport_transfer', 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool',
+                  'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
+                  'paid_parking', 'spa_services',
+                  'pool',
                   'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
                   'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
                   'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
@@ -107,7 +109,6 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     check_out_date = serializers.DateField(format='%d-%m-%Y')
     user = serializers.ReadOnlyField(default=serializers.CurrentUserDefault())
 
-
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
@@ -115,7 +116,6 @@ class HousingReservationSerializer(serializers.ModelSerializer):
 
 
 class HistoryReservationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = HistoryReservation
         fields = ('id', 'client', 'reservation')
