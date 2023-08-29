@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from .constants import *
-from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
+from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability, \
+    HistoryReservation
 from .service import get_average_rating, validate_beds, get_cheapest_room_price
 
 
@@ -49,7 +50,7 @@ class HousingAvailabilitySerializer(serializers.ModelSerializer):
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = serializers.ReadOnlyField(default=serializers.CurrentUserDefault())
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
 
     class Meta:
@@ -104,8 +105,17 @@ class HousingGetSerializer(serializers.ModelSerializer):
 class HousingReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
+    user = serializers.ReadOnlyField(default=serializers.CurrentUserDefault())
+
 
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
-                  'teens', 'children', 'infants', 'pets')
+                  'teens', 'children')
+
+
+class HistoryReservationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = HistoryReservation
+        fields = ('id', 'client', 'reservation')

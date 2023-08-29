@@ -81,7 +81,6 @@ class History_reservationsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        # Фильтровать только бронирования, сделанные клиентом (пользователем с user_type='клиент')
         return HousingReservation.objects.filter(user=user, user__user_type='client')
 
 

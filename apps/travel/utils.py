@@ -1,10 +1,12 @@
 from decimal import Decimal
+
+from django.core.mail import send_mail
+from django.shortcuts import redirect
 from googletrans import Translator
 from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
 from rest_framework import status
 from rest_framework.response import Response
-
 
 translator = Translator()
 
@@ -59,3 +61,27 @@ def retrieve_reservationtrans(self, request, *args, **kwargs):
     return Response(serializer.data)
 
 
+def perform_create(self, serializer):
+    instance = serializer.save()
+    subject = 'Новое бронирование'
+    message = (
+        f"Уважаемый {instance.user.firstname}\n\n"
+        f"Ваше бронирование на место жительства '{instance.housing}' ваша заявка принята.\n"
+        f"Дата заезда: {instance.check_in_date}\n"
+        f"Дата выезда: {instance.check_out_date}\n"
+        f"Количество взрослых: {instance.adults}\n"
+        f"Количество подростков: {instance.teens}\n"
+        f"Количество детей: {instance.children}\n"
+        f"Количество младенцев: {instance.infants}\n"
+        f"Количество домашних животных: {instance.pets}"
+    )
+    from_email = "abdykadyrovsyimyk0708@gmail.com"
+    recipient_email = instance.client_email
+    try:
+        send_mail(subject, message, from_email, [recipient_email])
+    except Exception as e:
+        return Response(
+            {"error": "Не удалось отправить уведомление на почту"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return redirect(serializer.data, status=status.HTTP_201_CREATED)
