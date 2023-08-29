@@ -1,12 +1,9 @@
 from decimal import Decimal
-
-from django.core.mail import send_mail
-from django.shortcuts import redirect
 from googletrans import Translator
 from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
-from rest_framework import status
 from rest_framework.response import Response
+from apps.travel.serializers import HousingGetSerializer, HousingPostSerializer, RoomGetSerializer, RoomPostSerializer
 
 translator = Translator()
 
@@ -20,7 +17,7 @@ class CurrencyParaMixin:
     def get_currency(self):
         return self.request.query_params.get('currency', 'USD')
 
-#
+
 # def retrieve_currency(self, request, *args, **kwargs):
 #     instance = self.get_object()
 #     base_currency = 'USD'
@@ -61,27 +58,19 @@ def retrieve_reservationtrans(self, request, *args, **kwargs):
     return Response(serializer.data)
 
 
-def perform_create(self, serializer):
-    instance = serializer.save()
-    subject = 'Новое бронирование'
-    message = (
-        f"Уважаемый {instance.user.firstname}\n\n"
-        f"Ваше бронирование на место жительства '{instance.housing}' ваша заявка принята.\n"
-        f"Дата заезда: {instance.check_in_date}\n"
-        f"Дата выезда: {instance.check_out_date}\n"
-        f"Количество взрослых: {instance.adults}\n"
-        f"Количество подростков: {instance.teens}\n"
-        f"Количество детей: {instance.children}\n"
-        f"Количество младенцев: {instance.infants}\n"
-        f"Количество домашних животных: {instance.pets}"
-    )
-    from_email = "abdykadyrovsyimyk0708@gmail.com"
-    recipient_email = instance.client_email
-    try:
-        send_mail(subject, message, from_email, [recipient_email])
-    except Exception as e:
-        return Response(
-            {"error": "Не удалось отправить уведомление на почту"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-    return redirect(serializer.data, status=status.HTTP_201_CREATED)
+def get_housing_serializer_class(request_method):
+    if request_method == 'GET':
+        return HousingGetSerializer
+    elif request_method == 'POST':
+        return HousingPostSerializer
+    else:
+        return HousingGetSerializer
+
+
+def get_room_serializer_class(request_method):
+    if request_method == 'GET':
+        return RoomGetSerializer
+    elif request_method == 'POST':
+        return RoomPostSerializer
+    else:
+        return RoomGetSerializer

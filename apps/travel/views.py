@@ -1,16 +1,14 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import HousingReview, HousingReservation, Housing, Room, HistoryReservation, HousingAvailability
-from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
-    HousingAvailabilitySerializer
+from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from .utils import perform_create, CurrencyParaMixin
+from .utils import CurrencyParaMixin, get_housing_serializer_class, get_room_serializer_class
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -19,13 +17,10 @@ class HousingViewSet(viewsets.ModelViewSet):
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
-    ordering_fields = ['stars']
-    serializer_class = HousingPostSerializer
+    ordering_fields = ['stars', ]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return HousingGetSerializer
-        return self.serializer_class
+        return get_housing_serializer_class(self.request.method)
 
     @action(detail=True, methods=['POST'])
     def add_to_favorite(self, request, pk=None):
@@ -45,20 +40,6 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        return perform_create(self, request)
-
-
-class History_reservationsViewSet(viewsets.ModelViewSet):
-    queryset = HistoryReservation.objects.all()
-    serializer_class = HistoryReservationSerializer
-    permission_classes = [IsClientUserOrReadOnly]
-
-    def get_queryset(self):
-        user = self.request.user
-        # Фильтровать только бронирования, сделанные клиентом (пользователем с user_type='клиент')
-        return HousingReservation.objects.filter(user=user, user__user_type='client')
 
 
 class HousingAvailabilityViewSet(viewsets.ModelViewSet):
@@ -80,15 +61,12 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     filterset_class = RoomFilter
     ordering_fields = ['price_per_night']
     pagination_class = StandardResultsSetPagination
-    serializer_class = RoomPostSerializer
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return RoomGetSerializer
-        return self.serializer_class
+        return get_room_serializer_class(self.request.method)
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     return retrieve_currency(self, request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        return retrieve_currency(self, request, *args, **kwargs)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

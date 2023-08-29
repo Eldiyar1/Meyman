@@ -5,6 +5,7 @@ from .service import get_average_rating, update_operating_area
 
 
 class TransferReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
 
     class Meta:
