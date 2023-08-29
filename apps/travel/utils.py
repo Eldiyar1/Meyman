@@ -84,4 +84,4 @@ def perform_create(self, serializer):
             {"error": "Не удалось отправить уведомление на почту"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-    return redirect(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

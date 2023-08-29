@@ -11,6 +11,7 @@ from .service import compress_image, validata_people
 
 
 class Housing(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")

@@ -72,14 +72,16 @@ class HousingPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
-        fields = (
-            'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
-            'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar', 'gym', 'children_playground',
-            'pool', "car_rental", 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
-            'car_rental',
-            'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
-            'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
+        fields = ("user",
+                  'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
+                  'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
+                  'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar', 'gym',
+                  'children_playground',
+                  'pool', "car_rental", 'room_service', 'poolside_bar', 'cafe', 'in_room_internet',
+                  'hotel_wide_internet',
+                  'car_rental',
+                  'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
+                  'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
@@ -91,13 +93,14 @@ class HousingGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
-        fields = ('id', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
-                  'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
-                  'paid_parking', 'spa_services',
-                  'pool',
-                  'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
-                  'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-                  'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
+        fields = (
+        'id', 'user', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
+        'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
+        'paid_parking', 'spa_services',
+        'pool',
+        'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
+        'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
+        'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
 
     def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)
