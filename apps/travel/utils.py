@@ -1,9 +1,10 @@
 from decimal import Decimal
 from googletrans import Translator
-from openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
+from rest_framework import status
 from rest_framework.response import Response
-from apps.travel.serializers import HousingGetSerializer, HousingPostSerializer, RoomGetSerializer, RoomPostSerializer
+
 
 translator = Translator()
 
@@ -18,22 +19,22 @@ class CurrencyParaMixin:
         return self.request.query_params.get('currency', 'USD')
 
 
-# def retrieve_currency(self, request, *args, **kwargs):
-#     instance = self.get_object()
-#     base_currency = 'USD'
-#     target_currency = self.get_currency()
-#     api_key = '5a3f772434804d4f842dd628f620c198'
-#     client = OpenExchangeRatesClient(api_key)
-#     try:
-#         exchange_rates = client.latest(base=base_currency)
-#         if target_currency in exchange_rates['rates']:
-#             exchange_rate = exchange_rates['rates'][target_currency]
-#             instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
-#     except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
-#         return "Error while fetching exchange rates:", e
-#
-#     serializer = self.get_serializer(instance)
-#     return Response(serializer.data)
+def retrieve_currency(self, request, *args, **kwargs):
+    instance = self.get_object()
+    base_currency = 'USD'
+    target_currency = self.get_currency()
+    api_key = '5a3f772434804d4f842dd628f620c198'
+    client = OpenExchangeRatesClient(api_key)
+    try:
+        exchange_rates = client.latest(base=base_currency)
+        if target_currency in exchange_rates['rates']:
+            exchange_rate = exchange_rates['rates'][target_currency]
+            instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
+    except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
+        return "Error while fetching exchange rates:", e
+
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)
 
 
 def retrieve_housetrans(self, request, *args, **kwargs):
@@ -58,19 +59,3 @@ def retrieve_reservationtrans(self, request, *args, **kwargs):
     return Response(serializer.data)
 
 
-def get_housing_serializer_class(request_method):
-    if request_method == 'GET':
-        return HousingGetSerializer
-    elif request_method == 'POST':
-        return HousingPostSerializer
-    else:
-        return HousingGetSerializer
-
-
-def get_room_serializer_class(request_method):
-    if request_method == 'GET':
-        return RoomGetSerializer
-    elif request_method == 'POST':
-        return RoomPostSerializer
-    else:
-        return RoomGetSerializer

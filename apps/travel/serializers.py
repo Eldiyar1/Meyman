@@ -23,6 +23,7 @@ class RoomPostSerializer(serializers.ModelSerializer):
         fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'outside', 'bathroom',
                   'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
                   'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed')
+        currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
 
     def validate(self, data):
         validate_beds(data.get('single_bed'), data.get('double_bed'), data.get('queen_bed'),
