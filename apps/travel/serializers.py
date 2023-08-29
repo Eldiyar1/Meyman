@@ -39,7 +39,8 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
+        fields = ('id', 'housing',
+                  'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
                   'room_area', 'bed_type')
 
 
@@ -75,7 +76,8 @@ class HousingPostSerializer(serializers.ModelSerializer):
             'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
             'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar', 'gym', 'children_playground',
-            'pool', "car_rental",'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet', 'car_rental',
+            'pool', "car_rental", 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+            'car_rental',
             'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
             'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
 
