@@ -15,6 +15,7 @@ venv/lib/python3.11/site-packages/openexchangerates/__init__.py
 *.py[cod]
 *$py.class
 
+db.sqlite3
 # C extensions
 *.so
 
