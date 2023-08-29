@@ -62,17 +62,10 @@ class Profile(models.Model):
 
 
 class ReviewSite(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True, null=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        compress_image(self)
-
-    def compress_image(self):
-        return compress_image(self)
 
     class Meta:
         verbose_name = 'Отзыв'

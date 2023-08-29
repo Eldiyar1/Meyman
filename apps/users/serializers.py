@@ -51,4 +51,4 @@ class ReviewSiteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReviewSite
-        fields = "__all__"
+        fields = ('id', "user", "content", "created_at")
