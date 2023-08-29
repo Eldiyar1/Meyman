@@ -10,10 +10,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
     HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from apps.travel.utils import retrieve_currency, perform_create
-
-from .utils import retrieve_currency, LanguageParamMixin, CurrencyParaMixin, retrieve_housetrans, \
-    retrieve_reservationtrans
+from .utils import perform_create, CurrencyParaMixin
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -90,8 +87,8 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
             return RoomGetSerializer
         return self.serializer_class
 
-    def retrieve(self, request, *args, **kwargs):
-        return retrieve_currency(self, request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return retrieve_currency(self, request, *args, **kwargs)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HistoryReservation, \
     HousingAvailability
-from .service import get_average_rating
+from .service import get_average_rating, get_cheapest_room_price, validate_beds
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -69,7 +69,10 @@ class HousingGetSerializer(serializers.ModelSerializer):
                   'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar',
                   'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
                   'address', 'housing_images', 'check_in_time_start', 'check_in_time_end',
-                  'check_out_time_start', 'check_out_time_end', 'rooms')
+                  'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
+
+    def get_cheapest_room_price(self, obj):
+        return get_cheapest_room_price(self, obj)
 
     def get_average_rating(self, obj):
         return get_average_rating(obj, obj)
