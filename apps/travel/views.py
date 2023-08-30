@@ -71,9 +71,6 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         serializer = HousingAvailabilitySerializer(availability, many=True)
         return Response(serializer.data)
 
-    def get_queryset(self):
-        user = self.request.user
-        return HousingReservation.objects.filter(user=user, user__user_type='owner')
 
 
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
