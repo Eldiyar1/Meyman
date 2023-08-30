@@ -39,7 +39,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'housing',
+        fields = ('id', 'housing', 'room_name',
                   'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
                   'room_area', 'bed_type')
 
@@ -94,13 +94,14 @@ class HousingGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Housing
         fields = (
-        'id', 'user', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet', 'bar',
-        'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
-        'paid_parking', 'spa_services',
-        'pool',
-        'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
-        'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-        'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
+            'id', 'user', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet',
+            'bar',
+            'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
+            'paid_parking', 'spa_services',
+            'pool',
+            'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
+            'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
 
     def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)
