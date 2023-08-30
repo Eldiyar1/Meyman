@@ -10,7 +10,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
     HousingAvailabilitySerializer
 from .filters import HousingFilter, RoomFilter
-from .utils import retrieve_currency, CurrencyParaMixin,  perform_create
+from .utils import retrieve_currency, CurrencyParaMixin, perform_create
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -45,9 +45,10 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         return perform_create(self, serializer)
-  
+
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
+
 
 class History_reservationsViewSet(viewsets.ModelViewSet):
     queryset = HistoryReservation.objects.all()
@@ -69,6 +70,10 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         availability = HousingAvailability.objects.filter(housing=housing)
         serializer = HousingAvailabilitySerializer(availability, many=True)
         return Response(serializer.data)
+
+    def get_queryset(self):
+        user = self.request.user
+        return HousingReservation.objects.filter(user=user, user__user_type='owner')
 
 
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
