@@ -1,13 +1,12 @@
 from django.db import models
 from apps.users.email import CustomUser
 from apps.travel.models import Housing
-from apps.travel_service.models import Transfer
 
 
 class HouseFavorite(models.Model):
     wishlist_album = models.ForeignKey("WishlistAlbum", on_delete=models.CASCADE, blank=True, null=True,
                                        related_name='houseFavorite')
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE)
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing')
 
     class Meta:
         verbose_name = "Избранное"
