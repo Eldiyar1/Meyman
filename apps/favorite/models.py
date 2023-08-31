@@ -5,7 +5,6 @@ from apps.travel_service.models import Transfer
 
 
 class HouseFavorite(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     wishlist_album = models.ForeignKey("WishlistAlbum", on_delete=models.CASCADE, blank=True, null=True,
                                        related_name='houseFavorite')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE)

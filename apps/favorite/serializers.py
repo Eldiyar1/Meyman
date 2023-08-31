@@ -6,7 +6,7 @@ class HouseFavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = HouseFavorite
         fields = ('id',
-                  'user', 'wishlist_album', 'housing')
+                  'wishlist_album', 'housing')
 
 
 class WishlistAlbumSerializer(serializers.ModelSerializer):
