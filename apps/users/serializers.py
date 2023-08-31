@@ -38,6 +38,13 @@ class LoginSerializer(serializers.Serializer):
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
 
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password', 'refresh_token', 'access_token']
+        extra_kwargs = {'password': {'write_only': True},
+                        'refresh_token': {'read_only': True},
+                        'access_token': {'read_only': True}}
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
