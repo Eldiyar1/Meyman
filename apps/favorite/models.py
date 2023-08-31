@@ -4,10 +4,20 @@ from apps.travel.models import Housing
 from apps.travel_service.models import Transfer
 
 
+class HouseFavorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    wishlist_album = models.ForeignKey("WishlistAlbum", on_delete=models.CASCADE, blank=True, null=True,
+                                       related_name='houseFavorite')
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранные"
+
+
 class WishlistAlbum(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    favorite = models.ForeignKey("HouseFavorite", on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         verbose_name = "Альбом желаний"
@@ -15,14 +25,3 @@ class WishlistAlbum(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class HouseFavorite(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    wishlist_album = models.ForeignKey(WishlistAlbum, on_delete=models.SET_NULL, blank=True, null=True)
-    housing = models.OneToOneField(Housing, on_delete=models.CASCADE, blank=True, null=True)
-    transfer = models.OneToOneField(Transfer, on_delete=models.CASCADE, blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Избранное"
-        verbose_name_plural = "Избранные"

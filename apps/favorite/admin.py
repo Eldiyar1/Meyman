@@ -4,8 +4,8 @@ from .models import HouseFavorite, WishlistAlbum
 
 @admin.register(HouseFavorite)
 class HouseFavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'housing', 'transfer', 'wishlist_album')
-    list_filter = ('user', 'housing', 'transfer', 'wishlist_album')
+    list_display = ('user', 'housing', 'wishlist_album')
+    list_filter = ('user', 'housing', 'wishlist_album')
 
 
 @admin.register(WishlistAlbum)
