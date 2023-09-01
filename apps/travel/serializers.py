@@ -41,7 +41,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'housing', 'room_name',
                   'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
-                  'room_area', 'bed_type' 'Free_cancellation_anytime')
+                  'room_area', 'bed_type', 'Free_cancellation_anytime')
 
 
 class HousingAvailabilitySerializer(serializers.ModelSerializer):
