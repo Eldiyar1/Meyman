@@ -14,7 +14,7 @@ from .service import VerifyService, RegisterService
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsUnregistered]
 
     def post(self, request, *args, **kwargs):
         return RegisterService.create_user(self.serializer_class(data=request.data), request)
@@ -27,6 +27,8 @@ class SignUpView(generics.CreateAPIView):
 
 class VerifyOTP(APIView):
     serializer_class = VerifySerializer
+    permission_classes = [IsUnregistered]
+
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -35,7 +37,7 @@ class VerifyOTP(APIView):
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsUnregistered]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
