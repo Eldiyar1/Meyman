@@ -5,10 +5,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
-from .models import HousingReview, HousingReservation, Housing, Room, HistoryReservation, HousingAvailability
+from .models import HousingReview, HousingReservation, Housing, Room, HistoryReservation, HousingAvailability, \
+    HousingImage
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, HistoryReservationSerializer, \
-    HousingAvailabilitySerializer
+    HousingAvailabilitySerializer, HousingImageSerializer
 from .filters import HousingFilter, RoomFilter
 from .utils import retrieve_currency, CurrencyParaMixin, perform_create
 
@@ -72,7 +73,6 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
@@ -94,4 +94,10 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = HousingReview.objects.all()
     serializer_class = HousingReviewSerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
+
+
+class HousingImageSet(viewsets.ModelViewSet):
+    queryset = HousingImage.objects.all()
+    serializer_class = HousingImageSerializer
     permission_classes = [IsOwnerUserOrReadOnly]

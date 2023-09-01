@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .constants import *
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability, \
     HistoryReservation
-from .service import get_average_rating, validate_beds, get_cheapest_room_price
+from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class RoomPostSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'outside', 'bathroom',
                   'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
-                  'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed' 'Free_cancellation_anytime')
+                  'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
         currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
 
     def validate(self, data):
@@ -88,13 +88,15 @@ class HousingGetSerializer(serializers.ModelSerializer):
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
     housing_images = HousingImageSerializer(many=True, read_only=True)
+    housing_image = serializers.SerializerMethodField()
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True)
 
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'housing_images', 'stars', 'average_rating', 'reviews', 'free_internet',
+            'id', 'user', 'housing_name', 'housing_image', 'housing_images', 'stars', 'average_rating', 'reviews',
+            'free_internet',
             'bar',
             'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
             'paid_parking', 'spa_services',
@@ -102,6 +104,9 @@ class HousingGetSerializer(serializers.ModelSerializer):
             'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
+
+    def get_housing_image(self, obj):
+        return get_housing_image(self, obj)
 
     def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)
