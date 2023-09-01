@@ -91,11 +91,13 @@ class HousingGetSerializer(serializers.ModelSerializer):
     housing_image = serializers.SerializerMethodField()
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True)
+    location = serializers.ReadOnlyField(default="27.3 км от центра")
 
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'housing_image', 'housing_images', 'stars', 'average_rating', 'reviews',
+            'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'stars', 'average_rating',
+            'reviews',
             'free_internet',
             'bar',
             'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',

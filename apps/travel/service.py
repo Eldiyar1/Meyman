@@ -44,6 +44,8 @@ def validata_people(adults, teens, children):
 def get_cheapest_room_price(self, obj):
     cheapest_room = obj.rooms.order_by('price_per_night').first()
     return cheapest_room.price_per_night if cheapest_room else None
+
+
 def get_housing_image(self, obj):
     first_image = obj.housing_images.first()
     if first_image:
