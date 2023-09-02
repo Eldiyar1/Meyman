@@ -17,7 +17,7 @@ class RoomPostSerializer(serializers.ModelSerializer):
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
     outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
-    bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная комната")
+    bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная")
 
     class Meta:
         model = Room
@@ -35,13 +35,16 @@ class RoomPostSerializer(serializers.ModelSerializer):
 class RoomGetSerializer(serializers.ModelSerializer):
     room_images = RoomImageSerializer(many=True, read_only=True)
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
+    kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
+    outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
+    bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная")
     bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
 
     class Meta:
         model = Room
-        fields = ('id', 'housing', 'room_name',
-                  'price_per_night', 'room_images', 'room_amenities', 'num_rooms', 'max_guest_capacity',
-                  'room_area', 'bed_type', 'Free_cancellation_anytime')
+        fields = ('id', 'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen',
+                  'outside', 'bathroom', 'num_rooms', 'max_guest_capacity', 'room_area', 'bed_type',
+                  'Free_cancellation_anytime')
 
 
 class HousingAvailabilitySerializer(serializers.ModelSerializer):
@@ -72,16 +75,13 @@ class HousingPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Housing
-        fields = ("user",
-                  'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
+        fields = ("user", 'housing_name', 'stars', 'address', 'check_in_time_start', 'check_in_time_end',
                   'check_out_time_start', 'check_out_time_end', 'free_internet', 'restaurant', 'airport_transfer',
                   'paid_transfer', 'park', 'paid_parking', 'spa_services', 'bar', 'paid_bar', 'gym',
-                  'children_playground',
-                  'pool', "car_rental", 'room_service', 'poolside_bar', 'cafe', 'in_room_internet',
-                  'hotel_wide_internet',
-                  'car_rental',
-                  'children_allowed', 'pets_allowed', 'pet_fee', 'breakfast_offered',
-                  'breakfast_included', 'breakfast_cost_usd', 'breakfast_type', 'parking_location', 'slug')
+                  'children_playground', 'pool', "car_rental", 'room_service', 'poolside_bar', 'cafe',
+                  'in_room_internet', 'hotel_wide_internet', 'car_rental', 'children_allowed', 'pets_allowed',
+                  'pet_fee', 'breakfast_offered', 'breakfast_included', 'breakfast_cost_usd', 'breakfast_type',
+                  'parking_location', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
@@ -91,19 +91,16 @@ class HousingGetSerializer(serializers.ModelSerializer):
     housing_image = serializers.SerializerMethodField()
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True)
+    breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     location = serializers.ReadOnlyField(default="27.3 км от центра")
 
     class Meta:
         model = Housing
         fields = (
             'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'stars', 'average_rating',
-            'reviews',
-            'free_internet',
-            'bar',
-            'restaurant', 'airport_transfer', 'gym', "children_playground", "car_rental", 'paid_transfer', 'park',
-            'paid_parking', 'spa_services',
-            'pool',
-            'paid_bar', 'gym', 'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe',
+            'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym', "children_playground",
+            "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
+            'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
 

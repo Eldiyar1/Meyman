@@ -2,14 +2,15 @@ from rest_framework import generics, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status, response
+from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser, ReviewSite
-from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer
+from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer, \
+    PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .utils import login_user
 from .paginations import ReviewPagination
-from .service import VerifyService, RegisterService
+from .service import VerifyService, RegisterService, ResetPasswordSendEmail, PasswordResetCode, PasswordResetNewPassword
 
 
 class SignUpView(generics.CreateAPIView):
@@ -29,7 +30,6 @@ class VerifyOTP(APIView):
     serializer_class = VerifySerializer
     permission_classes = [IsUnregistered]
 
-
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         return VerifyService.verify_code(serializer)
@@ -45,6 +45,39 @@ class LoginView(APIView):
             return login_user(serializer)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestAPIView(generics.CreateAPIView):
+    serializer_class = PasswordResetSearchUserSerializer
+
+    def post(self, request, *args, **kwargs):
+        reset_password_service = ResetPasswordSendEmail()
+        return reset_password_service.password_reset_email(self, request)
+
+
+class PasswordResetCodeAPIView(generics.CreateAPIView):
+    serializer_class = PasswordResetCodeSerializer
+
+    def post(self, request, *args, **kwargs):
+        reset_password_code = PasswordResetCode()
+        return reset_password_code.password_reset_code(self, request)
+
+
+class PasswordResetNewPasswordAPIView(generics.CreateAPIView):
+    serializer_class = PasswordResetNewPasswordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            code = kwargs["code"]
+            password = serializer.validated_data["password"]
+            success, message = PasswordResetNewPassword.password_reset_new_password(code, password)
+            if success:
+                return response.Response(data={"detail": message}, status=status.HTTP_200_OK)
+            else:
+                return response.Response(data={"detail": message}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ClientProfileView(generics.RetrieveUpdateAPIView):

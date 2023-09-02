@@ -59,3 +59,25 @@ class ReviewSiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewSite
         fields = ('id', "user", "content", "created_at")
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
+class PasswordResetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(
+        style={"input_type": "password"}, help_text="From 6 to 20", min_length=6
+    )
+
+
+class PasswordResetCodeSerializer(serializers.Serializer):
+    code = serializers.CharField()
+
+
+class PasswordResetSearchUserSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        fields = ['email']

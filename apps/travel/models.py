@@ -173,6 +173,7 @@ class Room(models.Model):
     room_area = models.PositiveIntegerField(verbose_name="Площадь комнаты(м²)")
     smoking_allowed = models.BooleanField(default=False, verbose_name="Разрешено ли курение в комнате")
     Free_cancellation_anytime = models.BooleanField(default=False, verbose_name='Бесплатное отмена в любое время')
+
     def __str__(self):
         return self.room_name
 
