@@ -58,7 +58,7 @@ class History_reservationsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return HousingReservation.objects.filter(user=user, user__user_type='client')
+        return HistoryReservation.objects.filter(client=user, client__user_type="client")
 
 
 class HousingAvailabilityViewSet(viewsets.ModelViewSet):
