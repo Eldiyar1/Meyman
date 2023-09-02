@@ -1,10 +1,11 @@
 from django.contrib.auth import hashers
-from rest_framework import status
+from rest_framework import status, response
 from rest_framework.response import Response
 from django.utils import timezone
 from apps.users import models
-from .emails import send_email_confirmation
+from .emails import send_email_confirmation, send_email_reset_password
 from .models import CustomUser
+from .tokens import code
 
 
 class RegisterService:
