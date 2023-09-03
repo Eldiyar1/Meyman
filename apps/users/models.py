@@ -22,29 +22,23 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'    
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.email
-    
+
+
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     code = models.CharField(max_length=100)
     time = models.DateTimeField()
 
+
 class Profile(models.Model):
-    user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE
-    )
-    avatar = models.ImageField(
-        upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar',
-    )
-    email = models.EmailField(
-        null=True, verbose_name='Email'
-    )
-    phone_number = PhoneNumberField(
-        null=True, verbose_name='Номер телефона',
-    )
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar')
+    email = models.EmailField(null=True, verbose_name='Email')
+    phone_number = PhoneNumberField(null=True, verbose_name='Номер телефона')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -65,7 +59,6 @@ class ReviewSite(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
-
 
     class Meta:
         verbose_name = 'Отзыв'

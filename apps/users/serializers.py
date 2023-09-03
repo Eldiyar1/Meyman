@@ -49,7 +49,7 @@ class LoginSerializer(serializers.Serializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['avatar', 'email', 'phone_number']
+        fields = ['id', 'image', 'email', 'phone_number']
         read_only_fields = ['email']
 
 
