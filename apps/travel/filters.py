@@ -17,7 +17,8 @@ class HousingFilter(FilterSet):
     class Meta:
         model = Housing
         fields = ('housing_type', 'accommodation_type', 'food_type', 'stars', 'free_internet',
-                  'restaurant', 'restaurant', 'airport_transfer', 'park', 'spa_services', 'bar', 'pool', 'room_service',
+                  'restaurant', 'restaurant', 'airport_transfer', 'car_rental', 'gym', 'children_playground', 'park',
+                  'spa_services', 'bar', 'pool', 'room_service',
                   'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet')
 
 
