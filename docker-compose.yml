@@ -7,20 +7,15 @@ services:
     container_name: backend
     env_file:
       - .env
-    command: sh -c "python manage.py migrate && python manage.py runserver 8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
     networks:
-      - db_network
+      - backend
     volumes:
       - .:/Meyman_Backend
-#  nginx:
-#    image: nginx:latest
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./nginx.conf:/etc/nginx/conf.d/backend.conf
-#    depends_on:
-#      - backend
+
 networks:
-  db_network:
+  backend:
     driver: bridge
 

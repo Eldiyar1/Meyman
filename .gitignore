@@ -9,7 +9,9 @@ run.sh
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/
 venv/lib/python3.11/site-packages/openexchangerates/__init__.py
-
+nginx.conf
+docker-compose.yml
+DockerFile
 ### Django.Python Stack ###
 # Byte-compiled / optimized / DLL files
 *.py[cod]

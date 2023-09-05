@@ -6,11 +6,19 @@ from rest_framework import status, response
 from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer, \
-    PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer
+    PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer, \
+    CustomUserSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .utils import login_user
 from .paginations import ReviewPagination
 from .service import VerifyService, RegisterService, ResetPasswordSendEmail, PasswordResetCode, PasswordResetNewPassword
+
+
+class CustomUserView(APIView):
+    def get(self, request):
+        users = CustomUser.objects.all()
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data)
 
 
 class SignUpView(generics.CreateAPIView):

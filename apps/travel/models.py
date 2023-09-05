@@ -134,6 +134,12 @@ class HousingReservation(models.Model):
     def validata_people(self, adults, teens, children):
         return validata_people(adults, teens, children)
 
+    def save(self, *args, **kwargs):
+        if not self.user_id:
+            default_user = CustomUser.objects.get(id=1)
+            self.user = default_user
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Бронь жилья для {self.user}"
 

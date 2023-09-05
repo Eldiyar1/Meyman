@@ -65,15 +65,13 @@ def perform_create(self, serializer):
     instance = serializer.save()
     subject = 'Новое бронирование'
     message = (
-        f"Уважаемый {instance.user.firstname}\n\n"
+        f"Уважаемый {instance.user.username}\n\n"
         f"Ваше бронирование на место жительства '{instance.housing}' ваша заявка принята.\n"
         f"Дата заезда: {instance.check_in_date}\n"
         f"Дата выезда: {instance.check_out_date}\n"
         f"Количество взрослых: {instance.adults}\n"
         f"Количество подростков: {instance.teens}\n"
         f"Количество детей: {instance.children}\n"
-        f"Количество младенцев: {instance.infants}\n"
-        f"Количество домашних животных: {instance.pets}"
     )
     from_email = "abdykadyrovsyimyk0708@gmail.com"
     recipient_email = instance.client_email

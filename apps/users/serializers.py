@@ -5,6 +5,12 @@ from .validators import validate_email, validate_password
 from .models import CustomUser, Profile, ReviewSite
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
+
+
 class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         return validate_password(value)
