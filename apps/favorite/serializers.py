@@ -13,8 +13,7 @@ class HouseFavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HouseFavorite
-        fields = ('id',
-                  'wishlist_album', 'housing')
+        fields = ('id', 'wishlist_album', 'housing')
 
 
 class WishlistAlbumSerializer(serializers.ModelSerializer):
@@ -26,5 +25,4 @@ class WishlistAlbumSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WishlistAlbum
-        fields = ('id',
-                  'user', 'title', 'favorite_count', 'houseFavorite',)
+        fields = ('id', 'user', 'title', 'favorite_count', 'houseFavorite',)

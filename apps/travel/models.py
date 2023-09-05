@@ -127,12 +127,11 @@ class HousingReservation(models.Model):
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
     adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
-    teens = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Подростки(от 13-18 лет)")
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
 
-    def validata_people(self, adults, teens, children):
-        return validata_people(adults, teens, children)
+    def validata_people(self, adults, children):
+        return validata_people(adults, children)
 
     def save(self, *args, **kwargs):
         if not self.user_id:

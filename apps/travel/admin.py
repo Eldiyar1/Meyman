@@ -36,7 +36,7 @@ class HousingReservationAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'housing__housing_name')
 
     def get_total_guests(self, obj):
-        return obj.adults + obj.teens + obj.children
+        return obj.adults + obj.children
 
     get_total_guests.short_description = 'Total Guests'
 

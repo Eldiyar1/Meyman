@@ -117,12 +117,11 @@ class HousingGetSerializer(serializers.ModelSerializer):
 class HousingReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
-    user = serializers.ReadOnlyField(default=serializers.CurrentUserDefault())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = HousingReservation
-        fields = ("id", 'user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults',
-                  'teens', 'children')
+        fields = ("id", 'user', 'housing', 'destination', 'check_in_date', 'check_out_date', 'adults', 'children')
 
 
 class HistoryReservationSerializer(serializers.ModelSerializer):

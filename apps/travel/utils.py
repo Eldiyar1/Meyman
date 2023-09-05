@@ -1,12 +1,10 @@
-from decimal import Decimal
-
-from django.core.mail import send_mail
-from django.shortcuts import redirect
-from googletrans import Translator
-from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
-import requests
 from rest_framework import status
 from rest_framework.response import Response
+from django.core.mail import send_mail
+from googletrans import Translator
+from decimal import Decimal
+from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
+import requests
 
 translator = Translator()
 
@@ -70,7 +68,6 @@ def perform_create(self, serializer):
         f"Дата заезда: {instance.check_in_date}\n"
         f"Дата выезда: {instance.check_out_date}\n"
         f"Количество взрослых: {instance.adults}\n"
-        f"Количество подростков: {instance.teens}\n"
         f"Количество детей: {instance.children}\n"
     )
     from_email = "abdykadyrovsyimyk0708@gmail.com"

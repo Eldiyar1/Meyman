@@ -8,7 +8,7 @@ from .models import CustomUser, Profile, ReviewSite
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ("id", "email", "username", "user_type", "date_of_birth", "is_staff", "verify_code", "is_active")
 
 
 class SignUpSerializer(serializers.ModelSerializer):

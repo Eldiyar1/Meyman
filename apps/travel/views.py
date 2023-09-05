@@ -44,7 +44,7 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
     serializer_class = HousingReservationSerializer
     permission_classes = [IsClientUserOrReadOnly]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer, *args, **kwargs):
         return perform_create(self, serializer)
 
     # def retrieve(self, request, *args, **kwargs):
