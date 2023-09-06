@@ -54,7 +54,7 @@ class HousingAvailabilitySerializer(serializers.ModelSerializer):
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(default=serializers.CurrentUserDefault())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault)
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
 
     class Meta:
