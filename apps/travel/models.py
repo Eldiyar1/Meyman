@@ -148,12 +148,6 @@ class HousingReservation(models.Model):
         verbose_name_plural = "Бронь жилищ"
 
 
-class HistoryReservation(models.Model):
-    client = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    reservation = models.ForeignKey(HousingReservation, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name_plural = "История бронирований"
 
 
 class Room(models.Model):

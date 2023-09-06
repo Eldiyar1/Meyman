@@ -2,8 +2,7 @@ import phonenumbers
 from rest_framework import serializers
 
 from .constants import *
-from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability, \
-    HistoryReservation
+from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
 from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
 
 
@@ -129,7 +128,3 @@ class HousingReservationSerializer(serializers.ModelSerializer):
                   'check_out_date', 'username', 'client_email', 'phone_number')
 
 
-class HistoryReservationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HistoryReservation
-        fields = ('id', 'client', 'reservation')
