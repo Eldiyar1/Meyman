@@ -3,11 +3,12 @@ from django.urls import path
 
 from .views import SignUpView, LoginView, ClientProfileView, OwnerProfileView, AdminProfileView, \
     ClientListView, OwnerListView, AdminListView, ProfileViewSet, ReviewSiteViewSet, LogoutView, VerifyOTP, \
-    PasswordResetRequestAPIView, PasswordResetCodeAPIView, PasswordResetNewPasswordAPIView \
+    PasswordResetRequestAPIView, PasswordResetCodeAPIView, PasswordResetNewPasswordAPIView, TokenViewSet
 
 router = DefaultRouter()
 router.register('profile', ProfileViewSet)
 router.register('review', ReviewSiteViewSet)
+router.register('tokens', TokenViewSet, basename='token')
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),

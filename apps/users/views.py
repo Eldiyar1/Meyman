@@ -1,15 +1,18 @@
 from rest_framework import generics, mixins, viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status, response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer, \
     PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer, \
     CustomUserSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
-from .utils import login_user
+from .utils import login_user, refresh_access_token
 from .paginations import ReviewPagination
 from .service import VerifyService, RegisterService, ResetPasswordSendEmail, PasswordResetCode, PasswordResetNewPassword
 
@@ -32,6 +35,14 @@ class SignUpView(generics.CreateAPIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(data={'errors': 'User already exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TokenViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['post'])
+    def refresh_access_token(self, request):
+        return refresh_access_token(self, request)
 
 
 class VerifyOTP(APIView):
