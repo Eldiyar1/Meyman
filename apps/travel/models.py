@@ -3,6 +3,8 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
+
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
@@ -123,12 +125,11 @@ class HousingImage(models.Model):
 class HousingReservation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
-    destination = models.CharField(max_length=100, choices=DESTINATION_CHOICES, verbose_name="Куда")
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
-    adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
-    children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
+    username = models.CharField(max_length=155)
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
+    phone_number = PhoneNumberField(verbose_name="Номер телефона клиента")
 
     def validata_people(self, adults, children):
         return validata_people(adults, children)

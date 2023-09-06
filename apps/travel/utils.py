@@ -63,12 +63,10 @@ def perform_create(self, serializer):
     instance = serializer.save()
     subject = 'Новое бронирование'
     message = (
-        f"Уважаемый {instance.user.username}\n\n"
+        f"Уважаемый {instance.username}\n\n"
         f"Ваше бронирование на место жительства '{instance.housing}' ваша заявка принята.\n"
         f"Дата заезда: {instance.check_in_date}\n"
         f"Дата выезда: {instance.check_out_date}\n"
-        f"Количество взрослых: {instance.adults}\n"
-        f"Количество детей: {instance.children}\n"
     )
     from_email = "abdykadyrovsyimyk0708@gmail.com"
     recipient_email = instance.client_email
@@ -76,7 +74,25 @@ def perform_create(self, serializer):
         send_mail(subject, message, from_email, [recipient_email])
     except Exception as e:
         return Response(
-            {"error": "Не удалось отправить уведомление на почту"},
+            {"error": "Не удалось отправить уведомление на почту клиенту"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    subject_forowner = 'Новое бронирование'
+    message_forowner = (
+        f"У вас есть новое бронирование на место жительства '{instance.housing}'\n"
+        f"Дата заезда: {instance.check_in_date}\n"
+        f"Дата выезда: {instance.check_out_date}\n"
+        f"Имя клиента: {instance.username}\n"
+        f"Почта клиента: {instance.client_email}\n"
+        f"Номер телефона клиента: {instance.phone_number}\n"
+    )
+    owner_email = instance.housing.user.email
+    try:
+        send_mail(subject_forowner, message_forowner, from_email, [owner_email])
+    except Exception as e:
+        return Response(
+            {"error": "Не удалось отправить уведомление на почту владельцу"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
     return Response(serializer.data, status=status.HTTP_201_CREATED)

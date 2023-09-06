@@ -13,7 +13,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
     verify_code = models.CharField(max_length=6, null=True, blank=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = CustomUserManager()
 

@@ -97,6 +97,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsClientUserOrReadOnly]
 
 
+
+
 class HousingImageSet(viewsets.ModelViewSet):
     queryset = HousingImage.objects.all()
     serializer_class = HousingImageSerializer

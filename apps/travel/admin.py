@@ -32,7 +32,7 @@ class HousingAdmin(admin.ModelAdmin):
 @admin.register(HousingReservation)
 class HousingReservationAdmin(admin.ModelAdmin):
     list_display = ('user', 'housing', 'check_in_date', 'check_out_date', 'get_total_guests')
-    list_filter = ('destination', 'check_in_date', 'check_out_date')
+    list_filter = ('check_in_date', 'check_out_date')
     search_fields = ('user__username', 'housing__housing_name')
 
     def get_total_guests(self, obj):
