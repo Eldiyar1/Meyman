@@ -159,8 +159,6 @@ class ReviewSiteViewSet(ModelViewSet):
     permission_classes = [IsOwnerAndClient]
     pagination_class = ReviewPagination
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user.profile)
 
 
 class LogoutView(APIView):

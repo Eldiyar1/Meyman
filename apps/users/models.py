@@ -56,7 +56,7 @@ class Profile(models.Model):
 
 
 class ReviewSite(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
