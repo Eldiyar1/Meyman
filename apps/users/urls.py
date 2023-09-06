@@ -3,7 +3,7 @@ from django.urls import path
 
 from .views import SignUpView, LoginView, ClientProfileView, OwnerProfileView, AdminProfileView, \
     ClientListView, OwnerListView, AdminListView, ProfileViewSet, ReviewSiteViewSet, LogoutView, VerifyOTP, \
-    PasswordResetRequestAPIView, PasswordResetCodeAPIView, PasswordResetNewPasswordAPIView, TokenViewSet
+    PasswordResetRequestAPIView, PasswordResetCodeAPIView, PasswordResetNewPasswordAPIView, TokenViewSet, CustomUserView
 
 router = DefaultRouter()
 router.register('profile', ProfileViewSet)
@@ -24,6 +24,7 @@ urlpatterns = [
     path('client/', ClientListView.as_view(), name='client-list'),
     path('owner/', OwnerListView.as_view(), name='owner-list'),
     path('admin/', AdminListView.as_view(), name='admin-list'),
+    path('customusers/', CustomUserView.as_view(), name='users-list')
 ]
 
 urlpatterns += router.urls

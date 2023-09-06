@@ -6,8 +6,8 @@ from django.utils import timezone
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
-from apps.users.email import CustomUser
 from .service import compress_image, validata_people
+from ..users.models import CustomUser
 
 
 class Housing(models.Model):
