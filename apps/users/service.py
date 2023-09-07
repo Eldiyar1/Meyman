@@ -5,7 +5,7 @@ from django.utils import timezone
 from apps.users import models
 from .emails import send_email_confirmation, send_email_reset_password
 from .models import CustomUser
-from .tokens import code
+from .tokens import confirmation_code, recovery_code
 
 
 class RegisterService:
@@ -56,13 +56,13 @@ class ResetPasswordSendEmail:
         time = timezone.now() + timezone.timedelta(minutes=5)
 
         password_reset_token = models.PasswordResetToken(
-            user=user, code=code, time=time
+            user=user, code=recovery_code, time=time
         )
         password_reset_token.save()
 
         send_email_reset_password(user.email)
 
-        return response.Response(data={"detail": 'код для сброса пароля отправлен в вашу'}, status=status.HTTP_200_OK)
+        return response.Response(data={"detail": f'код для сброса пароля отправлен на вашу почту {user.email}'}, status=status.HTTP_200_OK)
 
 
 class PasswordResetCode:
@@ -90,7 +90,7 @@ class PasswordResetNewPassword:
     def password_reset_new_password(code, password):
         try:
             password_reset_token = models.PasswordResetToken.objects.get(
-                code=code, time__gt=timezone.now()
+                code=recovery_code, time__gt=timezone.now()
             )
         except models.PasswordResetToken.DoesNotExist:
             return False, "Недействительный код для сброса пароля или время истечения кода закончилось."
