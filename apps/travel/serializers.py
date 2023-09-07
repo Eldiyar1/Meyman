@@ -6,8 +6,6 @@ from .models import Housing, HousingReview, HousingReservation, Room, RoomImage,
 from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
 
 
-
-
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImage
@@ -56,7 +54,6 @@ class HousingAvailabilitySerializer(serializers.ModelSerializer):
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
 
     class Meta:
@@ -121,10 +118,7 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     check_out_date = serializers.DateField(format='%d-%m-%Y')
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
-
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'check_in_date',
                   'check_out_date', 'username', 'client_email', 'phone_number')
-
-

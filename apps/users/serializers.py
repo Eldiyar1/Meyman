@@ -60,11 +60,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ReviewSiteSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
     class Meta:
         model = ReviewSite
-        fields = ('id', "user", "content", "created_at")
+        fields = ('id', 'user', 'content', 'created_at')
 
 
 class PasswordChangeSerializer(serializers.Serializer):
