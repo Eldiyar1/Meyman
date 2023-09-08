@@ -7,7 +7,7 @@ from apps.travel.models import HousingImage, RoomImage
 from apps.travel_service.models import TransferImage
 from apps.users.models import ReviewSite, Profile
 
-MODELS_TO_COMPRESS = [Profile, News, Advertising, TransferImage, HousingImage, RoomImage]
+MODELS_TO_COMPRESS = [News, Advertising, TransferImage, HousingImage, RoomImage]
 
 
 def compress_images(sender, instance, created, **kwargs):

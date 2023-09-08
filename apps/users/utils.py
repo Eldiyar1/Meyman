@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, request
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from apps.users.serializers import ChangePasswordSerializer
 from apps.users.tokens import create_jwt_pair_for_user
 
 

@@ -78,11 +78,10 @@ class HousingAvailability(models.Model):
     date = models.DateField(verbose_name='Дата')
     is_available = models.BooleanField(default=True)
 
-
-class Meta:
-    verbose_name = 'Календарь'
-    verbose_name_plural = 'Календари'
-    unique_together = ('rooms', 'date')
+    class Meta:
+        verbose_name = 'Календарь'
+        verbose_name_plural = 'Календари'
+        unique_together = ('rooms', 'date')
 
 
 class HousingReview(models.Model):
@@ -118,7 +117,7 @@ class HousingImage(models.Model):
         super().save(*args, **kwargs)
         compress_image(self)
 
-    def compress_images(self):
+    def compress_image(self):
         return compress_image(self)
 
     class Meta:
@@ -131,13 +130,13 @@ class HousingReservation(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства")
     check_in_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Заезд")
     check_out_date = models.DateField(validators=[MinValueValidator(timezone.now().date())], verbose_name="Выезд")
-    username = models.CharField(max_length=155)
+    username = models.CharField(max_length=155, verbose_name="Имя клиента")
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
     phone_number = PhoneNumberField(verbose_name="Номер телефона клиента")
     adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
 
-    def validata_all_people(self, adults, children):
+    def validata_people(self, adults, children):
         return validata_people(adults, children)
 
     def save(self, *args, **kwargs):
@@ -197,7 +196,7 @@ class RoomImage(models.Model):
         super().save(*args, **kwargs)
         compress_image(self)
 
-    def compress_images(self):
+    def compress_image(self):
         return compress_image(self)
 
     class Meta:

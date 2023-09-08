@@ -53,12 +53,17 @@ class LoginSerializer(serializers.Serializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Profile
         fields = ['id', 'user', 'image', 'email', 'phone_number']
         read_only_fields = ['email']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
 
 class ReviewSiteSerializer(serializers.ModelSerializer):

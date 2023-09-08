@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer, \
     PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer, \
-    CustomUserSerializer
+    CustomUserSerializer, ChangePasswordSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
 from .utils import login_user, refresh_access_token
 from .paginations import ReviewPagination
@@ -99,7 +99,7 @@ class PasswordResetNewPasswordAPIView(generics.CreateAPIView):
             return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ClientProfileView(generics.RetrieveUpdateAPIView):
+class ClientProfileView(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsClient]
@@ -108,7 +108,7 @@ class ClientProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class OwnerProfileView(generics.RetrieveUpdateAPIView):
+class OwnerProfileView(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsOwner]
@@ -117,7 +117,7 @@ class OwnerProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class AdminProfileView(generics.RetrieveUpdateAPIView):
+class AdminProfileView(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminUser]
@@ -138,6 +138,7 @@ class OwnerListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
 
 
+
 class AdminListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='admin')
     serializer_class = ProfileSerializer
@@ -153,12 +154,29 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
         return self.request.user
 
 
+class ChangePasswordView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            old_password = serializer.validated_data.get('old_password')
+            new_password = serializer.validated_data.get('new_password')
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                user.save()
+                return Response({'message': 'Пароль успешно изменен.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Неверный старый пароль.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ReviewSiteViewSet(ModelViewSet):
     queryset = ReviewSite.objects.all()
     serializer_class = ReviewSiteSerializer
     permission_classes = [IsOwnerAndClient]
     pagination_class = ReviewPagination
-
 
 
 class LogoutView(APIView):

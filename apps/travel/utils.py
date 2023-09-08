@@ -85,6 +85,8 @@ def perform_create(self, serializer):
         f"Имя клиента: {instance.username}\n"
         f"Почта клиента: {instance.client_email}\n"
         f"Номер телефона клиента: {instance.phone_number}\n"
+        f"Количество взрослых: {instance.adults}\n"
+        f"Количество детей: {instance.children}\n"
     )
     owner_email = instance.housing.user.email
     try:
