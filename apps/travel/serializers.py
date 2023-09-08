@@ -6,7 +6,13 @@ from .models import Housing, HousingReview, HousingReservation, Room, RoomImage,
 from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
 
 
-class HousingAvailabilitySerializer(serializers.ModelSerializer):
+class HousingAvailabilityPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HousingAvailability
+        fields = ('rooms', 'housing', 'date', 'is_available')
+
+
+class HousingAvailabilityGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingAvailability
         fields = ('rooms', 'date', 'is_available')
@@ -84,7 +90,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
-    availability = HousingAvailabilitySerializer(many=True, read_only=True)
+    availability = HousingAvailabilityGetSerializer(many=True, read_only=True)
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
     housing_images = HousingImageSerializer(many=True, read_only=True)
