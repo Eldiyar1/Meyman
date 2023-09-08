@@ -6,6 +6,12 @@ from .models import Housing, HousingReview, HousingReservation, Room, RoomImage,
 from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
 
 
+class HousingAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HousingAvailability
+        fields = ('rooms', 'date', 'is_available')
+
+
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImage
@@ -33,6 +39,7 @@ class RoomPostSerializer(serializers.ModelSerializer):
 
 
 class RoomGetSerializer(serializers.ModelSerializer):
+    availability = HousingAvailabilitySerializer(many=True, read_only=True)
     room_images = RoomImageSerializer(many=True, read_only=True)
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
@@ -44,13 +51,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen',
                   'outside', 'bathroom', 'num_rooms', 'max_guest_capacity', 'room_area', 'bed_type',
-                  'Free_cancellation_anytime')
-
-
-class HousingAvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HousingAvailability
-        fields = ('rooms', 'date', 'is_available')
+                  'Free_cancellation_anytime', 'availability')
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
@@ -121,4 +122,4 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'check_in_date',
-                  'check_out_date', 'username', 'client_email', 'phone_number','adults', 'children')
+                  'check_out_date', 'username', 'client_email', 'phone_number', 'adults', 'children')
