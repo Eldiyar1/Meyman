@@ -40,7 +40,6 @@ class RoomPostSerializer(serializers.ModelSerializer):
 
 class RoomGetSerializer(serializers.ModelSerializer):
     room_images = RoomImageSerializer(many=True, read_only=True)
-    availability = HousingAvailabilitySerializer(many=True, read_only=True)
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
     outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
@@ -51,7 +50,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen',
                   'outside', 'bathroom', 'num_rooms', 'max_guest_capacity', 'room_area', 'bed_type',
-                  'Free_cancellation_anytime', 'availability')
+                  'Free_cancellation_anytime')
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
@@ -85,6 +84,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
+    availability = HousingAvailabilitySerializer(many=True, read_only=True)
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
     housing_images = HousingImageSerializer(many=True, read_only=True)
@@ -103,15 +103,15 @@ class HousingGetSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms')
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'availability')
 
-    def get_first_housing_image(self, obj):
+    def get_housing_image(self, obj):
         return get_housing_image(self, obj)
 
-    def get_cheapest_rooms_price(self, obj):
+    def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)
 
-    def get_average_rating_review(self, obj):
+    def get_average_rating(self, obj):
         return get_average_rating(self, obj)
 
 

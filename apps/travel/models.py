@@ -72,13 +72,17 @@ class Housing(models.Model):
 class HousingAvailability(models.Model):
     rooms = models.ForeignKey("Room", related_name='availability', on_delete=models.CASCADE,
                               verbose_name='Номер')
+    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE,
+                                verbose_name='Место жительства')
+
     date = models.DateField(verbose_name='Дата')
     is_available = models.BooleanField(default=True)
 
-    class Meta:
-        verbose_name = 'Календарь'
-        verbose_name_plural = 'Календари'
-        unique_together = ('rooms', 'date')
+
+class Meta:
+    verbose_name = 'Календарь'
+    verbose_name_plural = 'Календари'
+    unique_together = ('rooms', 'date')
 
 
 class HousingReview(models.Model):
