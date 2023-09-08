@@ -4,9 +4,9 @@ from .models import HousingReview, HousingReservation, Room, HousingImage, RoomI
 
 @admin.register(HousingAvailability)
 class HousingAvailability(admin.ModelAdmin):
-    list_display = ('housing', 'date', 'is_available')
-    list_filter = ('housing', 'date', 'is_available')
-    search_fields = ('housing', 'date', 'is_available')
+    list_display = ('rooms', 'date', 'is_available')
+    list_filter = ('rooms', 'date', 'is_available')
+    search_fields = ('rooms', 'date', 'is_available')
 
 
 class HousingImageInline(admin.TabularInline):
@@ -31,10 +31,13 @@ class HousingAdmin(admin.ModelAdmin):
 
 @admin.register(HousingReservation)
 class HousingReservationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'housing', 'check_in_date', 'check_out_date')
+    list_display = ('user', 'housing', 'check_in_date',
+                    'check_out_date', 'adults', 'children', 'get_total_guests')
     list_filter = ('check_in_date', 'check_out_date')
     search_fields = ('user__username', 'housing__housing_name')
 
+    def get_total_guests(self, obj):
+        return obj.adults + obj.children
 
 
 @admin.register(HousingReview)

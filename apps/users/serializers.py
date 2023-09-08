@@ -53,9 +53,11 @@ class LoginSerializer(serializers.Serializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Profile
-        fields = ['id', 'image', 'email', 'phone_number']
+        fields = ['id', 'user', 'image', 'email', 'phone_number']
         read_only_fields = ['email']
 
 

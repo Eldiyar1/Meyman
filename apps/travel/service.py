@@ -34,6 +34,12 @@ def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
 
 
 
+def validata_people(adults, children):
+    total_people = (adults or 0) + (children or 0)
+    if total_people > 6:
+        raise ValidationError("Количество гостей н может быть больше шести")
+    elif total_people < 1:
+        raise ValidationError("Количество гостей не может быть равен 0")
 
 
 def get_cheapest_room_price(self, obj):

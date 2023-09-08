@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
-from .service import compress_image
+from .service import compress_image, validata_people
 from ..users.models import CustomUser
 
 
@@ -70,15 +70,15 @@ class Housing(models.Model):
 
 
 class HousingAvailability(models.Model):
-    housing = models.ForeignKey(Housing, related_name='availability', on_delete=models.CASCADE,
-                                verbose_name='Место жительство')
+    rooms = models.ForeignKey("Room", related_name='availability', on_delete=models.CASCADE,
+                              verbose_name='Номер')
     date = models.DateField(verbose_name='Дата')
     is_available = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Календарь'
         verbose_name_plural = 'Календари'
-        unique_together = ('housing', 'date')
+        unique_together = ('rooms', 'date')
 
 
 class HousingReview(models.Model):
@@ -130,6 +130,11 @@ class HousingReservation(models.Model):
     username = models.CharField(max_length=155)
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
     phone_number = PhoneNumberField(verbose_name="Номер телефона клиента")
+    adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
+    children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
+
+    def validata_people(self, adults, children):
+        return validata_people(adults, children)
 
     def save(self, *args, **kwargs):
         if not self.user_id:
@@ -143,8 +148,6 @@ class HousingReservation(models.Model):
     class Meta:
         verbose_name = "Бронь жилья"
         verbose_name_plural = "Бронь жилищ"
-
-
 
 
 class Room(models.Model):

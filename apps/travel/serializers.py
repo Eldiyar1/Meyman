@@ -50,7 +50,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
 class HousingAvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingAvailability
-        fields = ('housing', 'date', 'is_available')
+        fields = ('rooms', 'date', 'is_available')
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
@@ -121,4 +121,4 @@ class HousingReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'check_in_date',
-                  'check_out_date', 'username', 'client_email', 'phone_number')
+                  'check_out_date', 'username', 'client_email', 'phone_number','adults', 'children')
