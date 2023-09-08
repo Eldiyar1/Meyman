@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from apps.travel.constants import *
 from apps.travel_service.constants import DESTINATION_CHOICES
 from django.utils.text import slugify
-from .service import compress_image, validata_people
+from .service import compress_image
 from ..users.models import CustomUser
 
 
@@ -130,9 +130,6 @@ class HousingReservation(models.Model):
     username = models.CharField(max_length=155)
     client_email = models.EmailField(null=True, blank=True, verbose_name="Email клиента")
     phone_number = PhoneNumberField(verbose_name="Номер телефона клиента")
-
-    def validata_people(self, adults, children):
-        return validata_people(adults, children)
 
     def save(self, *args, **kwargs):
         if not self.user_id:
