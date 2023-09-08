@@ -114,7 +114,7 @@ class HousingImage(models.Model):
         super().save(*args, **kwargs)
         compress_image(self)
 
-    def compress_image(self):
+    def compress_images(self):
         return compress_image(self)
 
     class Meta:
@@ -133,7 +133,7 @@ class HousingReservation(models.Model):
     adults = models.PositiveIntegerField(default=1, verbose_name="Взрослые(от 18 лет)")
     children = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="Дети(от 2-12 лет)")
 
-    def validata_people(self, adults, children):
+    def validata_all_people(self, adults, children):
         return validata_people(adults, children)
 
     def save(self, *args, **kwargs):
@@ -193,7 +193,7 @@ class RoomImage(models.Model):
         super().save(*args, **kwargs)
         compress_image(self)
 
-    def compress_image(self):
+    def compress_images(self):
         return compress_image(self)
 
     class Meta:
