@@ -10,9 +10,9 @@ router = DefaultRouter()
 router.register('profile', ProfileViewSet)
 router.register('review', ReviewSiteViewSet)
 router.register('tokens', TokenViewSet, basename='token')
-router.register('adminprofile', AdminProfileView)
-router.register('clientprofile', ClientProfileView)
-router.register('ownerprofile', OwnerProfileView)
+router.register(f'adminprofile', AdminProfileView, basename='adminprofile')
+router.register(f'clientprofile', ClientProfileView, basename='clientprofile')
+router.register(f'ownerprofile', OwnerProfileView, basename='ownerprofile')
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
