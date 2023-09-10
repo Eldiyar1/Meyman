@@ -3,6 +3,7 @@ from .models import WishlistAlbum, HouseFavorite
 
 
 class HouseFavoriteSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = HouseFavorite
         fields = ('id', 'wishlist_album', 'housing')
