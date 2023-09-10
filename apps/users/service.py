@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from apps.users import models
 from .emails import send_email_confirmation, send_email_reset_password
-from .models import CustomUser
+from .models import CustomUser, Profile
 from .tokens import confirmation_code, recovery_code
 
 
@@ -13,6 +13,7 @@ class RegisterService:
     def create_user(serializer, request):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        profile = Profile.objects.create(user=user)
         send_email_confirmation(user.email)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

@@ -47,12 +47,13 @@ class Profile(models.Model):
     def compress_image(self):
         return compress_image(self)
 
+    def __str__(self):
+        return self.user.username
+    
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
 
-    def __str__(self):
-        return self.email
 
 
 class ReviewSite(models.Model):
