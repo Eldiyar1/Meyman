@@ -2,8 +2,8 @@ def create_slug(self, validated_data):
     from apps.advertising.models import Advertising
     from django.utils.text import slugify
     if not validated_data.get('slug'):
-        title = validated_data.get('title')
-        slug = slugify(title)
+        housing = validated_data.get('housing')
+        slug = slugify(housing)
 
         queryset = Advertising.objects.filter(slug=slug)
         if queryset.exists():

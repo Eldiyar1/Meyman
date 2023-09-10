@@ -1,4 +1,5 @@
 import phonenumbers
+from django.utils.text import slugify
 from rest_framework import serializers
 
 from .constants import *
@@ -109,7 +110,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'availability')
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'availability', 'slug')
 
     def get_housing_image(self, obj):
         return get_housing_image(self, obj)
@@ -119,6 +120,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
 
     def get_average_rating(self, obj):
         return get_average_rating(self, obj)
+
 
 
 class HousingReservationSerializer(serializers.ModelSerializer):

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Advertising
-
 from .service import create_slug
 
 
@@ -9,7 +8,7 @@ class AdvertisingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertising
-        fields = ('id', 'title', 'text', 'image', 'link', 'slug')
+        fields = ("id", "housing", "added", "slug")
 
     def create(self, validated_data):
         return create_slug(self, validated_data)
