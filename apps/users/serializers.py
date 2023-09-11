@@ -57,9 +57,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'username', 'image', 'email', 'phone_number']
-        read_only_fields = ['email']
-
+        fields = ['id', 'user', 'username', 'image', 'phone_number']
+        read_only_fields = ['email', 'user']
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)

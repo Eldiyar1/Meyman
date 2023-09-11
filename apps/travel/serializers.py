@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from .constants import *
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
-from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image
+from .service import get_average_rating, validate_beds, get_cheapest_room_price, get_housing_image, get_room_name
 
 
 class HousingAvailabilityPostSerializer(serializers.ModelSerializer):
@@ -122,13 +122,16 @@ class HousingGetSerializer(serializers.ModelSerializer):
         return get_average_rating(self, obj)
 
 
-
 class HousingReservationSerializer(serializers.ModelSerializer):
     check_in_date = serializers.DateField(format='%d-%m-%Y')
     check_out_date = serializers.DateField(format='%d-%m-%Y')
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    room_name = serializers.SerializerMethodField()
 
     class Meta:
         model = HousingReservation
         fields = ("id", 'user', 'housing', 'check_in_date',
-                  'check_out_date', 'username', 'client_email', 'phone_number', 'adults', 'children')
+                  'check_out_date', 'username', 'client_email', 'room_name', 'phone_number', 'adults', 'children')
+
+    def get_room_name(self, obj):
+        return get_room_name(self, obj)

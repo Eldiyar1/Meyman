@@ -29,7 +29,14 @@ def compress_image(self):
     else:
         pass
 
-
+def get_room_name(self, obj):
+    try:
+        room = obj.housing.rooms.first()
+        if room:
+            return room.room_name
+    except Exception as e:
+        pass
+    return None
 
 def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
     total_beds = (single_bed or 0) + (double_bed or 0) + (queen_bed or 0) + (king_bed or 0) + (sofa_bed or 0)

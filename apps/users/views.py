@@ -149,9 +149,11 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
 
     def put_object(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
+        data = request.data
+        data = {key: data[key] for key in ['username', 'image', 'phone_number']}
+        serializer = self.get_serializer(instance, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.update(instance, data)
         return Response(serializer.data)
 
     def patch_object(self, request, *args, **kwargs):

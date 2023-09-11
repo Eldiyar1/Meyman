@@ -12,6 +12,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
     date_of_birth = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
+    phone_number = PhoneNumberField(null=True, verbose_name='Номер телефона')
+    image = models.ImageField(upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar')
     verify_code = models.CharField(max_length=6, null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
