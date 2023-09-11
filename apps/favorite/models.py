@@ -7,6 +7,7 @@ class HouseFavorite(models.Model):
     wishlist_album = models.ForeignKey("WishlistAlbum", on_delete=models.CASCADE, blank=True, null=True,
                                        related_name='houseFavorite')
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Избранное"
