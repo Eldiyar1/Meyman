@@ -32,7 +32,6 @@ class SignUpView(generics.CreateAPIView):
         return RegisterService.create_user(self.serializer_class(data=request.data), request)
 
 
-
 class TokenViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
@@ -134,7 +133,6 @@ class OwnerListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
 
 
-
 class AdminListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='admin')
     serializer_class = ProfileSerializer
@@ -148,6 +146,20 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
 
     def get_object(self):
         return self.request.user
+
+    def put_object(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def patch_object(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class ChangePasswordView(APIView):

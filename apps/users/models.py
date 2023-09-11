@@ -36,6 +36,7 @@ class PasswordResetToken(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    username = models.CharField(max_length=150)
     image = models.ImageField(upload_to='media/avatars/', blank=True, null=True, verbose_name='Profiles_avatar')
     email = models.EmailField(null=True, verbose_name='Email')
     phone_number = PhoneNumberField(null=True, verbose_name='Номер телефона')
@@ -49,11 +50,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
-
 
 
 class ReviewSite(models.Model):

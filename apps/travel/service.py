@@ -22,9 +22,13 @@ def get_average_rating(self, obj):
 def compress_image(self):
     from PIL import Image
     img = Image.open(self.image.path)
-    img = img.convert('RGB')
-    img.thumbnail((800, 800))
-    img.save(self.image.path, 'JPEG', quality=90)
+    if img != 'null':
+        img = img.convert('RGB')
+        img.thumbnail((800, 800))
+        img.save(self.image.path, 'JPEG', quality=90)
+    else:
+        pass
+
 
 
 def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
