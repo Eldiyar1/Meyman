@@ -15,7 +15,7 @@ class Advertising(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.housing
+        return self.added
 
     class Meta:
         verbose_name = "Реклама"

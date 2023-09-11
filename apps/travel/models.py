@@ -57,10 +57,10 @@ class Housing(models.Model):
     slug = models.SlugField(max_length=255, unique=True, verbose_name="человеко-понятный url", blank=True, null=True)
 
     def __str__(self):
-        return self.housing_name
+        return f"{self.housing_name}"
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.slug and self.housing_name:
             self.slug = slugify(self.housing_name)
         super().save(*args, **kwargs)
 

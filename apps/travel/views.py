@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
-from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
+from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
     HousingImage
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
@@ -42,10 +42,14 @@ class HousingViewSet(viewsets.ModelViewSet):
 class HousingReservationViewSet(viewsets.ModelViewSet):
     queryset = HousingReservation.objects.all()
     serializer_class = HousingReservationSerializer
-    permission_classes = [IsClientUserOrReadOnly]
+    permission_classes = [IsrMineOrReadOnly]
 
     def perform_create(self, serializer, *args, **kwargs):
+        serializer.save(user=self.request.user)
         return perform_create(self, serializer)
+
+    def get_queryset(self):
+        return HousingReservation.objects.filter(user=self.request.user)
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_reservationtrans(self, request, *args, **kwargs)
