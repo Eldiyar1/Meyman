@@ -18,12 +18,6 @@ class NewsViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     filterset_class = NewsFilter
     search_fields = ['title', 'content']
 
-    @action(detail=True, methods=['POST'])
-    def add_to_favorite(self, request, pk=None):
-        instance = self.get_object()
-        instance.is_favorite = True
-        instance.save()
-        return Response('Объект успешно добавлен в избранное!')
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_trans(self, request, *args, **kwargs)

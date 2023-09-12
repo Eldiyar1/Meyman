@@ -42,19 +42,39 @@ def retrieve_housetrans(self, request, *args, **kwargs):
     instance = self.get_object()
     lang = self.get_language()
 
+    instance.housing_name = translator.translate(instance.housing_name, dest=lang).text
+    instance.address = translator.translate(instance.address, dest=lang).text
+    instance.region = translator.translate(instance.region, dest=lang).text
     instance.housing_type = translator.translate(instance.housing_type, dest=lang).text
     instance.accommodation_type = translator.translate(instance.accommodation_type, dest=lang).text
     instance.food_type = translator.translate(instance.food_type, dest=lang).text
+    instance.breakfast_type = translator.translate(instance.breakfast_type, dest=lang).text
 
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
 
 
-def retrieve_reservationtrans(self, request, *args, **kwargs):
+def retrieve_room(self, request, *args, **kwargs):
     instance = self.get_object()
     lang = self.get_language()
 
-    instance.destination = translator.translate(instance.destination, dest=lang).text
+    instance.housing = translator.translate(instance.housing, dest=lang).text
+    instance.room_name = translator.translate(instance.room_name, dest=lang).text
+    instance.room_amenities = translator.translate(instance.room_amenities, dest=lang).text
+    instance.kitchen = translator.translate(instance.kitchen, dest=lang).text
+    instance.outside = translator.translate(instance.outside, dest=lang).text
+    instance.bathroom = translator.translate(instance.bathroom, dest=lang).text
+    instance.bed_type = translator.translate(instance.bed_type, dest=lang).text
+
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)
+
+
+def retrieve_room_reservation(self, request, *args, **kwargs):
+    instance = self.get_object()
+    lang = self.get_language()
+
+    instance.housing = translator.translate(instance.housing, dest=lang).text
 
     serializer = self.get_serializer(instance)
     return Response(serializer.data)

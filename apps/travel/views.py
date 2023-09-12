@@ -11,7 +11,8 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, \
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
 from .filters import HousingFilter
-from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset
+from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset, retrieve_housetrans, \
+    retrieve_room
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -28,20 +29,14 @@ class HousingViewSet(viewsets.ModelViewSet):
             return HousingGetSerializer
         return self.serializer_class
 
-    @action(detail=True, methods=['POST'])
-    def add_to_favorite(self, request, pk=None):
-        instance = self.get_object()
-        instance.is_favorite = True
-        instance.save()
-        return Response('Объект успешно добавлен в избранное!')
 
     def get_queryset(self):
         queryset = super().get_queryset()
         annotated_queryset = annotate_housing_queryset(queryset)
         return annotated_queryset
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     return retrieve_housetrans(self, request, *args, **kwargs)
+    def housetrans(self, serializer, *args, **kwargs):
+        return retrieve_housetrans(self, serializer)
 
 
 class HousingReservationViewSet(viewsets.ModelViewSet):
@@ -55,9 +50,6 @@ class HousingReservationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return HousingReservation.objects.filter(user=self.request.user)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return retrieve_reservationtrans(self, request, *args, **kwargs)
 
 
 class HousingAvailabilityViewSet(viewsets.ModelViewSet):
@@ -84,6 +76,9 @@ class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
 
     def retrieve(self, request, *args, **kwargs):
         return retrieve_currency(self, request, *args, **kwargs)
+
+    def room_translate(self, serializer, *args, **kwargs):
+        return retrieve_room(self, serializer)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

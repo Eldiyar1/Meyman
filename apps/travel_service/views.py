@@ -5,7 +5,7 @@ from .serializers import TransferSerializer, TransferReservationSerializer, Tran
 from .filters import TransferFilter
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly
 from .paginations import StandardResultsSetPagination
-from .utils import retrieve_translate
+from .utils import retrieve_translate, retrieve_transfer_translate_review, retrieve_transfer_translate
 from ..travel.utils import LanguageParamMixin
 
 
@@ -16,6 +16,9 @@ class TransferViewSet(viewsets.ModelViewSet):
     filterset_class = TransferFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
+
+    def retrieve(self, request, *args, **kwargs):
+        return retrieve_transfer_translate(self, request, *args, **kwargs)
 
 
 class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
@@ -31,3 +34,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = TransferReview.objects.all()
     serializer_class = TransferReviewSerializer
     permission_classes = [IsOwnerUserOrReadOnly]
+
+    def retrieve(self, request, *args, **kwargs):
+        return retrieve_transfer_translate_review(self, request, *args, **kwargs)

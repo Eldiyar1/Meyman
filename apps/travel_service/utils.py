@@ -11,3 +11,22 @@ def retrieve_translate(self, request, *args, **kwargs):
 
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
+
+def retrieve_transfer_translate(self, request, *args, **kwargs):
+    instance = self.get_object()
+    lang = self.get_language()
+
+    instance.description = translator.translate(instance.description, dest=lang).text
+
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)
+
+
+def retrieve_transfer_translate_review(self, request, *args, **kwargs):
+    instance = self.get_object()
+    lang = self.get_language()
+
+    instance.comment = translator.translate(instance.comment, dest=lang).text
+
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)
