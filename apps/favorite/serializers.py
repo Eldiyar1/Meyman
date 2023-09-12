@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from .models import WishlistAlbum, HouseFavorite
-from ..travel.service import get_housing_image_for_favorite
+from ..travel.service import get_housing_image_for_favorite, \
+    get_cheapest_room_price_for_favorite
 
 
 class HouseFavoriteSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     housing_image = serializers.SerializerMethodField()
+    cheapest_room_price = serializers.SerializerMethodField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -52,11 +54,14 @@ class HouseFavoriteSerializer(serializers.ModelSerializer):
         return representation
 
     def get_housing_image(self, obj):
-        return get_housing_image_for_favorite(self,obj)
+        return get_housing_image_for_favorite(self, obj)
+
+    def get_cheapest_room_price(self, obj):
+        return get_cheapest_room_price_for_favorite(self, obj)
 
     class Meta:
         model = HouseFavorite
-        fields = ('id', 'user', 'wishlist_album', 'housing', 'housing_image')
+        fields = ('id', 'user', 'wishlist_album', 'housing', "cheapest_room_price", 'housing_image')
 
 
 class WishlistAlbumSerializer(serializers.ModelSerializer):

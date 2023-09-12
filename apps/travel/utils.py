@@ -7,6 +7,8 @@ from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, 
 import requests
 from django.db.models import Avg, Count, F
 
+from apps.travel.models import Room
+
 translator = Translator()
 
 
@@ -38,6 +40,21 @@ def retrieve_currency(self, request, *args, **kwargs):
     return Response(serializer.data)
 
 
+
+def retrieve_currency_for_housing(self, request, *args, **kwargs):
+    instance = self.get_object()
+    base_currency = 'USD'
+    target_currency = self.get_currency()
+    api_key = '5a3f772434804d4f842dd628f620c198'
+    try:
+        exchange_rates = OpenExchangeRatesClient(api_key).latest(base=base_currency)
+        for room in instance.rooms.all():
+            room.price_per_night *= Decimal(exchange_rates['rates'][target_currency])
+            room.save()
+
+    except Exception as e:
+        return Response("Ошибка при получении курсов валют: " + str(e), status=400)
+    return Response(self.get_serializer(instance).data)
 def retrieve_housetrans(self, request, *args, **kwargs):
     instance = self.get_object()
     lang = self.get_language()

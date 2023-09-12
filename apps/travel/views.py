@@ -10,10 +10,10 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
 from .filters import HousingFilter
 from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset, retrieve_housetrans, \
-    retrieve_room, LanguageParamMixin
+    retrieve_room, LanguageParamMixin, retrieve_currency_for_housing
 
 
-class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin):
+class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin, CurrencyParaMixin):
     queryset = Housing.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = HousingFilter
@@ -21,6 +21,9 @@ class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     pagination_class = TravelLimitOffsetPagination
     ordering_fields = ['stars', 'rooms__price_per_night', 'average_rating', 'review_count']
     serializer_class = HousingPostSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return retrieve_currency_for_housing(self, request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

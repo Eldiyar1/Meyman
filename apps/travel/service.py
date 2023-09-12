@@ -32,6 +32,7 @@ def compress_image(self):
     else:
         pass
 
+
 def get_room_name(self, obj):
     try:
         room = obj.housing.rooms.first()
@@ -41,11 +42,11 @@ def get_room_name(self, obj):
         pass
     return None
 
+
 def validate_beds(single_bed, double_bed, queen_bed, king_bed, sofa_bed):
     total_beds = (single_bed or 0) + (double_bed or 0) + (queen_bed or 0) + (king_bed or 0) + (sofa_bed or 0)
     if total_beds > 3:
         raise ValidationError("Общее количество кроватей не может превышать три.")
-
 
 
 def validata_people(adults, children):
@@ -61,12 +62,19 @@ def get_cheapest_room_price(self, obj):
     return cheapest_room.price_per_night if cheapest_room else None
 
 
+def get_cheapest_room_price_for_favorite(self, obj):
+    cheapest_room = obj.housing.rooms.order_by('price_per_night').first()
+    return cheapest_room.price_per_night if cheapest_room else None
+
+
 def get_housing_image(self, obj):
     first_image = obj.housing_images.first()
     if first_image:
         return first_image.image.url
     else:
         return None
+
+
 def get_housing_image_for_favorite(self, obj):
     housing_images = obj.housing.housing_images.all()
     if housing_images:
