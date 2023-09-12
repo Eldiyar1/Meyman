@@ -139,6 +139,21 @@ class AdminListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
 
 
+class UpdateUserTypeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        new_user_type = request.data.get('user_type')
+
+        if new_user_type is not None:
+            user.user_type = new_user_type
+            user.save()
+            return Response({'message': 'User type updated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Invalid data provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
@@ -147,21 +162,18 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
     def get_object(self):
         return self.request.user
 
-    def put_object(self, request, *args, **kwargs):
-        instance = self.get_object()
-        data = request.data
-        data = {key: data[key] for key in ['username', 'image', 'phone_number']}
-        serializer = self.get_serializer(instance, data=data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.update(instance, data)
-        return Response(serializer.data)
+    @action(detail=False, methods=['put'])
+    def update_user_type(self, request, *args, **kwargs):
+        user = self.get_object()
+        user_type = request.data.get('user_type', None)
 
-    def patch_object(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        if user_type is not None:
+            user.user_type = user_type
+            user.profile.user_type = user_type
+            user.save()
+            return Response({'message': 'User type updated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Invalid data provided'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ChangePasswordView(APIView):

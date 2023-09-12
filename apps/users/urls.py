@@ -4,7 +4,7 @@ from django.urls import path
 from .views import SignUpView, LoginView, ClientProfileView, OwnerProfileView, AdminProfileView, \
     ClientListView, OwnerListView, AdminListView, ProfileViewSet, ReviewSiteViewSet, LogoutView, VerifyOTP, \
     PasswordResetRequestAPIView, PasswordResetCodeAPIView, PasswordResetNewPasswordAPIView, TokenViewSet, \
-    CustomUserView, ChangePasswordView
+    CustomUserView, ChangePasswordView, UpdateUserTypeView
 
 router = DefaultRouter()
 router.register('profile', ProfileViewSet)
@@ -19,6 +19,7 @@ urlpatterns = [
     path('verify/', VerifyOTP.as_view(), name='confirm'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('update_user_type/', UpdateUserTypeView.as_view(), name='update_user_type'),
     path("reset-password-email/", PasswordResetRequestAPIView.as_view(), name="search user and send mail"),
     path("reset-password-code/", PasswordResetCodeAPIView.as_view(), name="write code"),
     path("reset-new-password/<str:code>/", PasswordResetNewPasswordAPIView.as_view(), name="write new password"),

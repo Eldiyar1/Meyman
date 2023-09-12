@@ -10,8 +10,8 @@ from .models import HousingReview, HousingReservation, Housing, Room, HousingAva
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
     RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, \
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
-from .filters import HousingFilter, RoomFilter
-from .utils import retrieve_currency, CurrencyParaMixin, perform_create
+from .filters import HousingFilter
+from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset
 
 
 class HousingViewSet(viewsets.ModelViewSet):
@@ -20,7 +20,7 @@ class HousingViewSet(viewsets.ModelViewSet):
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
-    ordering_fields = ['stars']
+    ordering_fields = ['stars', 'rooms__price_per_night', 'average_rating', 'review_count']
     serializer_class = HousingPostSerializer
 
     def get_serializer_class(self):
@@ -34,6 +34,11 @@ class HousingViewSet(viewsets.ModelViewSet):
         instance.is_favorite = True
         instance.save()
         return Response('Объект успешно добавлен в избранное!')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        annotated_queryset = annotate_housing_queryset(queryset)
+        return annotated_queryset
 
     # def retrieve(self, request, *args, **kwargs):
     #     return retrieve_housetrans(self, request, *args, **kwargs)
@@ -69,9 +74,6 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
 class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_class = RoomFilter
-    ordering_fields = ['price_per_night']
     pagination_class = StandardResultsSetPagination
     serializer_class = RoomPostSerializer
 

@@ -54,11 +54,18 @@ class LoginSerializer(serializers.Serializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user_type = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'username', "email", 'image', 'phone_number']
+        fields = ['id', 'user', 'username', 'email', 'image', 'phone_number', 'user_type']
         read_only_fields = ['email', 'user']
+
+    def get_user_type(self, obj):
+        try:
+            return obj.user_type
+        except Profile.DoesNotExist:
+            return None
 
 
 class ChangePasswordSerializer(serializers.Serializer):

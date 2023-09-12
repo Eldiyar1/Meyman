@@ -5,6 +5,7 @@ from googletrans import Translator
 from decimal import Decimal
 from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 import requests
+from django.db.models import Avg, Count, F
 
 translator = Translator()
 
@@ -98,3 +99,17 @@ def perform_create(self, serializer):
         )
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+def annotate_housing_queryset(queryset):
+    return queryset.annotate(
+        average_rating=Avg(
+            F('reviews__staff_rating') +
+            F('reviews__comfort_rating') +
+            F('reviews__cleanliness_rating') +
+            F('reviews__value_for_money_rating') +
+            F('reviews__food_rating') +
+            F('reviews__location_rating')
+        ) / 6,
+        review_count=Count('reviews')
+    ).distinct()

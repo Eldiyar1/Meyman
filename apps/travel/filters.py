@@ -14,24 +14,18 @@ class HousingFilter(FilterSet):
             id__in=[housing.id for housing in queryset if lower_rate <= get_average_rating(self, housing) <= upper_rate]
         )
 
+    price_per_night__gte = NumberFilter(field_name='rooms__price_per_night', lookup_expr='gte',
+                                        label="Минимальная цена за ночь")
+    price_per_night__lte = NumberFilter(field_name='rooms__price_per_night', lookup_expr='lte',
+                                        label="Максимальная цена за ночь")
+    room_amenities = MultipleChoiceFilter(field_name='rooms__room_amenities', choices=ROOM_AMENITIES_CHOICES,
+                                          label="Удобства в комнате")
+    bed_type = MultipleChoiceFilter(field_name='rooms__bed_type', choices=BED_CHOICES, label="Тип кроватей")
+
     class Meta:
         model = Housing
-        fields = ('housing_type', 'accommodation_type', 'food_type', 'stars', 'free_internet',
-                  'restaurant', 'airport_transfer', 'car_rental', 'gym', 'children_playground', 'park',
-                  'spa_services', 'bar', 'pool', 'room_service',
-                  'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet')
-
-
-class RoomFilter(FilterSet):
-    price_per_night__gte = NumberFilter(field_name='price_per_night', lookup_expr='gte')
-    price_per_night__lte = NumberFilter(field_name='price_per_night', lookup_expr='lte')
-    room_amenities = MultipleChoiceFilter(choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
-    kitchen = MultipleChoiceFilter(choices=KITCHEN_CHOICES, label="Кухня")
-    outside = MultipleChoiceFilter(choices=OUTSIDE_CHOICES, label="На улице")
-    bathroom = MultipleChoiceFilter(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная")
-    bed_type = MultipleChoiceFilter(choices=BED_CHOICES, label="Тип кроватей")
-
-    class Meta:
-        model = Room
-        fields = ('price_per_night__gte', 'price_per_night__lte', 'bedrooms', 'room_amenities', 'kitchen', 'outside',
-                  'bathroom', 'bed_type',)
+        fields = (
+            'housing_type', 'accommodation_type', 'food_type', 'stars', 'free_internet',
+            'restaurant', 'airport_transfer', 'car_rental', 'gym', 'children_playground', 'park', 'bar',
+            'spa_services', 'pool', 'room_service', 'poolside_bar', 'cafe', 'in_room_internet', 'hotel_wide_internet',
+            'price_per_night__gte', 'price_per_night__lte', 'rooms__bedrooms', 'room_amenities', 'bed_type',)

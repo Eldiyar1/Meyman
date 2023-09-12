@@ -8,6 +8,8 @@ from .models import CustomUser, Profile
 from .tokens import confirmation_code, recovery_code
 
 
+
+
 class RegisterService:
     @staticmethod
     def create_user(serializer, request):
@@ -63,7 +65,8 @@ class ResetPasswordSendEmail:
 
         send_email_reset_password(user.email)
 
-        return response.Response(data={"detail": f'код для сброса пароля отправлен на вашу почту {user.email}'}, status=status.HTTP_200_OK)
+        return response.Response(data={"detail": f'код для сброса пароля отправлен на вашу почту {user.email}'},
+                                 status=status.HTTP_200_OK)
 
 
 class PasswordResetCode:
