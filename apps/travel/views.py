@@ -1,6 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
@@ -12,10 +10,10 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
 from .filters import HousingFilter
 from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset, retrieve_housetrans, \
-    retrieve_room
+    retrieve_room, LanguageParamMixin
 
 
-class HousingViewSet(viewsets.ModelViewSet):
+class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Housing.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = HousingFilter
@@ -63,7 +61,7 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
 
-class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin):
+class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin, LanguageParamMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination

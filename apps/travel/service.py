@@ -67,3 +67,9 @@ def get_housing_image(self, obj):
         return first_image.image.url
     else:
         return None
+def get_housing_image_for_favorite(self, obj):
+    housing_images = obj.housing.housing_images.all()
+    if housing_images:
+        return [image.image.url for image in housing_images]
+    else:
+        return None

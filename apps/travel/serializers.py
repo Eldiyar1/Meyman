@@ -76,11 +76,9 @@ class HousingImageSerializer(serializers.ModelSerializer):
         fields = ('id', 'image', 'housing')
 
 class HousingPostSerializer(serializers.ModelSerializer):
-    availability = HousingAvailabilityGetSerializer(many=True)
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
     housing_images = HousingImageSerializer(many=True)
-    housing_image = serializers.SerializerMethodField()
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
@@ -89,16 +87,14 @@ class HousingPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'stars', 'average_rating',
+            'id', 'user', 'housing_name', 'location', 'housing_images', 'stars', 'average_rating',
             'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
             "children_playground",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'availability', 'slug')
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'slug')
 
-    def get_housing_image(self, obj):
-        return get_housing_image(self, obj)
 
     def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)

@@ -9,12 +9,12 @@ from .utils import retrieve_translate, retrieve_transfer_translate_review, retri
 from ..travel.utils import LanguageParamMixin
 
 
-class TransferViewSet(viewsets.ModelViewSet):
+class TransferViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Transfer.objects.all()
     serializer_class = TransferSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TransferFilter
-    permission_classes = [IsOwnerUserOrReadOnly]
+    # permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
 
     def retrieve(self, request, *args, **kwargs):
@@ -30,7 +30,7 @@ class TransferReservationViewSet(LanguageParamMixin, viewsets.ModelViewSet):
         return retrieve_translate(self, request, *args, **kwargs)
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
+class ReviewViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = TransferReview.objects.all()
     serializer_class = TransferReviewSerializer
     permission_classes = [IsOwnerUserOrReadOnly]
