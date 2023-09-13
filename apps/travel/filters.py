@@ -1,7 +1,7 @@
 from django_filters import FilterSet, ChoiceFilter, MultipleChoiceFilter, NumberFilter
 from .service import get_average_rating
 from .constants import *
-from .models import Housing
+from .models import Housing, Room
 
 
 class HousingFilter(FilterSet):

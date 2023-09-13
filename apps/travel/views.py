@@ -30,7 +30,6 @@ class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin, CurrencyParaMixi
             return HousingGetSerializer
         return self.serializer_class
 
-
     def get_queryset(self):
         queryset = super().get_queryset()
         annotated_queryset = annotate_housing_queryset(queryset)
