@@ -8,8 +8,6 @@ from .models import CustomUser, Profile
 from .tokens import confirmation_code, recovery_code
 
 
-
-
 class RegisterService:
     @staticmethod
     def create_user(serializer, request):
@@ -51,20 +49,13 @@ class ResetPasswordSendEmail:
             user = models.CustomUser.objects.get(email=email)
         except:
             return response.Response(
-                data={
-                    "error": "Пользователь с указанным адресом электронной почты не найден."
-                }
-            )
-
+                data={"error": "Пользователь с указанным адресом электронной почты не найден."},
+                status=status.HTTP_404_NOT_FOUND)
         time = timezone.now() + timezone.timedelta(minutes=5)
-
         password_reset_token = models.PasswordResetToken(
-            user=user, code=recovery_code, time=time
-        )
+            user=user, code=recovery_code, time=time)
         password_reset_token.save()
-
         send_email_reset_password(user.email)
-
         return response.Response(data={"detail": f'код для сброса пароля отправлен на вашу почту {user.email}'},
                                  status=status.HTTP_200_OK)
 

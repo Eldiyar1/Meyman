@@ -63,6 +63,7 @@ class LoginView(APIView):
 
 class PasswordResetRequestAPIView(generics.CreateAPIView):
     serializer_class = PasswordResetSearchUserSerializer
+    permission_classes = [IsUnregistered]
 
     def post(self, request, *args, **kwargs):
         reset_password_service = ResetPasswordSendEmail()
@@ -71,6 +72,7 @@ class PasswordResetRequestAPIView(generics.CreateAPIView):
 
 class PasswordResetCodeAPIView(generics.CreateAPIView):
     serializer_class = PasswordResetCodeSerializer
+    permission_classes = [IsUnregistered]
 
     def post(self, request, *args, **kwargs):
         reset_password_code = PasswordResetCode()
@@ -79,6 +81,7 @@ class PasswordResetCodeAPIView(generics.CreateAPIView):
 
 class PasswordResetNewPasswordAPIView(generics.CreateAPIView):
     serializer_class = PasswordResetNewPasswordSerializer
+    permission_classes = [IsUnregistered]
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
