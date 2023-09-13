@@ -18,9 +18,10 @@ class HousingFilter(FilterSet):
                                         label="Минимальная цена за ночь")
     price_per_night__lte = NumberFilter(field_name='rooms__price_per_night', lookup_expr='lte',
                                         label="Максимальная цена за ночь")
-    room_amenities = MultipleChoiceFilter(field_name='rooms__room_amenities', choices=ROOM_AMENITIES_CHOICES,
-                                          label="Удобства в комнате")
-    bed_type = MultipleChoiceFilter(field_name='rooms__bed_type', choices=BED_CHOICES, label="Тип кроватей")
+    room_amenities = MultipleChoiceFilter(field_name='rooms__room_amenities', lookup_expr="icontains",
+                                          choices=ROOM_AMENITIES_CHOICES, label="Удобства в комнате")
+    bed_type = MultipleChoiceFilter(field_name='rooms__bed_type', lookup_expr="icontains",
+                                    choices=BED_CHOICES, label="Тип кроватей")
 
     class Meta:
         model = Housing

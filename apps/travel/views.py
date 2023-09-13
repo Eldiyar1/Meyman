@@ -22,8 +22,8 @@ class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin, CurrencyParaMixi
     ordering_fields = ['stars', 'rooms__price_per_night', 'average_rating', 'review_count']
     serializer_class = HousingPostSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        return retrieve_currency_for_housing(self, request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return retrieve_currency_for_housing(self, request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

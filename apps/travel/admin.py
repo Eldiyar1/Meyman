@@ -16,7 +16,7 @@ class HousingImageInline(admin.TabularInline):
     extra = 0
 
     class Meta:
-        model = Housing
+        model = HousingImage
         fields = '__all__'
 
 

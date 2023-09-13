@@ -1,6 +1,7 @@
 import phonenumbers
 from django.utils.text import slugify
 from rest_framework import serializers
+from django.db import models
 
 from .constants import *
 from .models import Housing, HousingReview, HousingReservation, Room, RoomImage, HousingImage, HousingAvailability
@@ -73,7 +74,8 @@ class HousingReviewSerializer(serializers.ModelSerializer):
 class HousingImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousingImage
-        fields = ('id', 'image', 'housing')
+        fields = "__all__"
+
 
 class HousingPostSerializer(serializers.ModelSerializer):
     cheapest_room_price = serializers.SerializerMethodField()
@@ -83,6 +85,15 @@ class HousingPostSerializer(serializers.ModelSerializer):
     rooms = RoomGetSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     location = serializers.ReadOnlyField(default="27.3 км от центра")
+
+    def create(self, validated_data):
+        housing_images_validated_data = validated_data.pop('housing_images')
+        housing_post = Housing.objects.create(**validated_data)
+        image_models = [
+            HousingImage(housing_post=housing_post, **image)
+            for image in housing_images_validated_data]
+        HousingImage.objects.bulk_create(image_models)
+        return housing_post
 
     class Meta:
         model = Housing
@@ -94,7 +105,6 @@ class HousingPostSerializer(serializers.ModelSerializer):
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'slug')
-
 
     def get_cheapest_room_price(self, obj):
         return get_cheapest_room_price(self, obj)
