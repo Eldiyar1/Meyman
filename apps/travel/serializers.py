@@ -100,7 +100,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user', 'housing_name', 'location', 'images', 'stars', 'average_rating',
             'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
-            "children_playground",
+            "children_playground", "region",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
@@ -129,7 +129,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'stars', 'average_rating',
             'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
-            "children_playground",
+            "children_playground", "region",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
