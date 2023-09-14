@@ -1,36 +1,37 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
 
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
     HousingImage
-from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, \
-    RoomPostSerializer, HousingGetSerializer, HousingPostSerializer, \
-    HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomSerializer, \
+    HousingSerializer, \
+    HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer, ConvertedRoomSerializer
 from .filters import HousingFilter
-from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset, retrieve_housetrans, \
+from .utils import perform_create, annotate_housing_queryset, retrieve_housetrans, \
     retrieve_room, LanguageParamMixin
 
 
-class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin, CurrencyParaMixin):
+class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Housing.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = HousingFilter
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
     ordering_fields = ['stars', 'rooms__price_per_night', 'average_rating', 'review_count']
-    serializer_class = HousingPostSerializer
+    serializer_class = HousingSerializer
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     return retrieve_currency_for_housing(self, request, *args, **kwargs)
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return HousingGetSerializer
-        return self.serializer_class
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        currency = self.request.query_params.get('currency', 'USD')
+        rooms = instance.rooms.all()
+        converted_rooms = ConvertedRoomSerializer(rooms, many=True, context={'currency': currency}).data
+        data = HousingSerializer(instance).data
+        data['rooms'] = converted_rooms
+        return Response(data)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -65,19 +66,21 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
 
-class RoomViewSet(viewsets.ModelViewSet, CurrencyParaMixin, LanguageParamMixin):
+class RoomViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
-    serializer_class = RoomPostSerializer
+    serializer_class = RoomSerializer
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return RoomGetSerializer
-        return self.serializer_class
+        if 'currency' in self.request.query_params:
+            return ConvertedRoomSerializer
+        return RoomSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        return retrieve_currency(self, request, *args, **kwargs)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['currency'] = self.request.query_params.get('currency', 'USD')
+        return context
 
     def room_translate(self, serializer, *args, **kwargs):
         return retrieve_room(self, serializer)

@@ -1,4 +1,9 @@
+from _decimal import Decimal
+
+import requests
 from rest_framework.exceptions import ValidationError
+
+from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
 
 
 def get_average_rating(self, obj):
@@ -58,9 +63,27 @@ def validata_people(adults, children):
 
 
 def get_cheapest_room_price(self, obj):
-    cheapest_room = obj.rooms.order_by('price_per_night').first()
-    return cheapest_room.price_per_night if cheapest_room else None
+    cheapest_price = None
+    rooms = obj.rooms.all()
+    for room in rooms:
+        if cheapest_price is None or room.price_per_night < cheapest_price:
+            cheapest_price = room.price_per_night
+    return cheapest_price
 
+
+def get_price_per_night_convertede(self, obj):
+    target_currency = self.context.get('currency', 'USD')
+    base_currency = 'USD'
+    api_key = 'fa696137fbdd4a48b672f5a73c6a1818'
+    client = OpenExchangeRatesClient(api_key)
+    try:
+        exchange_rates = client.latest(base=base_currency)
+        if target_currency in exchange_rates['rates']:
+            exchange_rate = exchange_rates['rates'][target_currency]
+            return obj.price_per_night * Decimal(exchange_rate)
+    except (OpenExchangeRatesClientException, requests.exceptions.RequestException):
+        pass
+    return obj.price_per_night
 
 def get_cheapest_room_price_for_favorite(self, obj):
     cheapest_room = obj.housing.rooms.order_by('price_per_night').first()

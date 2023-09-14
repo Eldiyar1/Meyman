@@ -1,13 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from django.core.mail import send_mail
-from googletrans import Translator
-from decimal import Decimal
-from apps.currency_conversion.openexchangerates import OpenExchangeRatesClient, OpenExchangeRatesClientException
-import requests
 from django.db.models import Avg, Count, F
-
-from apps.travel.models import Room
+from googletrans import Translator
 
 translator = Translator()
 
@@ -15,48 +10,6 @@ translator = Translator()
 class LanguageParamMixin:
     def get_language(self):
         return self.request.query_params.get('lang', 'ru')
-
-
-class CurrencyParaMixin:
-    def get_currency(self):
-        return self.request.query_params.get('currency', 'USD')
-
-
-def retrieve_currency(self, request, *args, **kwargs):
-    instance = self.get_object()
-    base_currency = 'USD'
-    target_currency = self.get_currency()
-    api_key = 'fa696137fbdd4a48b672f5a73c6a1818'
-    client = OpenExchangeRatesClient(api_key)
-    try:
-        exchange_rates = client.latest(base=base_currency)
-        if target_currency in exchange_rates['rates']:
-            exchange_rate = exchange_rates['rates'][target_currency]
-            instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
-    except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
-        return Response({"error": "Error while fetching exchange rates", "detail": str(e)},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    serializer = self.get_serializer(instance)
-    return Response(serializer.data)
-
-
-def retrieve_currency_for_housing(self, request, *args, **kwargs):
-    pass
-    # instance = self.get_object()
-    # base_currency = 'USD'
-    # target_currency = self.get_currency()
-    # api_key = '5a3f772434804d4f842dd628f620c198'
-    # try:
-    #     exchange_rates = OpenExchangeRatesClient(api_key).latest(base=base_currency)
-    #     exchange_rate = Decimal(exchange_rates['rates'][target_currency])
-    # except decimal.InvalidOperation as e:
-    #     return Response("Ошибка: недопустимое значение курса валюты - " + str(e), status=400)
-    #
-    # for room in instance.rooms.all():
-    #     room.price_per_night *= exchange_rate
-    #     room.save()
-    #
-    # return Response(self.get_serializer(instance).data)
 
 
 def retrieve_housetrans(self, request, *args, **kwargs):
