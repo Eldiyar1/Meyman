@@ -1,12 +1,11 @@
 JAZZMIN_SETTINGS = {
     # Исправим смотря на тз
-    "site_title": "Site",  # Заголовок сайта
-    "site_header": "Simon",  # Заголовок на экране входа
-    "site_brand": "Django administrations",  # Выходит на сайте вместо Django-admin.(Администрирование сайта)
-    "welcome_sign": "Welcome to the my work",  # Приветственный текст на экране входа
+    "site_title": "Meyman",  # Заголовок сайта
+    "site_header": "Meyman",  # Заголовок на экране входа
+    "site_brand": "Meyman",  # Выходит на сайте вместо Django-admin.(Администрирование сайта)
+    "welcome_sign": "Meyman",  # Приветственный текст на экране входа
     "copyright": "Meyman",  # Авторское право (footer)
     "search_model": ["auth.User", "auth.Group", "apps.travel", "apps.weather_forecast", "apps.travel_service"],
-    # Для поиска пользователей или группы
 
     "topmenu_links": [
 
@@ -24,7 +23,6 @@ JAZZMIN_SETTINGS = {
         # App with dropdown menu to all its models pages (Permissions checked against models)
         {"app": "books"},
     ],
-
     "show_sidebar": True,
 
     "changeform_format": "horizontal_tabs",
@@ -40,6 +38,6 @@ JAZZMIN_UI_TWEAKS = {
 
     # темный фон:
     "theme": "darkly",
-    #"theme": "slate",    # темный (серьезный , полностью)
+    # "theme": "slate",    # темный (серьезный , полностью)
 
 }
