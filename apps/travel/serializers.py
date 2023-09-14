@@ -74,7 +74,7 @@ class HousingImageSerializer(serializers.ModelSerializer):
 class HousingSerializer(serializers.ModelSerializer):
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
-    images = HousingImageSerializer(many=True)
+    images = HousingImageSerializer(many=True, read_only=True)
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
