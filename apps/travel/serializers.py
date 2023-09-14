@@ -81,13 +81,14 @@ class HousingPostSerializer(serializers.ModelSerializer):
     location = serializers.ReadOnlyField(default="27.3 км от центра")
 
     def create(self, validated_data):
-        images_validated_data = validated_data.pop('images')
-        housing_post = Housing.objects.create(**validated_data)
+        images_data = validated_data.pop('images')
+        housing = Housing.objects.create(**validated_data)
+
         image_models = [
-            HousingImage(housing_post=housing_post, **image)
-            for image in images_validated_data]
+            HousingImage(housing=housing, **image)
+            for image in images_data]
         HousingImage.objects.bulk_create(image_models)
-        return housing_post
+        return housing
 
     class Meta:
         model = Housing
