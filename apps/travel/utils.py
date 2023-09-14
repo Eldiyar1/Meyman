@@ -26,7 +26,7 @@ def retrieve_currency(self, request, *args, **kwargs):
     instance = self.get_object()
     base_currency = 'USD'
     target_currency = self.get_currency()
-    api_key = '5a3f772434804d4f842dd628f620c198'
+    api_key = 'fa696137fbdd4a48b672f5a73c6a1818'
     client = OpenExchangeRatesClient(api_key)
     try:
         exchange_rates = client.latest(base=base_currency)
@@ -34,8 +34,8 @@ def retrieve_currency(self, request, *args, **kwargs):
             exchange_rate = exchange_rates['rates'][target_currency]
             instance.price_per_night = Decimal(instance.price_per_night) * Decimal(exchange_rate)
     except (OpenExchangeRatesClientException, requests.exceptions.RequestException) as e:
-        return "Error while fetching exchange rates:", e
-
+        return Response({"error": "Error while fetching exchange rates", "detail": str(e)},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
 
