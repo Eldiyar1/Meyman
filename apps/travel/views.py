@@ -8,7 +8,7 @@ from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineO
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
     HousingImage
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomSerializer, \
-    HousingSerializer, \
+    HousingGetSerializer, HousingPostSerializer, \
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer, ConvertedRoomSerializer
 from .filters import HousingFilter
 from .utils import perform_create, annotate_housing_queryset, retrieve_housetrans, \
@@ -22,14 +22,19 @@ class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = TravelLimitOffsetPagination
     ordering_fields = ['stars', 'rooms__price_per_night', 'average_rating', 'review_count']
-    serializer_class = HousingSerializer
+    serializer_class = HousingPostSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return HousingGetSerializer
+        return self.serializer_class
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         currency = self.request.query_params.get('currency', 'USD')
         rooms = instance.rooms.all()
         converted_rooms = ConvertedRoomSerializer(rooms, many=True, context={'currency': currency}).data
-        data = HousingSerializer(instance).data
+        data = HousingGetSerializer(instance).data
         data['rooms'] = converted_rooms
         return Response(data)
 
