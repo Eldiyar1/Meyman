@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
@@ -10,7 +12,7 @@ from .serializers import HousingReviewSerializer, HousingReservationSerializer, 
     HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer
 from .filters import HousingFilter
 from .utils import retrieve_currency, CurrencyParaMixin, perform_create, annotate_housing_queryset, retrieve_housetrans, \
-    retrieve_room, LanguageParamMixin, retrieve_currency_for_housing
+    retrieve_room, LanguageParamMixin
 
 
 class HousingViewSet(viewsets.ModelViewSet, LanguageParamMixin, CurrencyParaMixin):

@@ -108,7 +108,7 @@ class HousingReview(models.Model):
 
 class HousingImage(models.Model):
     image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images')
+    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images', null=True, blank=True)
 
     def __str__(self):
         return f"Image for {self.housing.housing_name}"

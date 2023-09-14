@@ -163,4 +163,3 @@ cython_debug/
 media
 ad_images/
 .ad_images/
-db.sqlite3

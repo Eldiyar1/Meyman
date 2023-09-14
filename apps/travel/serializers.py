@@ -80,25 +80,25 @@ class HousingImageSerializer(serializers.ModelSerializer):
 class HousingPostSerializer(serializers.ModelSerializer):
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
-    housing_images = HousingImageSerializer(many=True)
+    images = HousingImageSerializer(many=True)
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     rooms = RoomGetSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     location = serializers.ReadOnlyField(default="27.3 км от центра")
 
     def create(self, validated_data):
-        housing_images_validated_data = validated_data.pop('housing_images')
+        images_validated_data = validated_data.pop('images')
         housing_post = Housing.objects.create(**validated_data)
         image_models = [
             HousingImage(housing_post=housing_post, **image)
-            for image in housing_images_validated_data]
+            for image in images_validated_data]
         HousingImage.objects.bulk_create(image_models)
         return housing_post
 
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'location', 'housing_images', 'stars', 'average_rating',
+            'id', 'user', 'housing_name', 'location', 'images', 'stars', 'average_rating',
             'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
             "children_playground",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
