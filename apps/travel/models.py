@@ -15,6 +15,7 @@ from ..users.models import CustomUser
 class Housing(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
+    images = models.ForeignKey("HousingImage", on_delete=models.DO_NOTHING, related_name='images',null=True, blank=True)
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
     stars = models.IntegerField(default=1, choices=STAR_CHOICES, verbose_name='Количество звезд')
