@@ -129,7 +129,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'slug')
+            'check_out_time_start', 'check_out_time_end', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
