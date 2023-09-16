@@ -10,9 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 APP_MODE = config('APP_MODE', default='prod')
 if APP_MODE == 'prod':
-    from travel_app.settings.prodaction import *
+    from .prodaction import *
 else:
-    from travel_app.settings.development import *
+    from .development import *
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

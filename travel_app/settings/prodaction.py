@@ -1,8 +1,8 @@
 from decouple import config as env
 
+DEGUB = True
 
-
-DEBUG = env('DEBUG', cast=bool)
+# DEBUG = env('DEBUG', cast=bool)
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='0.0.0.0').split()
 
 DATABASES = {
