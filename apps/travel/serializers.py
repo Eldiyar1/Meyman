@@ -21,38 +21,72 @@ class HousingAvailabilityGetSerializer(serializers.ModelSerializer):
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImage
-        fields = ('id', 'image', 'room')
+        fields = "__all__"
 
 
-class RoomSerializer(serializers.ModelSerializer):
+class RoomPostSerializer(serializers.ModelSerializer):
     bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
+    images = RoomImageSerializer(many=True)
     room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
     kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
     outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
     bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная")
 
-    class Meta:
-        model = Room
-        fields = ('housing', 'room_name', 'price_per_night', 'room_amenities', 'kitchen', 'outside', 'bathroom',
-                  'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
-                  'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
-        currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
+    def create(self, validated_data):
+        images_data = validated_data.pop('images')
+        room = Room.objects.create(**validated_data)
+
+        image_models = [
+            RoomImage(room=room, **image)
+            for image in images_data]
+        RoomImage.objects.bulk_create(image_models)
+        return room
 
     def validate(self, data):
         validate_beds(data.get('single_bed'), data.get('double_bed'), data.get('queen_bed'),
                       data.get('king_bed'), data.get('sofa_bed'))
         return data
 
+    class Meta:
+        model = Room
+        fields = (
+            'housing', 'room_name', 'price_per_night', 'images', 'room_amenities', 'kitchen', 'outside', 'bathroom',
+            'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
+            'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
+        currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
 
-class ConvertedRoomSerializer(RoomSerializer):
-    price_per_night_converted = serializers.SerializerMethodField()
+
+class RoomGetSerializer(serializers.ModelSerializer):
+    bed_type = serializers.MultipleChoiceField(choices=BED_CHOICES, label="Тип кроватей")
+    room_images = RoomImageSerializer(many=True, read_only=True)
+    room_amenities = serializers.MultipleChoiceField(choices=ROOM_AMENITIES_CHOICES, label="Удобства в номере")
+    kitchen = serializers.MultipleChoiceField(choices=KITCHEN_CHOICES, label="Кухня")
+    outside = serializers.MultipleChoiceField(choices=OUTSIDE_CHOICES, label="На улице")
+    bathroom = serializers.MultipleChoiceField(choices=BATHROOM_AMENITIES_CHOICES, label="Ванная")
+
+    def validate(self, data):
+        validate_beds(data.get('single_bed'), data.get('double_bed'), data.get('queen_bed'),
+                      data.get('king_bed'), data.get('sofa_bed'))
+        return data
 
     class Meta:
         model = Room
-        fields = RoomSerializer.Meta.fields + ('price_per_night_converted',)
+        fields = (
+            'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen', 'outside', 'bathroom',
+            'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
+            'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
+        currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
+
+
+class ConvertedRoomSerializer(RoomGetSerializer):
+    price_per_night_converted = serializers.SerializerMethodField()
 
     def get_price_per_night_converted(self, obj):
         return get_price_per_night_convertede(self, obj)
+
+    class Meta:
+        model = Room
+        fields = RoomGetSerializer.Meta.fields + ('price_per_night_converted',)
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
@@ -76,7 +110,6 @@ class HousingPostSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField(read_only=True)
     images = HousingImageSerializer(many=True)
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
-    rooms = RoomSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     location = serializers.ReadOnlyField(default="27.3 км от центра")
 
@@ -90,6 +123,12 @@ class HousingPostSerializer(serializers.ModelSerializer):
         HousingImage.objects.bulk_create(image_models)
         return housing
 
+    def get_cheapest_room_price(self, obj):
+        return get_cheapest_room_price(self, obj)
+
+    def get_average_rating(self, obj):
+        return get_average_rating(self, obj)
+
     class Meta:
         model = Housing
         fields = (
@@ -99,13 +138,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'slug')
-
-    def get_cheapest_room_price(self, obj):
-        return get_cheapest_room_price(self, obj)
-
-    def get_average_rating(self, obj):
-        return get_average_rating(self, obj)
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
@@ -115,7 +148,7 @@ class HousingGetSerializer(serializers.ModelSerializer):
     housing_images = HousingImageSerializer(many=True, read_only=True)
     housing_image = serializers.SerializerMethodField()
     reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
-    rooms = RoomSerializer(many=True, read_only=True, label="Номера")
+    rooms = RoomGetSerializer(many=True, read_only=True, label="Номера")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     location = serializers.ReadOnlyField(default="27.3 км от центра")
 

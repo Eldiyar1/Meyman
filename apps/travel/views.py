@@ -6,10 +6,11 @@ from rest_framework.response import Response
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
 from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
-    HousingImage
-from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomSerializer, \
+    HousingImage, RoomImage
+from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, RoomPostSerializer, \
     HousingGetSerializer, HousingPostSerializer, \
-    HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer, ConvertedRoomSerializer
+    HousingAvailabilityPostSerializer, HousingImageSerializer, HousingAvailabilityGetSerializer, \
+    ConvertedRoomSerializer, RoomImageSerializer
 from .filters import HousingFilter
 from .utils import perform_create, annotate_housing_queryset, retrieve_housetrans, \
     retrieve_room, LanguageParamMixin
@@ -75,12 +76,13 @@ class RoomViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Room.objects.all()
     permission_classes = [IsOwnerUserOrReadOnly]
     pagination_class = StandardResultsSetPagination
-    serializer_class = RoomSerializer
+    serializer_class = RoomPostSerializer
 
     def get_serializer_class(self):
-        if 'currency' in self.request.query_params:
-            return ConvertedRoomSerializer
-        return RoomSerializer
+        if self.request.method == 'GET':
+            return RoomGetSerializer
+        return self.serializer_class
+
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -97,7 +99,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsClientUserOrReadOnly]
 
 
-class HousingImageSet(viewsets.ModelViewSet):
+class HousingImageViewSet(viewsets.ModelViewSet):
     queryset = HousingImage.objects.all()
     serializer_class = HousingImageSerializer
+    permission_classes = [IsOwnerUserOrReadOnly]
+
+
+class RoomsImagesViewSet(viewsets.ModelViewSet):
+    queryset = RoomImage.objects.all()
+    serializer_class = RoomImageSerializer
     permission_classes = [IsOwnerUserOrReadOnly]

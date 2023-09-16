@@ -15,7 +15,8 @@ from ..users.models import CustomUser
 class Housing(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь")
     housing_name = models.CharField(max_length=255, verbose_name="Название места жительства")
-    images = models.ForeignKey("HousingImage", on_delete=models.DO_NOTHING, related_name='images',null=True, blank=True)
+    images = models.ForeignKey("HousingImage", on_delete=models.DO_NOTHING, related_name='images', null=True,
+                               blank=True)
     address = models.CharField(max_length=255, verbose_name="Адрес")
     region = models.CharField(max_length=50, choices=DESTINATION_CHOICES, verbose_name="Область")
     stars = models.IntegerField(default=1, choices=STAR_CHOICES, verbose_name='Количество звезд')
@@ -108,7 +109,7 @@ class HousingReview(models.Model):
 
 
 class HousingImage(models.Model):
-    image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств")
+    image = models.ImageField(upload_to='housing', verbose_name="Изображения мест жительств", null=True, blank=True)
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='housing_images', null=True, blank=True)
 
     def __str__(self):
@@ -154,10 +155,31 @@ class HousingReservation(models.Model):
         verbose_name_plural = "Бронь жилищ"
 
 
+class RoomImage(models.Model):
+    room = models.ForeignKey("Room", on_delete=models.CASCADE, related_name='room_images', null=True, blank=True)
+    image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера", null=True, blank=True)
+
+    def __str__(self):
+        return f"Image for {self.room.room_name}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        compress_image(self)
+
+    def compress_image(self):
+        return compress_image(self)
+
+    class Meta:
+        verbose_name = 'Изображение номера'
+        verbose_name_plural = 'Изображения номеров'
+
+
 class Room(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства",
                                 related_name='rooms')
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
+    images = models.ForeignKey(RoomImage, on_delete=models.DO_NOTHING, related_name='images', null=True,
+                               blank=True)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255, verbose_name='Удобства')
     kitchen = MultiSelectField(choices=KITCHEN_CHOICES, max_length=255, verbose_name="Кухня")
@@ -184,22 +206,3 @@ class Room(models.Model):
     class Meta:
         verbose_name = 'Номер'
         verbose_name_plural = 'Номера'
-
-
-class RoomImage(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_images')
-    image = models.ImageField(upload_to='rooms', verbose_name="Изображения номера")
-
-    def __str__(self):
-        return f"Image for {self.room.room_name}"
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        compress_image(self)
-
-    def compress_image(self):
-        return compress_image(self)
-
-    class Meta:
-        verbose_name = 'Изображение номера'
-        verbose_name_plural = 'Изображения номеров'
