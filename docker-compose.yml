@@ -13,9 +13,20 @@ services:
     networks:
       - backend
     volumes:
-      - .:/Meyman_Backend
-
+      - .:/meymanbackend
+  postgres-db:
+    image: 'postgres:15'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
 networks:
   backend:
     driver: bridge
+volumes:
+  postgres-data:
 

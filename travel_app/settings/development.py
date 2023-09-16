@@ -1,21 +1,17 @@
 import os
+from decouple import config
+from pathlib import Path
 
-# SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY='django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9'
-# SECRET_KEY = config('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
+DEBUG = config('DEBUG', cast=bool)
 
 CREATE_APPS = [
     'apps.travel',
     'apps.advertising',
-    'apps.news',
     'apps.travel_service',
     'apps.users',
-    'apps.weather_forecast',
     'apps.favorite',
 ]
 INSTALLED_LIBRARY = [
@@ -38,4 +34,11 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 INSTALLED_APPS = INSTALLED_LIBRARY + CREATE_APPS + DJANGO_APPS
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 from .base import *
