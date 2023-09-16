@@ -8,11 +8,11 @@ SECRET_KEY = "django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-APP_MODE = config('APP_MODE', default='prod')
-if APP_MODE == 'prod':
-    from .prodaction import *
-else:
-    from .development import *
+# APP_MODE = config('APP_MODE', default='prod')
+# if APP_MODE == 'prod':
+#     from .prodaction import *
+# else:
+#     from .development import *
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
