@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
-from development import *
+from .development import *
 SECRET_KEY = "django-insecure-)f(ueona)v_r-0sb)o3y!**vp)1))72xly#_motvqct3_70fq9"
 # SECRET_KEY = config('SECRET_KEY')
 
