@@ -5,7 +5,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status, response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, ReviewSite
 from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, ReviewSiteSerializer, VerifySerializer, \
@@ -95,52 +94,6 @@ class PasswordResetNewPasswordAPIView(generics.CreateAPIView):
                 return response.Response(data={"detail": message}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ClientProfileView(ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [IsClient]
-
-    def get_object(self):
-        return self.request.user
-
-
-class OwnerProfileView(ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [IsOwner]
-
-    def get_object(self):
-        return self.request.user
-
-
-class AdminProfileView(ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAdminUser]
-
-    def get_object(self):
-        return self.request.user
-
-
-class ClientListView(generics.ListAPIView):
-    queryset = CustomUser.objects.filter(user_type='client')
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAdminUser]
-
-
-class OwnerListView(generics.ListAPIView):
-    queryset = CustomUser.objects.filter(user_type='owner')
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAdminUser]
-
-
-class AdminListView(generics.ListAPIView):
-    queryset = CustomUser.objects.filter(user_type='admin')
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAdminUser]
-
 
 class UpdateUserTypeView(APIView):
     permission_classes = [IsAuthenticated]

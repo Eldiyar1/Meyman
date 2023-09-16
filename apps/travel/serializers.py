@@ -72,7 +72,8 @@ class RoomGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = (
-            'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen', 'outside', 'bathroom',
+            'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen', 'outside',
+            'bathroom',
             'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
             'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
         currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
@@ -106,12 +107,8 @@ class HousingImageSerializer(serializers.ModelSerializer):
 
 
 class HousingPostSerializer(serializers.ModelSerializer):
-    cheapest_room_price = serializers.SerializerMethodField()
-    average_rating = serializers.SerializerMethodField(read_only=True)
     images = HousingImageSerializer(many=True)
-    reviews = HousingReviewSerializer(many=True, read_only=True, label="Отзывы")
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
-    location = serializers.ReadOnlyField(default="27.3 км от центра")
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')
@@ -123,17 +120,11 @@ class HousingPostSerializer(serializers.ModelSerializer):
         HousingImage.objects.bulk_create(image_models)
         return housing
 
-    def get_cheapest_room_price(self, obj):
-        return get_cheapest_room_price(self, obj)
-
-    def get_average_rating(self, obj):
-        return get_average_rating(self, obj)
-
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'location', 'images', 'stars', 'average_rating',
-            'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
+            'id', 'user', 'housing_name', 'images',
+            'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
             "children_playground", "region",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
