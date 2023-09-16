@@ -3,8 +3,8 @@ from decouple import config
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = True
+# DEBUG = config('DEBUG', cast=bool)
 
 CREATE_APPS = [
     'apps.travel',
