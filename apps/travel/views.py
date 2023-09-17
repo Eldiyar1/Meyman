@@ -4,7 +4,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from .paginations import StandardResultsSetPagination, TravelLimitOffsetPagination
-from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly
+from .permissions import IsOwnerUserOrReadOnly, IsClientUserOrReadOnly, IsrMineOrReadOnly, IsOwnerUserOrReadOnlyForRooms
 from .models import HousingReview, HousingReservation, Housing, Room, HousingAvailability, \
     HousingImage, RoomImage
 from .serializers import HousingReviewSerializer, HousingReservationSerializer, RoomGetSerializer, RoomPostSerializer, \
@@ -74,7 +74,7 @@ class HousingAvailabilityViewSet(viewsets.ModelViewSet):
 
 class RoomViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     queryset = Room.objects.all()
-    permission_classes = [IsOwnerUserOrReadOnly]
+    permission_classes = [IsOwnerUserOrReadOnlyForRooms]
     pagination_class = StandardResultsSetPagination
     serializer_class = RoomPostSerializer
 
