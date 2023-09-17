@@ -78,6 +78,8 @@ class RoomViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     pagination_class = StandardResultsSetPagination
     serializer_class = RoomPostSerializer
 
+    
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RoomGetSerializer
@@ -108,4 +110,4 @@ class HousingImageViewSet(viewsets.ModelViewSet):
 class RoomsImagesViewSet(viewsets.ModelViewSet):
     queryset = RoomImage.objects.all()
     serializer_class = RoomImageSerializer
-    permission_classes = [IsOwnerUserOrReadOnly]
+    permission_classes = [IsOwnerUserOrReadOnlyForRooms]

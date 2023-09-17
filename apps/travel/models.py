@@ -178,8 +178,7 @@ class Room(models.Model):
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, verbose_name="Название места жительства",
                                 related_name='rooms')
     room_name = models.CharField(max_length=100, choices=ACCOMMODATION_TYPE_CHOICES, verbose_name='название номера')
-    images = models.ForeignKey(RoomImage, on_delete=models.DO_NOTHING, related_name='images', null=True,
-                               blank=True)
+    images = models.ManyToManyField(RoomImage, related_name='rooms', blank=True)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена за ночь")
     room_amenities = MultiSelectField(choices=ROOM_AMENITIES_CHOICES, max_length=255, verbose_name='Удобства')
     kitchen = MultiSelectField(choices=KITCHEN_CHOICES, max_length=255, verbose_name="Кухня")
