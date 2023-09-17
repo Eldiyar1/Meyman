@@ -109,6 +109,10 @@ class HousingImageSerializer(serializers.ModelSerializer):
 class HousingPostSerializer(serializers.ModelSerializer):
     images = HousingImageSerializer(many=True)
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
+    housing_type = serializers.MultipleChoiceField(choices=HOUSING_CHOICES, label="Тип жилья")
+    accommodation_type = serializers.MultipleChoiceField(choices=ACCOMMODATION_CHOICES, label="Тип размещения")
+    food_type = serializers.MultipleChoiceField(choices=FOOD_CHOICES, default="Не включено", label="Тип питания")
+    parking_location = serializers.ChoiceField(choices=PARKING_LOCATION_CHOICES, label='Местонахождение парковки')
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')
@@ -123,9 +127,9 @@ class HousingPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'images',
-            'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
-            "children_playground", "region",
+            'id', 'user', 'housing_name', 'images', 'stars', 'housing_type', 'accommodation_type',
+            'free_internet', 'bar', 'restaurant', 'airport_transfer', 'food_type',
+            "children_playground", "region", "parking_location",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
@@ -146,8 +150,9 @@ class HousingGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Housing
         fields = (
-            'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'stars', 'average_rating',
-            'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer', 'gym',
+            'id', 'user', 'housing_name', 'location', 'housing_image', 'housing_images', 'housing_type',
+            'stars', 'average_rating', 'accommodation_type', "food_type", 'parking_location',
+            'reviews', 'free_internet', 'bar', 'restaurant', 'airport_transfer',
             "children_playground", "region",
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
