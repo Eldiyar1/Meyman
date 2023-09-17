@@ -91,6 +91,7 @@ class ConvertedRoomSerializer(RoomGetSerializer):
 
 
 class HousingReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
 
     class Meta:
@@ -107,6 +108,7 @@ class HousingImageSerializer(serializers.ModelSerializer):
 
 
 class HousingPostSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = HousingImageSerializer(many=True)
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
     housing_type = serializers.MultipleChoiceField(choices=HOUSING_CHOICES, label="Тип жилья")
@@ -137,6 +139,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     availability = HousingAvailabilityGetSerializer(many=True, read_only=True)
     cheapest_room_price = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField(read_only=True)
