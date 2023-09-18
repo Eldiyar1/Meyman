@@ -135,7 +135,8 @@ class HousingPostSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'slug')
+            'check_out_time_start', 'check_out_time_end', 'children_allowed' ,'pets_allowed', 'pet_fee',
+            'breakfast_cost_usd', 'slug')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):
@@ -160,7 +161,9 @@ class HousingGetSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'rooms', 'availability', 'slug')
+            'check_out_time_start', 'check_out_time_end', 'cheapest_room_price', 'children_allowed', 'pets_allowed',
+            'pet_fee', 'breakfast_cost_usd', 'rooms',
+            'availability', 'slug')
 
     def get_housing_image(self, obj):
         return get_housing_image(self, obj)

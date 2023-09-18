@@ -79,7 +79,7 @@ python manage.py runserver
 Backend developers:
 * [Ismar](https://t.me/Savadatsu)
 * [Ulan](https://t.me/ekfybj)
-* [Daniel](https://t.me/@geeksdaniel)
+* [Daniel](https://t.me/geeksdaniel)
 * [Eldiar](https://t.me/elldiyar)
 * [Syimyk](https://t.me/Abdykadyrov_S)
 * [Islam](https://t.me/islaw_BT)
