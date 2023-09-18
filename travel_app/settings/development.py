@@ -18,7 +18,6 @@ INSTALLED_LIBRARY = [
     'jazzmin',
     'rest_framework',
     'drf_yasg',
-    'rest_framework_simplejwt',
     'rest_framework.authtoken',
     "corsheaders",
     'phonenumbers',

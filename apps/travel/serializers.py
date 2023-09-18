@@ -72,10 +72,11 @@ class RoomGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = (
-            'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen', 'outside',
+            'id', 'housing', 'room_name', 'price_per_night', 'room_images', 'room_amenities', 'kitchen', 'outside',
             'bathroom',
             'num_rooms', 'bathroom', 'bedrooms', 'bed_type', 'single_bed', 'double_bed', 'queen_bed', 'king_bed',
             'sofa_bed', 'max_guest_capacity', 'room_area', 'smoking_allowed', 'Free_cancellation_anytime')
+
         currency = serializers.ChoiceField(choices=['USD', 'EUR', 'KGS'])
 
 
@@ -135,7 +136,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
             "car_rental", 'paid_transfer', 'park', 'paid_parking', 'spa_services', 'pool', 'paid_bar', 'gym',
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
-            'check_out_time_start', 'check_out_time_end', 'children_allowed' ,'pets_allowed', 'pet_fee',
+            'check_out_time_start', 'check_out_time_end', 'children_allowed', 'pets_allowed', 'pet_fee',
             'breakfast_cost_usd', 'slug')
 
 
