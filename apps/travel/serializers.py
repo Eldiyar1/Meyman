@@ -137,7 +137,7 @@ class HousingPostSerializer(serializers.ModelSerializer):
             'children_playground', 'car_rental', 'room_service', 'poolside_bar', 'cafe', 'breakfast_type',
             'in_room_internet', 'hotel_wide_internet', 'address', 'check_in_time_start', 'check_in_time_end',
             'check_out_time_start', 'check_out_time_end', 'children_allowed', 'pets_allowed', 'pet_fee',
-            'breakfast_cost_usd', 'slug')
+            'breakfast_cost_usd')
 
 
 class HousingGetSerializer(serializers.ModelSerializer):

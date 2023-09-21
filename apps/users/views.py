@@ -19,6 +19,7 @@ from .service import VerifyService, RegisterService, ResetPasswordSendEmail, Pas
 
 
 class CustomUserView(APIView):
+    permission_classes = [IsUnregistered]
     def get(self, request):
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)

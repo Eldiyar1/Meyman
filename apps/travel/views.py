@@ -78,13 +78,10 @@ class RoomViewSet(viewsets.ModelViewSet, LanguageParamMixin):
     pagination_class = StandardResultsSetPagination
     serializer_class = RoomPostSerializer
 
-    
-
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return RoomGetSerializer
+            return ConvertedRoomSerializer
         return self.serializer_class
-
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

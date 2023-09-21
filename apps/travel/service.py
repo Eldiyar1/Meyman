@@ -85,6 +85,7 @@ def get_price_per_night_convertede(self, obj):
         pass
     return obj.price_per_night
 
+
 def get_cheapest_room_price_for_favorite(self, obj):
     cheapest_room = obj.housing.rooms.order_by('price_per_night').first()
     return cheapest_room.price_per_night if cheapest_room else None
