@@ -112,8 +112,6 @@ class HousingPostSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = HousingImageSerializer(many=True)
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
-    housing_type = serializers.MultipleChoiceField(choices=HOUSING_CHOICES, label="Тип жилья")
-    accommodation_type = serializers.MultipleChoiceField(choices=ACCOMMODATION_CHOICES, label="Тип размещения")
     food_type = serializers.MultipleChoiceField(choices=FOOD_CHOICES, default="Не включено", label="Тип питания")
     parking_location = serializers.ChoiceField(choices=PARKING_LOCATION_CHOICES, label='Местонахождение парковки')
 
