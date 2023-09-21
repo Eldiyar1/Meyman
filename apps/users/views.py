@@ -1,3 +1,5 @@
+from django.contrib.auth import logout
+
 from rest_framework import generics, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -161,5 +163,5 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.auth.delete()
+        logout(request)
         return Response({"message": "Logout Successful"}, status=status.HTTP_200_OK)
