@@ -11,6 +11,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ("id", "email", "username", "user_type", "date_of_birth", "is_staff", "verify_code", "is_active")
 
 
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+
 class SignUpSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         return validate_password(value)

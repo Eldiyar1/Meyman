@@ -13,13 +13,14 @@ from .serializers import SignUpSerializer, LoginSerializer, ProfileSerializer, R
     PasswordResetSearchUserSerializer, PasswordResetCodeSerializer, PasswordResetNewPasswordSerializer, \
     CustomUserSerializer, ChangePasswordSerializer
 from .permissions import IsClient, IsOwner, IsAdminUser, IsUnregistered, IsOwnerAndClient
-from .utils import login_user, refresh_access_token
+from .utils import login_user
 from .paginations import ReviewPagination
 from .service import VerifyService, RegisterService, ResetPasswordSendEmail, PasswordResetCode, PasswordResetNewPassword
 
 
 class CustomUserView(APIView):
     permission_classes = [IsUnregistered]
+
     def get(self, request):
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -34,12 +35,7 @@ class SignUpView(generics.CreateAPIView):
         return RegisterService.create_user(self.serializer_class(data=request.data), request)
 
 
-class TokenViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['post'])
-    def refresh_access_token(self, request):
-        return refresh_access_token(self, request)
 
 
 class VerifyOTP(APIView):
@@ -97,6 +93,7 @@ class PasswordResetNewPasswordAPIView(generics.CreateAPIView):
                 return response.Response(data={"detail": message}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UpdateUserTypeView(APIView):
     permission_classes = [IsAuthenticated]
