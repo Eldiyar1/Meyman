@@ -112,7 +112,6 @@ class HousingPostSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     images = HousingImageSerializer(many=True)
     breakfast_type = serializers.MultipleChoiceField(choices=BREAKFAST_CHOICES, label="Типы завтрака")
-    food_type = serializers.MultipleChoiceField(choices=FOOD_CHOICES, default="Не включено", label="Тип питания")
     parking_location = serializers.ChoiceField(choices=PARKING_LOCATION_CHOICES, label='Местонахождение парковки')
 
     def create(self, validated_data):
